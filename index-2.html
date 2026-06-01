@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f0f">
+<title>Workout Tracker</title>
+<style>
+:root {
+  --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #252525; --bg4: #2e2e2e;
+  --border: #2e2e2e; --border2: #3a3a3a;
+  --text: #f0f0f0; --text2: #aaa; --text3: #666;
+  --green: #22c55e; --green-bg: #052e16; --green-border: #166534;
+  --amber: #f59e0b; --amber-bg: #1c1003; --amber-border: #78350f;
+  --red: #ef4444; --blue: #3b82f6; --blue-bg: #0c1a2e;
+  --purple: #a78bfa;
+  --r: 12px; --rs: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; }
+body { padding-bottom: 100px; }
+
+/* NAV */
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.nav-left h1 { font-size: 16px; font-weight: 700; }
+.nav-left .date { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.nav-right { display: flex; gap: 6px; }
+.nav-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rs); padding: 6px 10px; font-size: 12px; color: var(--text2); cursor: pointer; white-space: nowrap; }
+
+/* TIMER */
+.timer-section { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 10px 16px 6px; }
+.timer-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.timer-dig { font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 80px; letter-spacing: -1px; transition: color 0.3s; }
+.timer-dig.idle { color: var(--text2); }
+.timer-dig.running { color: var(--green); }
+.timer-dig.warn { color: var(--amber); }
+.timer-dig.done { color: var(--red); }
+.timer-btns { display: flex; gap: 6px; flex: 1; }
+.t-btn { flex: 1; padding: 9px 8px; border-radius: var(--rs); border: 1px solid var(--border2); background: var(--bg3); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.t-btn:active { transform: scale(0.96); }
+.t-btn.go { background: var(--green); border-color: var(--green); color: #000; }
+.presets { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.presets::-webkit-scrollbar { display: none; }
+.pre-btn { flex-shrink: 0; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text3); font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.pre-btn.on { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+
+/* DAY TABS */
+.day-scroll { display: flex; overflow-x: auto; gap: 6px; padding: 10px 16px 8px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+.day-scroll::-webkit-scrollbar { display: none; }
+.d-tab { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text3); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.d-tab.on { background: var(--text); color: #000; border-color: var(--text); font-weight: 700; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 16px; }
+.stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rs); padding: 10px 12px; }
+.stat-l { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.stat-v { font-size: 17px; font-weight: 700; }
+.stat-v.g { color: var(--green); }
+
+/* EXERCISES */
+.exwrap { padding: 0 16px; }
+.sec-head { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin: 14px 0 8px; }
+
+/* SUPERSET BADGE */
+.ss-badge { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.ss-line { flex: 1; height: 1px; background: var(--amber-border); }
+.ss-label { font-size: 10px; color: var(--amber); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.ex-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 8px; overflow: hidden; transition: border-color 0.2s; }
+.ex-card.open { border-color: var(--border2); }
+.ex-card.ss-card { border-left: 2px solid var(--amber-border); }
+
+.ex-hdr { display: flex; align-items: center; padding: 13px 13px 11px; cursor: pointer; gap: 10px; }
+.ex-badge { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text3); flex-shrink: 0; }
+.ex-badge.ss { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
+.ex-info { flex: 1; min-width: 0; }
+.ex-name { font-size: 14px; font-weight: 600; line-height: 1.2; }
+.ex-focus { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.ex-ring { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
+.ex-ring svg { transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: var(--bg3); stroke-width: 3; }
+.ring-fill { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 82; stroke-dashoffset: 82; transition: stroke-dashoffset 0.4s ease; }
+.ring-lbl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--text3); }
+.chevron { font-size: 16px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; }
+.ex-card.open .chevron { transform: rotate(180deg); }
+
+/* BODY */
+.ex-body { display: none; border-top: 1px solid var(--border); }
+.ex-card.open .ex-body { display: block; }
+
+/* CUES */
+.cues { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 11px 13px; }
+.cue-tabs { display: flex; gap: 5px; margin-bottom: 8px; }
+.c-tab { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text3); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.c-tab.on { background: var(--bg4); color: var(--text2); border-color: var(--border2); }
+.cue-txt { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.cue-txt.hide { display: none; }
+
+/* SETS */
+.sets-wrap { padding: 11px 13px; }
+.sets-hdr { display: grid; grid-template-columns: 54px 1fr 1fr 1fr 38px; gap: 5px; margin-bottom: 5px; }
+.sets-hdr span { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+.sets-hdr span:first-child { text-align: left; }
+.set-row { display: grid; grid-template-columns: 54px 1fr 1fr 1fr 38px; gap: 5px; align-items: center; margin-bottom: 5px; }
+.set-tag { font-size: 11px; color: var(--text3); }
+.s-in { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rs); padding: 8px 3px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; width: 100%; -moz-appearance: textfield; }
+.s-in::-webkit-outer-spin-button, .s-in::-webkit-inner-spin-button { -webkit-appearance: none; }
+.s-in:focus { outline: none; border-color: var(--border2); }
+.s-in.pre { color: var(--text3); font-weight: 400; }
+.s-in.mod { color: var(--amber); border-color: var(--amber-border); }
+.tick { width: 34px; height: 34px; border-radius: var(--rs); border: 1px solid var(--border); background: transparent; color: transparent; font-size: 16px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+.tick:active { transform: scale(0.9); }
+.tick.done { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+
+/* REST ROW */
+.rest-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 13px; background: var(--bg3); border-top: 1px solid var(--border); }
+.rest-txt { font-size: 11px; color: var(--text3); }
+.rest-go { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; }
+
+/* HISTORY */
+.hist-wrap { padding: 10px 13px 13px; border-top: 1px solid var(--border); }
+.hist-title { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; }
+.hist-row { font-size: 11px; color: var(--text3); margin-bottom: 3px; line-height: 1.5; }
+.hist-row span { color: var(--text2); }
+.hist-empty { font-size: 11px; color: var(--text3); font-style: italic; }
+
+/* FINISH */
+.finish-area { padding: 14px 16px; }
+.fin-btn { width: 100%; padding: 14px; border-radius: var(--r); border: none; background: var(--green); color: #000; font-size: 15px; font-weight: 700; cursor: pointer; }
+.fin-btn:active { transform: scale(0.98); }
+
+/* DONE */
+.done-wrap { display: none; text-align: center; padding: 50px 20px; }
+.done-wrap.show { display: block; }
+.done-icon { font-size: 52px; margin-bottom: 14px; }
+.done-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.done-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.done-back { margin-top: 20px; padding: 12px 24px; border-radius: var(--r); border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 14px; cursor: pointer; }
+
+/* MODAL */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200; align-items: flex-end; }
+.overlay.show { display: flex; }
+.modal { background: var(--bg2); border-radius: var(--r) var(--r) 0 0; border: 1px solid var(--border); padding: 18px 16px 36px; width: 100%; max-height: 75vh; overflow-y: auto; }
+.modal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.modal-hdr h3 { font-size: 16px; font-weight: 700; }
+.modal-close { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rs); padding: 5px 12px; font-size: 12px; color: var(--text2); cursor: pointer; }
+.h-entry { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rs); padding: 10px 12px; margin-bottom: 8px; }
+.h-date { font-size: 11px; color: var(--text2); font-weight: 600; margin-bottom: 5px; }
+.h-sets { font-size: 11px; color: var(--text3); line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-left">
+    <h1 id="nav-title">Workout Tracker</h1>
+    <div class="date" id="nav-date"></div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="openHistory()">📋 History</button>
+    <button class="nav-btn" onclick="clearDay()">↺ Reset</button>
+  </div>
+</div>
+
+<div class="timer-section">
+  <div class="timer-row">
+    <div class="timer-dig idle" id="tdig">2:30</div>
+    <div class="timer-btns">
+      <button class="t-btn go" id="t-start" onclick="toggleTimer()">▶ Start</button>
+      <button class="t-btn" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="presets" id="presets">
+    <button class="pre-btn on" onclick="setPre(150)">2:30</button>
+    <button class="pre-btn" onclick="setPre(120)">2:00</button>
+    <button class="pre-btn" onclick="setPre(90)">1:30</button>
+    <button class="pre-btn" onclick="setPre(60)">1:00</button>
+    <button class="pre-btn" onclick="setPre(45)">0:45</button>
+  </div>
+</div>
+
+<div class="day-scroll" id="day-tabs"></div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-l">Sets</div><div class="stat-v g" id="s-sets">0/0</div></div>
+  <div class="stat"><div class="stat-l">Volume kg</div><div class="stat-v" id="s-vol">0</div></div>
+  <div class="stat"><div class="stat-l">Week</div><div class="stat-v" id="s-week">1</div></div>
+</div>
+
+<div class="exwrap" id="exwrap"></div>
+
+<div class="finish-area" id="finish-area">
+  <button class="fin-btn" onclick="finishDay()">✓ Finish Workout</button>
+</div>
+
+<div class="done-wrap" id="done-wrap">
+  <div class="done-icon">💪</div>
+  <div class="done-title">Session Complete!</div>
+  <div class="done-sub" id="done-sub"></div>
+  <button class="done-back" onclick="backFromDone()">← Back to program</button>
+</div>
+
+<div class="overlay" id="hist-modal" onclick="maybeClose(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3 id="hist-title">History</h3>
+      <button class="modal-close" onclick="closeHistory()">✕ Close</button>
+    </div>
+    <div id="hist-body"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// PROGRAM — 6 days, 6 exercises + 1 superset
+// ══════════════════════════════════════════
+const P = [
+  // ── DAY 1 ──────────────────────────────
+  { id:'d1', label:'Day 1', title:'Chest & Triceps',
+    note: 'Face pull warm-up: 2×15 light before pressing to prime rotator cuff.',
+    sections:[
+      { name:'Chest', items:[
+        { id:'d1_inc_bp', ss:false, name:'Incline Barbell Press', focus:'Upper chest — primary compound',
+          rest:150,
+          form:'Set bench 30–45°. Retract scapula, slight arch. Bar path to upper chest. Elbows at 45° — not flared. 2 sec controlled descent. Unrack with your chest not shoulders.',
+          mmc:'Imagine pushing the ceiling away with your upper chest only. Feel the deep stretch at the bottom. If you feel it in your front delt, the bench is too steep.',
+          sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:65,r:8},{t:'Set 2',kg:65,r:8},{t:'Set 3',kg:62.5,r:10},{t:'Set 4',kg:60,r:12}]
+        },
+        { id:'d1_flat_bp', ss:false, name:'Flat Bench Press', focus:'Mid chest — compound',
+          rest:120,
+          form:'Grip just outside shoulder width. Lower bar to mid-chest / sternum line. Elbows at 45°. Scapula pinched throughout. Drive through the chest not shoulders.',
+          mmc:'Before unracking, squeeze shoulder blades together like cracking a walnut — hold that the entire set. This locks the chest as prime mover.',
+          sets:[{t:'Set 1',kg:65,r:10},{t:'Set 2',kg:65,r:10},{t:'Set 3',kg:60,r:12}]
+        },
+        { id:'d1_inc_fly', ss:false, name:'Incline Cable Fly', focus:'Upper chest — stretch overload',
+          rest:75,
+          form:'Bench at 30° between low cables. Slight fixed elbow bend. Palms up. Wide arc from low to together above chest. Control the return slowly — the stretch IS the stimulus.',
+          mmc:'Think hugging a giant tree. The deep stretch at the bottom is what drives growth. Don\'t rush through it — pause 1 sec at full stretch every rep.',
+          sets:[{t:'Set 1',kg:15,r:12},{t:'Set 2',kg:15,r:12},{t:'Set 3',kg:12,r:15}]
+        },
+        { id:'d1_crossover', ss:false, name:'Cable Crossover (Low-to-High)', focus:'Upper chest — peak contraction',
+          rest:60,
+          form:'Cables set LOW. Stand centre, slight forward lean. Bring hands UP and together in an upward arc to chest height. Squeeze hard at peak. Slow controlled return.',
+          mmc:'The upward arc targets the upper chest fibres specifically. Feel the contraction at the top of your pec. Hands can cross slightly at the peak.',
+          sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]
+        }
+      ]},
+      { name:'Triceps', items:[
+        { id:'d1_rope_push', ss:true, ssLabel:'Superset — do both back to back, rest after second', name:'Rope Pushdown', focus:'Lateral head — most visible',
+          rest:120,
+          form:'Elbows pinned at sides. Grip rope thumbs up. Push down and FLARE rope outward at bottom. Full extension. Slow return. Elbows never move.',
+          mmc:'The flare at the bottom fully contracts the lateral head — without it you get partial activation. "Spread the rope apart" at the bottom of every single rep.',
+          sets:[{t:'Warm-up',kg:30,r:15},{t:'Set 1',kg:52.5,r:10},{t:'Set 2',kg:52.5,r:10},{t:'Set 3',kg:47.5,r:12}]
+        },
+        { id:'d1_bar_push', ss:true, ssLabel:'', name:'Straight Bar Pushdown', focus:'Medial head — makes arm look full',
+          rest:120,
+          form:'Overhand grip straight bar. Elbows pinned. Wrists NEUTRAL — don\'t curl under. Full extension at bottom. Slow return. Go directly from rope pushdown with no rest.',
+          mmc:'Medial head shows when arm is hanging at rest — it fills out the tricep. Squeeze hard at full extension. Last set to failure.',
+          sets:[{t:'Set 1',kg:45,r:12},{t:'Set 2',kg:45,r:12},{t:'Set 3',kg:40,r:20}]
+        }
+      ]}
+    ]
+  },
+
+  // ── DAY 2 ──────────────────────────────
+  { id:'d2', label:'Day 2', title:'Back & Biceps',
+    note: '',
+    sections:[
+      { name:'Back', items:[
+        { id:'d2_pullups', ss:false, name:'Pull-Ups', focus:'Lat width — primary compound',
+          rest:150,
+          form:'Dead hang start. Pull elbows DOWN and BACK. Chest toward bar. Lower slowly 3 sec. Use minimum assistance needed for clean reps.',
+          mmc:'Don\'t think "pull with arms". Think "drive elbows into your back pockets". Lats are the engine — arms are just hooks.',
+          sets:[{t:'Set 1',kg:0,r:6},{t:'Set 2',kg:0,r:5},{t:'Set 3',kg:0,r:5}]
+        },
+        { id:'d2_lat_pull', ss:false, name:'Lat Pulldown', focus:'Lat width — volume',
+          rest:120,
+          form:'Slight lean back 15°. Pull bar to upper chest — not chin. Lead with elbows. Full stretch at top — let shoulder blades rise. Squeeze lats at bottom.',
+          mmc:'Hands are hooks. At the top feel your lats stretched like wings before pulling. At the bottom feel the lat contracted against your side.',
+          sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:70,r:10},{t:'Set 2',kg:70,r:10},{t:'Set 3',kg:65,r:12}]
+        },
+        { id:'d2_cable_row', ss:false, name:'Seated Cable Row', focus:'Mid back thickness + lower lat',
+          rest:90,
+          form:'Sit tall. Full forward stretch between reps — let scapula protract. Pull handle to lower sternum. Drive elbows back. Don\'t rock the torso.',
+          mmc:'Two distinct positions each rep: full stretch forward (lats lengthened) → full contraction (scapula retracted). Not a swing — two deliberate positions.',
+          sets:[{t:'Set 1',kg:55,r:12},{t:'Set 2',kg:55,r:12},{t:'Set 3',kg:50,r:15}]
+        },
+        { id:'d2_shrugs', ss:true, ssLabel:'Superset — shrugs then immediately curl, rest after curl',name:'Barbell Shrugs', focus:'Traps — visible from all angles',
+          rest:90,
+          form:'Bar in front. Lift shoulders straight UP — not forward, not circles. Hold at top 1 sec. Full drop to hang. No body momentum whatsoever.',
+          mmc:'Try to touch your ears with your shoulders. The hold at the top is non-negotiable — swinging the weight skips the contraction entirely.',
+          sets:[{t:'Set 1',kg:80,r:12},{t:'Set 2',kg:80,r:12},{t:'Set 3',kg:70,r:15}]
+        },
+        { id:'d2_bar_curl', ss:true, ssLabel:'', name:'Barbell Curl', focus:'Bicep overall mass — primary',
+          rest:90,
+          form:'Elbows pinned at sides. Curl to full contraction. Supinate wrists as you curl. Lower to FULL extension. No body swing.',
+          mmc:'At the top turn pinkies up toward ceiling — peak supination hits the short head fully. Full extension at the bottom stretches the long head. Both ends matter.',
+          sets:[{t:'Warm-up',kg:15,r:15},{t:'Set 1',kg:25,r:10},{t:'Set 2',kg:25,r:10},{t:'Set 3',kg:22.5,r:12}]
+        },
+        { id:'d2_hammer', ss:false, name:'Hammer Curl', focus:'Brachialis — pushes bicep peak up',
+          rest:75,
+          form:'Neutral grip (thumbs forward) throughout — do NOT supinate. Curl to shoulder height. Elbows stay at sides. Full extension each rep.',
+          mmc:'The brachialis sits under the bicep and physically lifts it. Feel the outer side of your upper arm working — that\'s the brachialis. Not the bicep belly.',
+          sets:[{t:'Set 1',kg:14,r:12},{t:'Set 2',kg:14,r:12},{t:'Set 3',kg:12,r:15}]
+        }
+      ]}
+    ]
+  },
+
+  // ── DAY 3 ──────────────────────────────
+  { id:'d3', label:'Day 3', title:'Shoulders & Legs',
+    note: 'Face pull warm-up: 2×15 light before pressing.',
+    sections:[
+      { name:'Shoulders', items:[
+        { id:'d3_ohp', ss:false, name:'Overhead Press', focus:'Front + side delt — primary compound',
+          rest:150,
+          form:'Grip just outside shoulder width. Bar from clavicle. Press in a slight arc upward and back. Full lockout. Don\'t flare elbows at 90°. Control the lowering.',
+          mmc:'Think "press the ceiling away". At lockout shrug slightly to fully stabilise. Side delt fires more as arm moves away from body.',
+          sets:[{t:'Warm-up',kg:30,r:15},{t:'Set 1',kg:47.5,r:8},{t:'Set 2',kg:47.5,r:8},{t:'Set 3',kg:42.5,r:10},{t:'Set 4',kg:40,r:12}]
+        },
+        { id:'d3_lat_raise', ss:true, ssLabel:'Superset — lateral raise then immediately rear delt fly, rest after fly',name:'Lateral Raise', focus:'Side delt — shoulder width',
+          rest:75,
+          form:'Slight forward lean. Slight fixed elbow bend. Lead with ELBOWS not hands. Raise to just above shoulder height. Tilt pinky up at top. 3 sec controlled lowering.',
+          mmc:'Slow lowering is where the side delt works hardest. Don\'t drop the weight. Feel the burn on the outer shoulder — if you feel it in traps you\'re shrugging.',
+          sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]
+        },
+        { id:'d3_rear_delt', ss:true, ssLabel:'', name:'Bent Over Rear Delt Fly', focus:'Rear delt — hypertrophy specific',
+          rest:75,
+          form:'Hinge at hips 45°. Arms hang down. Raise dumbbells in arc to shoulder height. Lead with elbows going back. Thumbs pointing DOWN increases rear delt activation. Squeeze at top.',
+          mmc:'Imagine spreading wings. Lead elbows back and up. Feel the contraction at the BACK of the shoulder — not in your traps or upper back. If traps dominate, go lighter.',
+          sets:[{t:'Set 1',kg:8,r:15},{t:'Set 2',kg:8,r:15},{t:'Set 3',kg:6,r:20}]
+        }
+      ]},
+      { name:'Legs', items:[
+        { id:'d3_squat', ss:false, name:'Barbell Back Squat', focus:'Quads + glutes — king of leg exercises',
+          rest:180,
+          form:'Bar on upper traps. Feet shoulder width, toes 30° out. Break hips and knees simultaneously. Parallel or below. Drive knees out over toes. Press through heels.',
+          mmc:'At the bottom "spread the floor apart with your feet" — this fires the glutes. Drive hips through on the way up. Quads on the way down, glutes on the way up.',
+          sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:80,r:8},{t:'Set 2',kg:80,r:8},{t:'Set 3',kg:75,r:10},{t:'Set 4',kg:70,r:12}]
+        },
+        { id:'d3_hack_squat', ss:false, name:'Hack Squat (Feet High & Wide)', focus:'Glutes — dedicated isolation',
+          rest:120,
+          form:'Place feet HIGH on platform, WIDE stance, toes out. Descend deep — full range. Press through heels not toes. Control the ascent.',
+          mmc:'Higher and wider feet = more glute. Feel the back of your upper legs doing the pushing on the way up. Compare to standard leg press — completely different feel.',
+          sets:[{t:'Set 1',kg:80,r:10},{t:'Set 2',kg:80,r:10},{t:'Set 3',kg:70,r:12}]
+        },
+        { id:'d3_leg_curl', ss:true, ssLabel:'Superset — leg curl then immediately leg extension, rest after extension + calf raise',name:'Leg Curl', focus:'Hamstrings — pure antagonist pair',
+          rest:90,
+          form:'Hips flat on pad. Flex feet (dorsiflexion — toes toward shins). Curl heels to glutes. Full extension each rep. Slow controlled negative 3 sec.',
+          mmc:'Pointing toes toward your shins throughout increases hamstring activation by ~20%. Feel the pull in the back of the thigh — not the calves.',
+          sets:[{t:'Set 1',kg:40,r:12},{t:'Set 2',kg:40,r:12},{t:'Set 3',kg:35,r:15}]
+        },
+        { id:'d3_leg_ext', ss:true, ssLabel:'', name:'Leg Extension + Calf Raise (triset)', focus:'Quads + calves',
+          rest:90,
+          form:'Leg extension: extend to full lockout, hold 1 sec, 3 sec lowering. Then immediately move to calf raise: full heel drop below step, rise all the way up on big toe, hold 1 sec at top.',
+          mmc:'VMO (teardrop muscle above knee) fires only in last 15° of extension — that\'s why you hold at the top. For calves: full range + pause at peak is the only way to stimulate them.',
+          sets:[{t:'Set 1',kg:40,r:15},{t:'Set 2',kg:40,r:15},{t:'Set 3',kg:35,r:20}]
+        }
+      ]}
+    ]
+  },
+
+  // ── DAY 4 ──────────────────────────────
+  { id:'d4', label:'Day 4', title:'Chest & Triceps B',
+    note: 'Face pull warm-up: 2×15 light. Goal: beat Day 1 on incline press by 1 rep or 2.5kg.',
+    sections:[
+      { name:'Chest', items:[
+        { id:'d4_inc_bp', ss:false, name:'Incline Barbell Press', focus:'Upper chest — progressive overload vs Day 1',
+          rest:150,
+          form:'Same as Day 1. Try to add 1 rep or 2.5kg on at least one set. Log actual weight achieved.',
+          mmc:'Compare your tick marks to Day 1. Even 1 extra rep is progressive overload. That\'s the mechanism of hypertrophy.',
+          sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:65,r:8},{t:'Set 2',kg:65,r:8},{t:'Set 3',kg:62.5,r:10},{t:'Set 4',kg:60,r:12}]
+        },
+        { id:'d4_decline', ss:false, name:'Decline Press (Smith / DB)', focus:'Lower chest — was completely missing',
+          rest:120,
+          form:'Bench at 15–30° decline. Bar to lower chest. Wider grip than flat. Drive through the lower pec. Full extension but don\'t lock elbows.',
+          mmc:'Lower chest is the definition line under the pec visible from the front. Focus on feeling the base of your pec contracting and squeezing — not the middle.',
+          sets:[{t:'Set 1',kg:60,r:10},{t:'Set 2',kg:60,r:10},{t:'Set 3',kg:55,r:12}]
+        },
+        { id:'d4_high_low', ss:false, name:'Cable Crossover (High-to-Low)', focus:'Lower chest — isolation',
+          rest:75,
+          form:'Cables set HIGH. Stand centre, lean slightly forward. Bring hands DOWN and together in downward arc to hip level. Elbows slightly bent. Squeeze at bottom — hands can cross.',
+          mmc:'Downward arc specifically activates lower chest fibres. Feel the contraction at the base of your pec. Slow return — don\'t let cables snap back.',
+          sets:[{t:'Set 1',kg:12,r:15},{t:'Set 2',kg:12,r:15},{t:'Set 3',kg:10,r:20}]
+        },
+        { id:'d4_pec_deck', ss:false, name:'Pec Deck (Machine Fly)', focus:'Inner chest — peak contraction',
+          rest:60,
+          form:'Sit upright, chest against pad. Bring arms together — pause and squeeze HARD at peak. Control return to full stretch. Don\'t let weight stack touch between reps.',
+          mmc:'Inner chest only fires in the fully shortened position — the squeeze at peak is the whole point. Imagine trying to crush something between your pecs.',
+          sets:[{t:'Set 1',kg:50,r:12},{t:'Set 2',kg:50,r:12},{t:'Set 3',kg:45,r:15}]
+        }
+      ]},
+      { name:'Triceps', items:[
+        { id:'d4_overhead', ss:true, ssLabel:'Superset — overhead extension then immediately straight bar, rest after bar',name:'Overhead Cable Extension', focus:'Long head — most important head for size',
+          rest:120,
+          form:'Face away from cable, rope overhead. Let hands go BACK as far as possible — full stretch. Press out to full extension. Elbows stay pointed forward throughout.',
+          mmc:'Long head ONLY gets fully stretched overhead — this exercise is irreplaceable for tricep size. Feel the deep stretch behind your arms before pressing. Don\'t skip it.',
+          sets:[{t:'Set 1',kg:35,r:12},{t:'Set 2',kg:35,r:12},{t:'Set 3',kg:30,r:15}]
+        },
+        { id:'d4_bar_push', ss:true, ssLabel:'', name:'Straight Bar Pushdown', focus:'Medial head — finisher',
+          rest:120,
+          form:'Same as Day 1. Go directly from overhead extension. Wrists neutral. Full extension. Last set to complete failure.',
+          mmc:'All three tricep heads are now covered this week: lateral (D1 rope), medial (D1 + D4 bar), long head (D4 overhead). Full development.',
+          sets:[{t:'Set 1',kg:45,r:12},{t:'Set 2',kg:45,r:12},{t:'Set 3',kg:40,r:20}]
+        }
+      ]}
+    ]
+  },
+
+  // ── DAY 5 ──────────────────────────────
+  { id:'d5', label:'Day 5', title:'Back & Biceps B',
+    note: 'Goal: beat Day 2 pull-ups by 1 rep per set.',
+    sections:[
+      { name:'Back', items:[
+        { id:'d5_pullups', ss:false, name:'Pull-Ups', focus:'Lat width — beat Day 2',
+          rest:150,
+          form:'Same as Day 2. Aim for 1 extra rep per set. Full dead hang start. Elbows to back pockets.',
+          mmc:'Every week, if you add 1 rep — that\'s progressive overload on the hardest back movement there is.',
+          sets:[{t:'Set 1',kg:0,r:6},{t:'Set 2',kg:0,r:5},{t:'Set 3',kg:0,r:5}]
+        },
+        { id:'d5_lat_pull', ss:false, name:'Lat Pulldown', focus:'Lat width — volume',
+          rest:120,
+          form:'Same as Day 2. Try a slightly different grip width today — medium vs wide — for different lat activation angle.',
+          mmc:'Feel which grip gives a better lat stretch at the top. The width that allows more range = the width to use.',
+          sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:70,r:10},{t:'Set 2',kg:70,r:10},{t:'Set 3',kg:65,r:12}]
+        },
+        { id:'d5_tbar_row', ss:false, name:'T-Bar / Barbell Row', focus:'Mid back thickness — mass builder',
+          rest:120,
+          form:'Hinge at hips 45°. Neutral spine — never round lower back. Pull bar to lower chest / upper abdomen. Lead with elbows past your torso. Squeeze blades together at top. 1 sec hold.',
+          mmc:'At the top of each rep try to touch shoulder blades together — hold 1 sec. That squeeze is what builds mid back thickness. Lower under control.',
+          sets:[{t:'Set 1',kg:60,r:10},{t:'Set 2',kg:60,r:10},{t:'Set 3',kg:55,r:12}]
+        },
+        { id:'d5_shrugs', ss:true, ssLabel:'Superset — shrugs then immediately incline curl, rest after curl',name:'Barbell Shrugs', focus:'Traps — second session (recover fast)',
+          rest:90,
+          form:'Same as Day 2. Straight up, 1 sec hold at top. Full hang drop.',
+          mmc:'Traps recover in 48–72 hrs. Second hit this week drives more hypertrophy. Ears to shoulders, hold every rep.',
+          sets:[{t:'Set 1',kg:80,r:12},{t:'Set 2',kg:80,r:12},{t:'Set 3',kg:70,r:15}]
+        },
+        { id:'d5_inc_curl', ss:true, ssLabel:'', name:'Incline DB Curl', focus:'Long head — best stretch position',
+          rest:90,
+          form:'Sit on 45° incline. Arms hanging BEHIND body. Curl WITHOUT moving upper arms forward. Supinate at the top. The behind-torso stretch is what makes this unique.',
+          mmc:'Long head is only fully stretched when your arm is behind your torso. Feel the deep stretch in the lower bicep before curling. You can\'t get this stretch standing.',
+          sets:[{t:'Set 1',kg:10,r:12},{t:'Set 2',kg:10,r:12},{t:'Set 3',kg:8,r:15}]
+        },
+        { id:'d5_preacher', ss:false, name:'Preacher Curl', focus:'Short head — lower bicep thickness',
+          rest:75,
+          form:'Upper arm flat on pad — eliminates all cheating. Full extension at bottom. Curl to 90° — short head loses tension past 90°. Squeeze hard at 90°.',
+          mmc:'The pad removes all momentum. Curl to 90°, squeeze hard, lower to full extension. Feel the burn in the belly of the lower bicep — not in the elbow.',
+          sets:[{t:'Set 1',kg:20,r:12},{t:'Set 2',kg:20,r:12},{t:'Set 3',kg:17.5,r:15}]
+        }
+      ]}
+    ]
+  },
+
+  // ── DAY 6 ──────────────────────────────
+  { id:'d6', label:'Day 6', title:'Shoulders & Legs B',
+    note: 'Face pull warm-up: 2×15 light before pressing.',
+    sections:[
+      { name:'Shoulders', items:[
+        { id:'d6_db_press', ss:false, name:'Dumbbell Shoulder Press', focus:'Front + side delt — full natural range',
+          rest:120,
+          form:'From ear level to full lockout. Natural wrist rotation through the arc. Don\'t lean back excessively. Control lowering — feel the stretch at the bottom.',
+          mmc:'Dumbbells allow your hands to travel a more natural arc than barbell. Feel the full stretch in both front and side delt at the bottom before pressing up.',
+          sets:[{t:'Warm-up',kg:10,r:15},{t:'Set 1',kg:22,r:10},{t:'Set 2',kg:22,r:10},{t:'Set 3',kg:20,r:12}]
+        },
+        { id:'d6_cable_lat', ss:true, ssLabel:'Superset — cable lateral then immediately bent over fly, rest after fly',name:'Cable Lateral Raise', focus:'Side delt — constant tension throughout',
+          rest:75,
+          form:'Single arm, cable at ankle on opposite side. Cross body to grab handle. Raise to shoulder height. Cable maintains tension from 0–90° unlike dumbbells.',
+          mmc:'Feel the side delt working the ENTIRE movement — not just the top half like with dumbbells. Constant tension = more total time under load per set.',
+          sets:[{t:'Set 1',kg:8,r:15},{t:'Set 2',kg:8,r:15},{t:'Set 3',kg:7,r:20}]
+        },
+        { id:'d6_rear_fly', ss:true, ssLabel:'', name:'Bent Over Rear Delt Fly', focus:'Rear delt — second session',
+          rest:75,
+          form:'Same as Day 3. Hinge 45°. Lead elbows back and up. Thumbs down. Squeeze at shoulder height.',
+          mmc:'Rear delt now hit twice this week — D3 and D6. Rear delt is typically the most underdeveloped shoulder head and needs the extra frequency.',
+          sets:[{t:'Set 1',kg:8,r:15},{t:'Set 2',kg:8,r:15},{t:'Set 3',kg:6,r:20}]
+        }
+      ]},
+      { name:'Legs', items:[
+        { id:'d6_leg_press', ss:false, name:'Leg Press (Feet High & Wide)', focus:'Glutes — foot position changes everything',
+          rest:120,
+          form:'Feet HIGH on platform, wider than shoulder width. Deep descent — full range. Press through heels. Feel glutes driving on the way up.',
+          mmc:'Same machine, different foot position = completely different muscle emphasis. High + wide = glutes. Feel the burn shift to the back of your legs.',
+          sets:[{t:'Set 1',kg:140,r:12},{t:'Set 2',kg:140,r:12},{t:'Set 3',kg:120,r:15}]
+        },
+        { id:'d6_rdl', ss:false, name:'Romanian Deadlift', focus:'Hamstrings + glutes — stretch based',
+          rest:120,
+          form:'Hip hinge — push hips BACK toward wall behind you. Slight fixed knee bend. Bar drags down thighs to mid-shin. Strong hamstring stretch. Drive hips forward to stand.',
+          mmc:'This is a hip hinge not a squat. If you feel it in your lower back you\'re rounding — reduce weight. Feel the pull from mid-thigh down to knee in the hamstrings.',
+          sets:[{t:'Set 1',kg:70,r:10},{t:'Set 2',kg:70,r:10},{t:'Set 3',kg:65,r:12}]
+        },
+        { id:'d6_calf', ss:true, ssLabel:'Superset — calf raise then immediately adductor, rest after adductor',name:'Calf Raise (Standing)', focus:'Gastrocnemius — second calf session',
+          rest:60,
+          form:'Full heel drop below step — full stretch. Rise ALL the way up on big toe. Hold 1 sec at top. Calves need extreme range and a peak hold to grow.',
+          mmc:'Calves are stubborn because they\'re used to walking. Full range + 1 sec pause at peak is the only way to stimulate new growth. Half reps do nothing.',
+          sets:[{t:'Set 1',kg:60,r:15},{t:'Set 2',kg:60,r:15},{t:'Set 3',kg:60,r:20}]
+        },
+        { id:'d6_adductor', ss:true, ssLabel:'', name:'Adductor Machine', focus:'Inner thigh — missed by all compounds',
+          rest:60,
+          form:'Full range — let legs open as wide as machine allows. Bring knees together slowly. Squeeze inner thighs hard at peak. Control the opening — don\'t let it snap back.',
+          mmc:'Inner thigh is completely untouched by squats, presses, or RDL. Feel the squeeze on the inside of the thigh. Also protects knee stability.',
+          sets:[{t:'Set 1',kg:40,r:15},{t:'Set 2',kg:40,r:15},{t:'Set 3',kg:40,r:15}]
+        }
+      ]}
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let dayIdx = 0;
+let tSec = 150, tPre = 150, tRun = false, tInt = null;
+
+function pad(n){ return String(n).padStart(2,'0'); }
+function fmt(s){ return `${Math.floor(s/60)}:${pad(s%60)}`; }
+function todayKey(){ return new Date().toISOString().split('T')[0]; }
+function sessionKey(dayId){ return `wt_s_${dayId}_${todayKey()}`; }
+function histKey(dayId){ return `wt_h_${dayId}`; }
+function weekNum(){
+  let s = localStorage.getItem('wt_start');
+  if(!s){ s = new Date().toISOString(); localStorage.setItem('wt_start',s); }
+  return Math.floor((new Date()-new Date(s))/(7*86400000))+1;
+}
+function loadSess(id){ try{ return JSON.parse(localStorage.getItem(sessionKey(id))||'{}'); }catch(e){ return {}; } }
+function saveSess(id,d){ localStorage.setItem(sessionKey(id),JSON.stringify(d)); }
+function loadHist(id){ try{ return JSON.parse(localStorage.getItem(histKey(id))||'[]'); }catch(e){ return []; } }
+function saveHist(id,entry){ const h=loadHist(id); h.unshift(entry); if(h.length>8)h.pop(); localStorage.setItem(histKey(id),JSON.stringify(h)); }
+
+// ══════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════
+function updateTdig(){
+  const el = document.getElementById('tdig');
+  if(tSec<=0){ el.textContent='GO!'; el.className='timer-dig done'; }
+  else if(tSec<=10){ el.textContent=fmt(tSec); el.className='timer-dig warn'; }
+  else{ el.textContent=fmt(tSec); el.className=tRun?'timer-dig running':'timer-dig idle'; }
+}
+function setPre(s){
+  clearInterval(tInt); tRun=false; tPre=s; tSec=s; updateTdig();
+  document.getElementById('t-start').textContent='▶ Start';
+  document.querySelectorAll('.pre-btn').forEach(b=>{
+    b.classList.toggle('on', parseInt(b.textContent.split(':').reduce((a,v,i)=>a+(i?+v:+v*60),0))===s);
+  });
+}
+function toggleTimer(){
+  const btn=document.getElementById('t-start');
+  if(tRun){ clearInterval(tInt); tRun=false; btn.textContent='▶ Resume'; }
+  else{
+    tRun=true; btn.textContent='⏸ Pause';
+    tInt=setInterval(()=>{
+      tSec--; updateTdig();
+      if(tSec<=0){ clearInterval(tInt); tRun=false; btn.textContent='▶ Start'; if(navigator.vibrate)navigator.vibrate([200,100,200]); }
+    },1000);
+  }
+}
+function resetTimer(){ clearInterval(tInt); tRun=false; tSec=tPre; updateTdig(); document.getElementById('t-start').textContent='▶ Start'; }
+function kickTimer(s){
+  clearInterval(tInt); tRun=false; tPre=s; tSec=s; updateTdig();
+  document.getElementById('t-start').textContent='▶ Start';
+  document.querySelectorAll('.pre-btn').forEach(b=>{ b.classList.toggle('on', parseInt(b.textContent.split(':').reduce((a,v,i)=>a+(i?+v:+v*60),0))===s); });
+  toggleTimer();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════
+// BUILD UI
+// ══════════════════════════════════════════
+function buildTabs(){
+  const c=document.getElementById('day-tabs'); c.innerHTML='';
+  P.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='d-tab'+(i===dayIdx?' on':'');
+    b.textContent=`${d.label}: ${d.title}`;
+    b.onclick=()=>switchDay(i);
+    c.appendChild(b);
+  });
+}
+function switchDay(i){ dayIdx=i; buildTabs(); renderDay(); }
+
+function renderDay(){
+  const day=P[dayIdx];
+  document.getElementById('nav-title').textContent=`${day.label} — ${day.title}`;
+  document.getElementById('s-week').textContent=weekNum();
+  document.getElementById('done-wrap').classList.remove('show');
+  document.getElementById('finish-area').style.display='block';
+  const wrap=document.getElementById('exwrap'); wrap.innerHTML='';
+  const sess=loadSess(day.id);
+  if(day.note){
+    const n=document.createElement('div');
+    n.style.cssText='margin:10px 0 4px;padding:8px 12px;background:var(--blue-bg);border:1px solid #1e3a5f;border-radius:var(--rs);font-size:11px;color:#93c5fd;line-height:1.5;';
+    n.textContent='📌 ' + day.note;
+    wrap.appendChild(n);
+  }
+  day.sections.forEach(sec=>{
+    const sh=document.createElement('div'); sh.className='sec-head'; sh.textContent=sec.name; wrap.appendChild(sh);
+    let prevWasSS=false;
+    sec.items.forEach((ex,ei)=>{
+      if(ex.ss && ex.ssLabel){
+        const badge=document.createElement('div'); badge.className='ss-badge';
+        badge.innerHTML=`<div class="ss-line"></div><div class="ss-label">⚡ ${ex.ssLabel}</div><div class="ss-line"></div>`;
+        wrap.appendChild(badge);
+      }
+      wrap.appendChild(buildCard(ex,sess,day.id));
+    });
+  });
+  updateStats();
+}
+
+function buildCard(ex,sess,dayId){
+  const card=document.createElement('div');
+  card.className='ex-card'+(ex.ss?' ss-card':'');
+  card.id='c-'+ex.id;
+  const tot=ex.sets.length;
+  const done=ex.sets.filter((_,i)=>sess[ex.id+'_done_'+i]).length;
+  const off=Math.round(82-(done/tot)*82);
+  const hist=getExHist(ex.id,dayId);
+  card.innerHTML=`
+    <div class="ex-hdr" onclick="toggle('${ex.id}')">
+      <div class="ex-badge${ex.ss?' ss':''}">${ex.ss?'SS':tot}</div>
+      <div class="ex-info">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-focus">${ex.focus}</div>
+      </div>
+      <div class="ex-ring">
+        <svg viewBox="0 0 34 34" width="34" height="34">
+          <circle class="ring-track" cx="17" cy="17" r="13"/>
+          <circle class="ring-fill" cx="17" cy="17" r="13" style="stroke-dashoffset:${off}"/>
+        </svg>
+        <div class="ring-lbl">${done}/${tot}</div>
+      </div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="ex-body" id="b-${ex.id}">
+      <div class="cues">
+        <div class="cue-tabs">
+          <button class="c-tab on" onclick="showCue(event,'${ex.id}','form')">Form</button>
+          <button class="c-tab" onclick="showCue(event,'${ex.id}','mmc')">Mind-Muscle</button>
+        </div>
+        <div class="cue-txt" id="cf-${ex.id}">${ex.form}</div>
+        <div class="cue-txt hide" id="cm-${ex.id}">${ex.mmc}</div>
+      </div>
+      <div class="sets-wrap">
+        <div class="sets-hdr"><span></span><span>Target</span><span>Actual kg</span><span>Reps</span><span></span></div>
+        ${ex.sets.map((s,i)=>{
+          const aKg=sess[ex.id+'_kg_'+i]!==undefined?sess[ex.id+'_kg_'+i]:s.kg;
+          const aR=sess[ex.id+'_r_'+i]!==undefined?sess[ex.id+'_r_'+i]:s.r;
+          const isDone=sess[ex.id+'_done_'+i]||false;
+          const modKg=aKg!==s.kg;
+          const modR=aR!==s.r;
+          return `<div class="set-row" id="sr-${ex.id}-${i}">
+            <span class="set-tag">${s.t}</span>
+            <input class="s-in pre" type="number" value="${s.kg}" readonly step="2.5">
+            <input class="s-in${modKg?' mod':''}" type="number" value="${aKg}" step="2.5" min="0"
+              onchange="logKg('${dayId}','${ex.id}',${i},this.value,${s.kg})" onfocus="this.select()">
+            <input class="s-in${modR?' mod':''}" type="number" value="${aR}" step="1" min="0"
+              onchange="logR('${dayId}','${ex.id}',${i},this.value,${s.r})" onfocus="this.select()">
+            <button class="tick${isDone?' done':''}" id="tk-${ex.id}-${i}"
+              onclick="tickSet('${dayId}','${ex.id}',${i},${ex.rest})">${isDone?'✓':''}</button>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="rest-row">
+        <span class="rest-txt">⏱ Rest: ${fmt(ex.rest)}</span>
+        <button class="rest-go" onclick="kickTimer(${ex.rest})">Start rest ↑</button>
+      </div>
+      <div class="hist-wrap">
+        <div class="hist-title">Previous sessions</div>
+        ${hist.length===0
+          ? '<div class="hist-empty">No history yet</div>'
+          : hist.map(h=>`<div class="hist-row">${h.date} — <span>${h.sets.filter(s=>s.done).map(s=>`${s.kg}×${s.r}`).join('  ')}</span></div>`).join('')
+        }
+      </div>
+    </div>`;
+  return card;
+}
+
+function getExHist(exId,dayId){
+  const h=loadHist(dayId);
+  return h.map(entry=>({ date:entry.date, sets:(entry.sets&&entry.sets[exId])||[] })).filter(e=>e.sets.some(s=>s.done)).slice(0,3);
+}
+
+function toggle(id){
+  const card=document.getElementById('c-'+id);
+  card.classList.toggle('open');
+}
+function showCue(e,id,type){
+  document.getElementById('cf-'+id).classList.toggle('hide',type!=='form');
+  document.getElementById('cm-'+id).classList.toggle('hide',type!=='mmc');
+  e.currentTarget.closest('.cue-tabs').querySelectorAll('.c-tab').forEach(t=>t.classList.remove('on'));
+  e.currentTarget.classList.add('on');
+}
+
+// ══════════════════════════════════════════
+// LOGGING
+// ══════════════════════════════════════════
+function logKg(dayId,exId,i,val,pre){
+  const s=loadSess(dayId); s[exId+'_kg_'+i]=parseFloat(val); saveSess(dayId,s);
+  const inp=document.querySelectorAll(`#sr-${exId}-${i} .s-in:not(.pre)`)[0];
+  if(inp) inp.className='s-in'+(parseFloat(val)!==pre?' mod':'');
+  updateStats();
+}
+function logR(dayId,exId,i,val,pre){
+  const s=loadSess(dayId); s[exId+'_r_'+i]=parseInt(val); saveSess(dayId,s);
+  updateStats();
+}
+function tickSet(dayId,exId,i,rest){
+  const s=loadSess(dayId); const k=exId+'_done_'+i; s[k]=!s[k]; saveSess(dayId,s);
+  const btn=document.getElementById('tk-'+exId+'-'+i);
+  btn.className='tick'+(s[k]?' done':''); btn.textContent=s[k]?'✓':'';
+  refreshRing(exId,dayId); updateStats();
+  if(s[k]) kickTimer(rest);
+}
+function refreshRing(exId,dayId){
+  const day=P[dayIdx]; let ex=null;
+  for(const sec of day.sections) for(const e of sec.items) if(e.id===exId) ex=e;
+  if(!ex) return;
+  const s=loadSess(dayId);
+  const done=ex.sets.filter((_,i)=>s[exId+'_done_'+i]).length;
+  const off=Math.round(82-(done/ex.sets.length)*82);
+  const fill=document.querySelector(`#c-${exId} .ring-fill`);
+  const lbl=document.querySelector(`#c-${exId} .ring-lbl`);
+  if(fill) fill.style.strokeDashoffset=off;
+  if(lbl) lbl.textContent=`${done}/${ex.sets.length}`;
+}
+function updateStats(){
+  const day=P[dayIdx]; const s=loadSess(day.id);
+  let tot=0,done=0,vol=0;
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    ex.sets.forEach((set,i)=>{
+      tot++;
+      if(s[ex.id+'_done_'+i]){
+        done++;
+        const kg=s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg;
+        const r=s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r;
+        vol+=kg*r;
+      }
+    });
+  }));
+  document.getElementById('s-sets').textContent=`${done}/${tot}`;
+  document.getElementById('s-vol').textContent=Math.round(vol).toLocaleString('en-IN');
+}
+
+function clearDay(){
+  if(!confirm('Reset today\'s session for this day?')) return;
+  localStorage.removeItem(sessionKey(P[dayIdx].id));
+  renderDay();
+}
+
+function finishDay(){
+  const day=P[dayIdx]; const s=loadSess(day.id);
+  const sets={};
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    sets[ex.id]=ex.sets.map((set,i)=>({
+      kg:s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg,
+      r:s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r,
+      done:s[ex.id+'_done_'+i]||false
+    }));
+  }));
+  saveHist(day.id,{date:todayKey(),sets});
+  let done=0,tot=0,vol=0;
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    ex.sets.forEach((set,i)=>{
+      tot++;
+      if(s[ex.id+'_done_'+i]){
+        done++;
+        const kg=s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg;
+        const r=s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r;
+        vol+=kg*r;
+      }
+    });
+  }));
+  document.getElementById('exwrap').innerHTML='';
+  document.getElementById('finish-area').style.display='none';
+  const dw=document.getElementById('done-wrap'); dw.classList.add('show');
+  document.getElementById('done-sub').textContent=`${done} sets completed · ${Math.round(vol).toLocaleString('en-IN')} kg volume · Week ${weekNum()}`;
+}
+function backFromDone(){ renderDay(); }
+
+// ══════════════════════════════════════════
+// HISTORY MODAL
+// ══════════════════════════════════════════
+function openHistory(){
+  const day=P[dayIdx];
+  document.getElementById('hist-title').textContent=`${day.label} — History`;
+  const hist=loadHist(day.id);
+  const body=document.getElementById('hist-body');
+  if(!hist.length){ body.innerHTML='<p style="font-size:13px;color:var(--text3)">No sessions saved yet for this day.</p>'; }
+  else{
+    body.innerHTML=hist.map(h=>{
+      const rows=Object.entries(h.sets||{}).map(([exId,sets])=>{
+        let name=exId;
+        for(const d of P) for(const s of d.sections) for(const e of s.items) if(e.id===exId) name=e.name;
+        const done=sets.filter(s=>s.done).map(s=>`${s.kg}×${s.r}`).join('  ');
+        return done?`<div>${name}: ${done}</div>`:'';
+      }).filter(Boolean).join('');
+      return `<div class="h-entry"><div class="h-date">${h.date}</div><div class="h-sets">${rows||'No sets logged'}</div></div>`;
+    }).join('');
+  }
+  document.getElementById('hist-modal').classList.add('show');
+}
+function closeHistory(){ document.getElementById('hist-modal').classList.remove('show'); }
+function maybeClose(e){ if(e.target===document.getElementById('hist-modal')) closeHistory(); }
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.getElementById('nav-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+buildTabs();
+renderDay();
+</script>
+</body>
+</html>
