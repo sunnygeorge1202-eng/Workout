@@ -1821,13 +1821,6 @@ function maybeClose(e,id){if(e.target===document.getElementById(id))closeModal(i
 // ═══════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════
-const user=getUser();
-if(user){
-  document.getElementById('onboard').style.display='none';
-  initApp();
-} else {
-  document.getElementById('onboard').style.display='flex';
-}
 
 
 // ═══ SETUP DATA ═══
@@ -2672,6 +2665,16 @@ function renderSetupTab(exId) {
     </div>
   </div>
 </div>`;
+}
+
+
+
+const user=getUser();
+if(user){
+  document.getElementById('onboard').style.display='none';
+  initApp();
+} else {
+  document.getElementById('onboard').style.display='flex';
 }
 
 </script>
