@@ -882,441 +882,19 @@ side_plank:{title:'Side Plank — Athlean-X',url:'https://www.youtube.com/watch?
 hollow_hold:{title:'Hollow Body Hold — Athlean-X',url:'https://www.youtube.com/watch?v=p7HQOoq7X04',cue:'Rib tuck at 0:55'},
 inc_db_press:{title:'Incline DB Press — Jeff Nippard',url:'https://www.youtube.com/watch?v=8iPEnn-ltC8',cue:'Natural arc at 1:15'},
 cross_horizontal:{title:'Cable Crossover — Athlean-X',url:'https://www.youtube.com/watch?v=taI4XduLpTk',cue:'Chest height at 0:55'},
+hip_thrust:{title:'Barbell Hip Thrust — Athlean-X',url:'https://www.youtube.com/watch?v=xDmFkJxPzeM',cue:'Hip crease pad placement at 1:15'},
+calf_seated:{title:'Seated Calf Raise — Athlean-X',url:'https://www.youtube.com/watch?v=JbyjNymZOt0',cue:'Soleus vs gastroc at 0:55'},
+hammer:{title:'Hammer Curl — Jeff Nippard',url:'https://www.youtube.com/watch?v=TwD-YGVP4Bk',cue:'Brachialis cue at 0:50'},
+machine_press:{title:'Machine Chest Press — Athlean-X',url:'https://www.youtube.com/watch?v=xMaFbZBOzbs',cue:'Seat height setup at 0:45'},
+face_pull:{title:'Face Pull — Jeff Nippard',url:'https://www.youtube.com/watch?v=rep-qVOkqgk',cue:'External rotation at 1:30'},
 };
 const EX_SVG={
-d1_inc_bp:'press',d1_flat_bp:'press',d1_cross_lth:'fly',d1_pec_deck:'fly',d1_cgbp:'press',d1_overhead_ext:'pushdown',d1_rope_push:'pushdown',d1_cable_crunch:'abs_crunch',d1_leg_raise:'abs_leg',
-d2_pullups:'latpull',d2_lat_pull:'latpull',d2_tbar:'row',d2_cable_row:'row',d2_shrugs:'shrug',d2_bar_curl:'curl',d2_inc_curl:'curl',d2_pallof:'abs_crunch',d2_ab_wheel:'abs_crunch',
-d3_ohp:'ohp',d3_lat_raise:'ohp',d3_front_raise:'ohp',d3_rear_fly:'row',d3_preacher:'curl',d3_bar_push:'pushdown',d3_decline_crunch:'abs_crunch',d3_russian_twist:'abs_crunch',
-d4_squat:'squat',d4_hack:'squat',d4_leg_curl:'legcurl',d4_leg_ext:'legcurl',d4_rdl:'rdl',d4_rev_lunge:'lunge',d4_abductor:'legcurl',d4_calf:'squat',d4_leg_raise:'abs_leg',d4_side_plank:'abs_crunch',
-d5_inc_db_press:'press',d5_single_row:'row',d5_db_press:'ohp',d5_dips:'press',d5_conc_curl:'curl',d5_goblet:'squat',d5_leg_press:'squat',d5_dead_bug:'abs_crunch',d5_hollow:'abs_crunch',
-d6_chest_row:'row',d6_cross_mid:'fly',d6_arnold:'ohp',d6_overhead_db:'pushdown',d6_ez_curl:'curl',d6_sumo:'squat',d6_leg_curl:'legcurl',d6_ab_wheel:'abs_crunch',d6_pallof:'abs_crunch'
+'d1_inc_bp':'press','d1_chest_row':'row','d1_cable_cross':'fly','d1_lat_pull':'latpull','d1_ohp':'ohp','d1_lat_raise':'ohp','d1_inc_curl':'curl','d1_overhead_ext':'pushdown','d2_squat':'squat','d2_rdl':'rdl','d2_hack_sq':'squat','d2_leg_curl':'legcurl','d2_calf_stand':'squat','d2_leg_raise':'abs_leg','d3_inc_db':'press','d3_cable_row':'row','d3_pec_deck':'fly','d3_neutral_pull':'latpull','d3_rear_fly':'row','d3_lat_raise_b':'ohp','d3_preacher':'curl','d3_rope_push':'pushdown','d4_leg_press':'squat','d4_hip_thrust':'squat','d4_lunge':'lunge','d4_leg_curl_b':'legcurl','d4_calf_seated':'squat','d4_abductor':'legcurl','d4_cable_crunch':'abs_crunch','d5_goblet':'squat','d5_cable_cross_mid':'fly','d5_single_row':'row','d5_arnold':'ohp','d5_lat_raise_c':'ohp','d5_hammer_curl':'curl','d5_overhead_db_ext':'pushdown','d6_machine_press':'press','d6_seated_row':'row','d6_face_pull':'row','d6_hammer_curl_b':'curl','d6_sumo':'squat','d6_walking_lunge':'lunge','d6_leg_curl_c':'legcurl','d6_cable_crunch_b':'abs_crunch','d6_leg_raise_b':'abs_leg'
 };
 const EX_YT={
-d1_inc_bp:'incline_bp',d1_flat_bp:'flat_bp',d1_cross_lth:'fly',d1_pec_deck:'pec_deck',d1_cgbp:'cgbp',d1_overhead_ext:'overhead_ext',d1_rope_push:'rope_push',d1_cable_crunch:'cable_crunch',d1_leg_raise:'leg_raise',
-d2_pullups:'pullups',d2_lat_pull:'lat_pull',d2_tbar:'row',d2_cable_row:'cable_row',d2_shrugs:'shrugs',d2_bar_curl:'curl',d2_inc_curl:'inc_curl',d2_pallof:'pallof',d2_ab_wheel:'ab_wheel',
-d3_ohp:'ohp',d3_lat_raise:'lat_raise',d3_front_raise:'front_raise',d3_rear_fly:'rear_delt',d3_preacher:'preacher',d3_bar_push:'bar_push',d3_decline_crunch:'decline_crunch',d3_russian_twist:'russian_twist',
-d4_squat:'squat',d4_hack:'hack_squat',d4_leg_curl:'leg_curl',d4_leg_ext:'leg_ext',d4_rdl:'rdl',d4_rev_lunge:'rev_lunge',d4_abductor:'abductor',d4_calf:'calf',d4_leg_raise:'leg_raise',d4_side_plank:'side_plank',
-d5_inc_db_press:'inc_db_press',d5_single_row:'single_row',d5_db_press:'db_press',d5_dips:'dips',d5_conc_curl:'conc_curl',d5_goblet:'goblet',d5_leg_press:'leg_press',d5_dead_bug:'dead_bug',d5_hollow:'hollow_hold',
-d6_chest_row:'chest_row',d6_cross_mid:'cross_horizontal',d6_arnold:'arnold',d6_overhead_db:'overhead_db',d6_ez_curl:'ez_curl',d6_sumo:'sumo',d6_leg_curl:'leg_curl',d6_ab_wheel:'ab_wheel',d6_pallof:'pallof'
+'d1_inc_bp':'incline_bp','d1_chest_row':'chest_row','d1_cable_cross':'fly','d1_lat_pull':'lat_pull','d1_ohp':'ohp','d1_lat_raise':'lat_raise','d1_inc_curl':'inc_curl','d1_overhead_ext':'overhead_ext','d2_squat':'squat','d2_rdl':'rdl','d2_hack_sq':'hack_squat','d2_leg_curl':'leg_curl','d2_calf_stand':'calf','d2_leg_raise':'leg_raise','d3_inc_db':'inc_db_press','d3_cable_row':'cable_row','d3_pec_deck':'pec_deck','d3_neutral_pull':'lat_pull','d3_rear_fly':'rear_delt','d3_lat_raise_b':'lat_raise','d3_preacher':'preacher','d3_rope_push':'rope_push','d4_leg_press':'leg_press','d4_hip_thrust':'hip_thrust','d4_lunge':'rev_lunge','d4_leg_curl_b':'leg_curl','d4_calf_seated':'calf_seated','d4_abductor':'abductor','d4_cable_crunch':'cable_crunch','d5_goblet':'goblet','d5_cable_cross_mid':'cross_horizontal','d5_single_row':'single_row','d5_arnold':'arnold','d5_lat_raise_c':'lat_raise','d5_hammer_curl':'hammer','d5_overhead_db_ext':'overhead_db','d6_machine_press':'machine_press','d6_seated_row':'cable_row','d6_face_pull':'face_pull','d6_hammer_curl_b':'hammer','d6_sumo':'sumo','d6_walking_lunge':'rev_lunge','d6_leg_curl_c':'leg_curl','d6_cable_crunch_b':'cable_crunch','d6_leg_raise_b':'leg_raise'
 };
-const P=[
-{id:'d1',label:'Day 1',title:'Chest + Triceps',muscle:'Chest, Triceps',
-note:'Face pull warm-up: 2x15 light before pressing — primes rotator cuff.',
-sections:[
-{name:'Chest',items:[
-{id:'d1_inc_bp',ss:false,name:'Incline Barbell Press',focus:'Upper chest — primary compound',rest:150,
-form:'Set bench 30-45°. Grip wider than shoulder width. Retract scapula — crack a walnut between shoulder blades and hold. Lower bar to upper chest in 2 sec. Elbows at 45° — not flared, not tucked. Touch lightly, drive up and slightly back.',
-pre:'Before unracking: squeeze shoulder blades together. Push chest up. Big breath and brace core. Feel the upper chest — poke it with a finger.',
-during:'Focus on the upper chest pushing the bar away. At bottom feel the full stretch across upper pec. At lockout feel the contraction — not the shoulders.',
-check:'Correct: deep stretch in upper chest at bottom, squeeze at top. Wrong: feeling front delt — bench angle is too steep, lower it.',
-sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:65,r:8},{t:'Set 2',kg:65,r:8},{t:'Set 3',kg:62.5,r:10},{t:'Set 4',kg:60,r:12}]},
-{id:'d1_flat_bp',ss:false,name:'Flat Bench Press',focus:'Mid chest — compound',rest:120,
-form:'Grip just outside shoulder width. Bar to mid-chest/sternum. Elbows 45° to torso throughout. Full lockout at top. 2 sec descent.',
-pre:'Maintain the scapula retraction from incline. Reset before unracking. Feel mid-chest — press your hand firmly against it.',
-during:'Every rep: feel the bar path in the chest not the arms. At the bottom feel the stretch across the middle pec. Drive through the chest to lockout.',
-check:'Correct: mid-chest burn, shoulders stay back. Wrong: shoulder pain or front delt dominating — reduce weight, reset scapula.',
-sets:[{t:'Set 1',kg:65,r:10},{t:'Set 2',kg:65,r:10},{t:'Set 3',kg:60,r:12}]},
-{id:'d1_cross_lth',ss:false,name:'Cable Crossover (Low-to-High)',focus:'Upper chest — stretch and peak contraction',rest:75,
-form:'Cables set LOW. Stand centre, slight forward lean. Bring hands UP and together in upward arc to chest height. Elbows slightly bent — fixed throughout. Squeeze hard at top. 3 sec return.',
-pre:'Touch your upper chest — the area just below the collarbone. That is what this targets.',
-during:'Feel the upward arc in the upper chest. At the top bring hands together and feel the upper pec contract hard. The squeeze at the top is the entire stimulus.',
-check:'Correct: feeling it near collarbone and upper pec. Wrong: feeling shoulders — hands are travelling too high.',
-sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]},
-{id:'d1_pec_deck',ss:true,ssLabel:'Superset A — pec deck then immediately crossover high-to-low, rest 60 sec after crossover',
-name:'Pec Deck (Machine Fly)',focus:'Inner chest — peak contraction',rest:60,
-form:'Sit upright, chest against pad. Bring arms together slowly. Pause and squeeze HARD at peak for 2 sec. Control return to full stretch.',
-pre:'Touch your sternum. Inner chest fibres run from there outward. That is what fires at the squeeze.',
-during:'At the peak, squeeze as hard as possible for 2 seconds. Feel the burn right in the centre of the chest between the pecs.',
-check:'Correct: burning in inner chest at the peak. Wrong: feeling it in arms — elbows are not leading the movement.',
-sets:[{t:'Set 1',kg:50,r:12},{t:'Set 2',kg:50,r:12},{t:'Set 3',kg:45,r:15}]}
-]},
-{name:'Triceps',items:[
-{id:'d1_cgbp',ss:false,name:'Close Grip Bench Press',focus:'All 3 tricep heads — heavy compound',rest:150,
-form:'Shoulder-width grip — not too narrow. Elbows tucked 45° to body. Bar to lower chest. Full lockout and squeeze triceps at top. 2 sec descent.',
-pre:'Touch the back of the upper arm — the entire horseshoe. All three heads work here. This is the squat of tricep training.',
-during:'At the top of every rep, fully lock out and squeeze the back of the arm as hard as possible for 1 second.',
-check:'Correct: feeling back of arm at lockout. Wrong: chest or front delt dominating — grip is too wide or elbows are flaring.',
-sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:60,r:8},{t:'Set 2',kg:60,r:8},{t:'Set 3',kg:57.5,r:10},{t:'Set 4',kg:55,r:12}]},
-{id:'d1_overhead_ext',ss:true,ssLabel:'Superset B — overhead extension then immediately rope pushdown, rest 90 sec',
-name:'Overhead Cable Extension',focus:'Long head — most important for tricep size',rest:90,
-form:'Face away from cable. Rope overhead. Let hands go BACK as far as possible — full long head stretch. Elbows point forward, fixed. Press to full extension. 1 sec hold.',
-pre:'Reach one arm overhead and bend the elbow — feel the deep stretch in the back of the upper arm. That is the long head. It ONLY stretches in this position.',
-during:'At the top before pressing, hold the full stretch 1 second and feel it in the back of the upper arm. Then press out. That stretch is the growth stimulus.',
-check:'Correct: deep stretch in back of upper arm overhead. Wrong: elbows flaring — they must stay pointing forward.',
-sets:[{t:'Set 1',kg:35,r:12},{t:'Set 2',kg:35,r:12},{t:'Set 3',kg:30,r:15}]},
-{id:'d1_rope_push',ss:true,ssLabel:'',
-name:'Rope Pushdown',focus:'Lateral head — the most visible tricep head',rest:90,
-form:'Elbows pinned at sides. Push down and FLARE rope outward at the bottom. Full extension. 1 sec hold. 2 sec return.',
-pre:'Touch the outer side of the back of the upper arm. That is the lateral head — what is visible when you flex.',
-during:'Every rep: at the bottom, spread the rope apart as wide as possible. Feel the contraction on the outer side of the tricep. Hold 1 second.',
-check:'Correct: feeling outer side of back of arm. Wrong: not feeling outer arm — not flaring the rope enough.',
-sets:[{t:'Set 1',kg:52.5,r:10},{t:'Set 2',kg:52.5,r:10},{t:'Set 3',kg:47.5,r:12}]}
-]},
-{name:'Abs',items:[
-{id:'d1_cable_crunch',ss:true,ssLabel:'Superset — cable crunch then immediately hanging leg raise, rest 60 sec',
-name:'Cable Crunch',focus:'Rectus abdominis — weighted for hypertrophy',rest:60,
-form:'Kneel facing cable. Rope at neck. Crunch DOWN through elbows — not pulling with hands. Hips stay fixed. Round the spine fully. Pause at the bottom.',
-pre:'Place hands on abs and do a hard crunch without weight. Feel the contraction. That is what you chase with the cable.',
-during:'Think "elbows to knees" not "hands pulling down". Hips stay still — only spine moves. Feel the rectus abdominis contract hard at the bottom.',
-check:'Correct: burn in middle of stomach. Wrong: feeling in hip flexors — hips are moving with the weight.',
-sets:[{t:'Set 1',kg:25,r:15},{t:'Set 2',kg:25,r:15},{t:'Set 3',kg:22.5,r:20}]},
-{id:'d1_leg_raise',ss:true,ssLabel:'',
-name:'Hanging Leg Raise',focus:'Lower abs and hip flexors',rest:60,
-form:'Dead hang. Raise legs to 90° or higher. Tilt pelvis BACK at the top — posterior pelvic tilt — to engage lower abs fully. Slow controlled lowering.',
-pre:'Lie on the floor. Do a posterior pelvic tilt — flatten lower back against the floor by squeezing abs. Remember this feeling.',
-during:'At the top of the raise, tilt pelvis back. Feel the lower abs contract hard. Without this tilt it is mostly hip flexors.',
-check:'Correct: burning below the belly button. Wrong: only hip flexors — add the pelvic tilt at the top.',
-sets:[{t:'Set 1',kg:0,r:12},{t:'Set 2',kg:0,r:12},{t:'Set 3',kg:0,r:15}]}
-]}
-]},
-{id:'d2',label:'Day 2',title:'Back + Biceps',muscle:'Back, Biceps, Traps',
-note:'Biceps are pre-fatigued from pulling — keep curl form strict, no swinging.',
-sections:[
-{name:'Back',items:[
-{id:'d2_pullups',ss:false,name:'Pull-Ups',focus:'Lat width — primary compound',rest:150,
-form:'Dead hang start. Elbows DOWN and BACK. Chest to bar. 3 sec lowering to dead hang. No kipping.',
-pre:'Hang and actively depress shoulder blades — pull them down. Feel the lat engage slightly. That is the muscle doing the work.',
-during:'Think "drive elbows into back pockets" not "pull with hands". At the top feel lats against sides. At dead hang feel the full lat stretch.',
-check:'Correct: lats burning, feeling stretch in dead hang. Wrong: biceps giving out first — pulling with arms not lats.',
-sets:[{t:'Set 1',kg:0,r:6},{t:'Set 2',kg:0,r:6},{t:'Set 3',kg:0,r:5}]},
-{id:'d2_lat_pull',ss:false,name:'Lat Pulldown',focus:'Lat width — volume',rest:120,
-form:'15° lean back. Bar to upper chest. Lead with elbows. Full stretch at top — shoulder blades rise. Squeeze lats at bottom.',
-pre:'Sit and reach up. Feel lats stretching. Now pull elbows down — feel them contract. That is the exact movement.',
-during:'Top: full lat stretch. Bottom: lats contracted against sides. Two distinct feelings every rep.',
-check:'Correct: lat burning from armpit down the side. Wrong: traps and biceps dominating — think elbows not hands.',
-sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:70,r:10},{t:'Set 2',kg:70,r:10},{t:'Set 3',kg:65,r:12}]},
-{id:'d2_tbar',ss:false,name:'T-Bar / Barbell Row',focus:'Mid back thickness',rest:120,
-form:'45° hinge, neutral spine. Bar to lower chest. Lead elbows past torso. Squeeze blades together at top — hold 1 sec. 2-3 sec lowering.',
-pre:'Roll shoulder blades back and together as far as they go. Feel the rhomboids and mid traps contract. That squeeze is what you hold at peak.',
-during:'At the peak of every rep, try to touch shoulder blades together. Hold for 1 second. That hold is what builds mid back thickness.',
-check:'Correct: feeling between shoulder blades. Wrong: lower back burning — rounding, reduce weight.',
-sets:[{t:'Set 1',kg:60,r:10},{t:'Set 2',kg:60,r:10},{t:'Set 3',kg:55,r:12}]},
-{id:'d2_cable_row',ss:false,name:'Seated Cable Row',focus:'Lower lat and mid back',rest:90,
-form:'Sit tall. Reach forward fully between reps — let scapula protract. Pull to lower sternum. Elbows straight back. No torso rocking.',
-pre:'Sit and reach forward as far as possible — feel lats stretching. Now pull back — feel them contracting. Full range every rep.',
-during:'Two deliberate positions: fully stretched forward, fully contracted back. Not a swing. Hold contraction for 1 second at the back.',
-check:'Correct: feeling stretch forward and squeeze back. Wrong: rocking torso — reduce weight and isolate the back.',
-sets:[{t:'Set 1',kg:55,r:12},{t:'Set 2',kg:55,r:12},{t:'Set 3',kg:50,r:15}]},
-{id:'d2_shrugs',ss:true,ssLabel:'Superset — shrugs then immediately barbell curl, rest 90 sec',
-name:'Barbell Shrugs',focus:'Traps — second hit this week',rest:90,
-form:'Straight UP — not forward, not circles. Hold at top 1-2 sec. Full drop to hang. No momentum.',
-pre:'Try to touch ears with shoulders right now without weights. Feel the traps contract. That is exactly what you recreate with the bar.',
-during:'Every rep: lift straight up, hold for 1-2 seconds, full drop. The hold is everything.',
-check:'Correct: feeling on top of the shoulder going into the neck. Wrong: shrugging forward — straight up only.',
-sets:[{t:'Set 1',kg:80,r:12},{t:'Set 2',kg:80,r:12},{t:'Set 3',kg:70,r:15}]}
-]},
-{name:'Biceps',items:[
-{id:'d2_bar_curl',ss:true,ssLabel:'Superset — barbell curl then immediately incline curl, rest 90 sec',
-name:'Barbell Curl',focus:'Overall mass — primary bicep builder',rest:90,
-form:'Elbows pinned at sides. Supinate as you curl. Full extension at bottom always. No body swing.',
-pre:'Curl your fist to shoulder with no weight and HARD supinate — turn pinky toward ceiling. Feel the bicep fully contract. That is your peak.',
-during:'At the top, turn pinkies up as far as possible — peak supination fires the short head. Full extension at the bottom stretches the long head.',
-check:'Correct: full burn across bicep when supinating. Wrong: feeling only in lower arm — not supinating at the top.',
-sets:[{t:'Warm-up',kg:15,r:15},{t:'Set 1',kg:25,r:10},{t:'Set 2',kg:25,r:10},{t:'Set 3',kg:22.5,r:12}]},
-{id:'d2_inc_curl',ss:true,ssLabel:'',
-name:'Incline Dumbbell Curl',focus:'Long head — best stretch position for peak',rest:90,
-form:'45° incline. Arms hanging BEHIND torso. Curl without elbows moving forward. Supinate at top. Full extension behind the body.',
-pre:'Lie on incline and let arms hang. Feel the deep stretch in the lower bicep. That stretch is the long head loaded — only this exercise achieves it.',
-during:'Before each curl, hold the full stretch for 1 second. Feel the long head loaded at the bottom. Curl only from the elbow — upper arm stays back.',
-check:'Correct: deep stretch in lower bicep at bottom, peak in upper bicep at top. Wrong: elbows swinging forward — lose the stretch entirely.',
-sets:[{t:'Set 1',kg:12,r:10},{t:'Set 2',kg:12,r:10},{t:'Set 3',kg:10,r:12}]}
-]},
-{name:'Abs',items:[
-{id:'d2_pallof',ss:true,ssLabel:'Superset — pallof press then immediately ab wheel, rest 60 sec',
-name:'Pallof Press',focus:'Obliques and TVA — anti-rotation',rest:60,
-form:'Cable at chest height, side on. Press handle out from chest. Hold 2 sec fully extended. Return slowly. Resist rotation — that is the exercise.',
-pre:'Stand sideways to the cable with no weight. Press hands out. Feel obliques and deep core working to stop you rotating. That resistance is the training.',
-during:'The effort is resisting the cable pulling you sideways. Feel obliques on the side away from the cable working hard to keep you square.',
-check:'Correct: obliques burning on far side from cable. Wrong: rotating toward cable — reduce weight significantly.',
-sets:[{t:'Set 1',kg:15,r:12},{t:'Set 2',kg:15,r:12},{t:'Set 3',kg:12,r:15}]},
-{id:'d2_ab_wheel',ss:true,ssLabel:'',
-name:'Ab Wheel Rollout',focus:'Full core — highest ab activation exercise',rest:60,
-form:'Knees on floor. Roll out as far as possible while keeping lower back flat. Roll back using abs — not hip flexors. If back arches, reduce range.',
-pre:'Big breath, brace abs as hard as possible — maintain this brace the entire rep.',
-during:'Roll out slowly feeling the stretch. At full extension abs are fully lengthened under tension. Roll back by pulling with the abs.',
-check:'Correct: abs burning from the stretch and the pull back. Wrong: lower back arching — reduce range.',
-sets:[{t:'Set 1',kg:0,r:10},{t:'Set 2',kg:0,r:10},{t:'Set 3',kg:0,r:12}]}
-]}
-]},
-{id:'d3',label:'Day 3',title:'Shoulders + Arms',muscle:'Shoulders, Biceps, Triceps',
-note:'Arms are fresh today — the best session for bicep and tricep hypertrophy.',
-sections:[
-{name:'Shoulders',items:[
-{id:'d3_ohp',ss:false,name:'Overhead Barbell Press',focus:'All 3 delt heads — primary compound',rest:150,
-form:'Grip just outside shoulder width. Bar from clavicle. Press up and slightly back. Full lockout with slight shrug. Elbows slightly in front at start.',
-pre:'Touch the three parts of your shoulder — front, side, back. All three fire during this press.',
-during:'Press the ceiling away. At lockout feel the shoulder fully contracted. The shrug at lockout engages the upper trap for stability.',
-check:'Correct: burning across the whole shoulder cap. Wrong: only front delt — elbows are too far forward at start.',
-sets:[{t:'Warm-up',kg:30,r:15},{t:'Set 1',kg:47.5,r:8},{t:'Set 2',kg:47.5,r:8},{t:'Set 3',kg:42.5,r:10},{t:'Set 4',kg:40,r:12}]},
-{id:'d3_lat_raise',ss:true,ssLabel:'Superset A — lateral raise then immediately front raise, rest 75 sec',
-name:'Lateral Raise',focus:'Side delt — shoulder width',rest:75,
-form:'Slight forward lean. Elbows lead — tilt pinky up at the top. Raise to just above shoulder height. 3 sec lowering — this is where side delt works hardest.',
-pre:'Touch the side of the shoulder cap. Raise arm out — feel when side delt starts to burn. That is the target.',
-during:'The 3 second LOWERING is the working portion. Feel the outer shoulder burning on the way down. Elbow leads not hand.',
-check:'Correct: burning in outer shoulder cap on the way down. Wrong: feeling traps — shrugging, reduce weight and lead with elbows.',
-sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]},
-{id:'d3_front_raise',ss:true,ssLabel:'',
-name:'Cable Front Raise',focus:'Front delt — dedicated isolation',rest:75,
-form:'Cable at ankle height behind you. Raise forward to shoulder height. Torso still. Control the return.',
-pre:'Touch the front of your shoulder cap — right at the front. Cable gives constant tension unlike dumbbells.',
-during:'Raise to exactly shoulder height — not higher. Feel the front of the shoulder contracting throughout.',
-check:'Correct: burning at the front of the shoulder cap throughout. Wrong: leaning back to lift — reduce weight.',
-sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]},
-{id:'d3_rear_fly',ss:false,name:'Bent Over Rear Delt Fly',focus:'Rear delt — hypertrophy focused',rest:75,
-form:'Hinge 45°. Raise in wide arc to shoulder height. Lead elbows back and up. Thumbs pointing DOWN. Squeeze at peak. 3 sec lowering.',
-pre:'Reach behind and touch the back of the shoulder cap. That is the rear delt. Most people never feel it in isolation.',
-during:'Lead with elbows going back — not hands going up. At peak, feel the contraction SPECIFICALLY at the back of the shoulder cap.',
-check:'Correct: feeling at back of shoulder cap. Wrong: feeling in traps — thumbs must point DOWN to reduce trap involvement.',
-sets:[{t:'Set 1',kg:8,r:15},{t:'Set 2',kg:8,r:15},{t:'Set 3',kg:6,r:20}]}
-]},
-{name:'Arms (Fresh)',items:[
-{id:'d3_preacher',ss:true,ssLabel:'Superset A — preacher curl then immediately straight bar pushdown, rest 90 sec',
-name:'Preacher Curl',focus:'Short head — lower bicep thickness',rest:90,
-form:'Upper arm flat on pad. Full extension at bottom. Curl to 90°. Squeeze HARD at 90°. Slow lowering.',
-pre:'Upper arm on pad with no weight — curl slowly. Feel the short head — the lower, thicker part — working as the pad prevents momentum.',
-during:'Curl to 90° — feel the short head peak there. The pad eliminates every form of cheating. Squeeze hard and hold 1 sec at 90°.',
-check:'Correct: burn in lower/inner belly of bicep. Wrong: feeling it in the elbow — too heavy, reduce weight.',
-sets:[{t:'Set 1',kg:20,r:12},{t:'Set 2',kg:20,r:12},{t:'Set 3',kg:17.5,r:15}]},
-{id:'d3_bar_push',ss:true,ssLabel:'',
-name:'Straight Bar Pushdown',focus:'Medial and lateral head — arms fresh today',rest:90,
-form:'Overhand grip. Elbows pinned. Wrists NEUTRAL — do not curl under. Full extension. Hold 1 sec. 2 sec return.',
-pre:'Arms are fresh today — go heavier than Day 1. Extend arms down and flex tricep hard. Feel the entire horseshoe.',
-during:'At full extension, squeeze the entire back of the arm for 1 second. Wrists stay straight throughout.',
-check:'Correct: burn in back of arm at full extension. Wrong: wrists curling under the bar — reduces tricep activation.',
-sets:[{t:'Set 1',kg:47.5,r:12},{t:'Set 2',kg:47.5,r:12},{t:'Set 3',kg:42.5,r:15}]}
-]},
-{name:'Abs',items:[
-{id:'d3_decline_crunch',ss:true,ssLabel:'Superset — weighted decline crunch then immediately russian twist, rest 60 sec',
-name:'Weighted Decline Crunch',focus:'Upper rectus — progressive overload abs',rest:60,
-form:'Hold plate at chest or behind head on decline bench. Crunch up — round the spine fully. Pause at top 1 sec. Slow lowering.',
-pre:'Same as cable crunch — feel abs with hands before starting. Progressive overload applies to abs just like any muscle.',
-during:'Feel the full spinal flexion — lower back lifts off the bench at the top. That is full range. Pause and feel rectus fully contracted.',
-check:'Correct: burn in centre of stomach, full spinal flexion. Wrong: just lifting head — not crunching the spine.',
-sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:10,r:20}]},
-{id:'d3_russian_twist',ss:true,ssLabel:'',
-name:'Russian Twist',focus:'Obliques — rotational strength',rest:60,
-form:'Sit at 45°. Feet off floor or crossed. Rotate side to side — touch weight to floor each side. Chest up throughout.',
-pre:'Sit without weight and twist as far as possible each side. Feel the obliques pulling you through the rotation.',
-during:'Feel the oblique PULLING you through the rotation. Pause 1 sec at each side at full rotation.',
-check:'Correct: burning on sides of stomach. Wrong: just swinging arms — slow down and feel oblique drive the rotation.',
-sets:[{t:'Set 1',kg:10,r:20},{t:'Set 2',kg:10,r:20},{t:'Set 3',kg:8,r:25}]}
-]}
-]},
-{id:'d4',label:'Day 4',title:'Legs',muscle:'Quads, Glutes, Hamstrings, Calves',
-note:'Full leg day — no upper body fatigue. Give it everything.',
-sections:[
-{name:'Quads + Glutes',items:[
-{id:'d4_squat',ss:false,name:'Barbell Back Squat',focus:'Quads and glutes — king of leg exercises',rest:180,
-form:'Bar on upper traps. Feet shoulder width, toes 30° out. Break at hips and knees simultaneously. Knees track over toes. Parallel or below. Drive through heels.',
-pre:'Bodyweight squat first. At the bottom try to spread the floor apart with your feet. Feel the glutes activate. That is your cue all session.',
-during:'Going down: quads loading. At bottom: spread the floor, feel glutes. Coming up: drive hips through, glutes squeeze at top.',
-check:'Correct: quads on way down, glutes on way up. Wrong: lower back taking over — leaning too far forward, reduce weight.',
-sets:[{t:'Warm-up',kg:40,r:15},{t:'Set 1',kg:80,r:8},{t:'Set 2',kg:80,r:8},{t:'Set 3',kg:75,r:10},{t:'Set 4',kg:70,r:12}]},
-{id:'d4_hack',ss:false,name:'Hack Squat (Feet High and Wide)',focus:'Glutes — foot position changes everything',rest:120,
-form:'Feet HIGH on platform, WIDE stance, toes out. Deep descent. Press through HEELS. Feel glutes on the way up.',
-pre:'On the machine with no weight: feet high and wide. Compare to low feet — completely different feeling. High feet = glutes.',
-during:'Feel the burn shift to the back of your upper legs compared to regular squats. If only feeling quads — move feet higher.',
-check:'Correct: burning in glutes and back of upper thigh. Wrong: only quads — feet are too low on the platform.',
-sets:[{t:'Set 1',kg:80,r:10},{t:'Set 2',kg:80,r:10},{t:'Set 3',kg:70,r:12}]}
-]},
-{name:'Hamstrings',items:[
-{id:'d4_leg_curl',ss:true,ssLabel:'Superset — leg curl then immediately leg extension, rest 90 sec',
-name:'Leg Curl',focus:'Hamstrings — isolated',rest:90,
-form:'Hips flat. FLEX feet — toes toward shins throughout. Curl to full contraction. Full extension each rep. 3 sec negative.',
-pre:'Lie on back. Flex both feet hard. Feel hamstrings activate. That dorsiflexion is the key cue throughout the entire set.',
-during:'Toes toward shins the entire set. Feel pull specifically in back of thigh — not calves. If you feel calves, you are pointing toes.',
-check:'Correct: burning in back of thigh from knee to glute. Wrong: calves working — flex your feet harder.',
-sets:[{t:'Set 1',kg:40,r:12},{t:'Set 2',kg:40,r:12},{t:'Set 3',kg:35,r:15}]},
-{id:'d4_leg_ext',ss:true,ssLabel:'',
-name:'Leg Extension',focus:'Quads — VMO activation',rest:90,
-form:'Knees at edge of seat. Extend to FULL lockout. Hold 1-2 sec. 3 sec lowering. No swinging.',
-pre:'Sit and extend one leg. At full lockout feel the teardrop muscle above the inner knee — the VMO. It only fires at full extension.',
-during:'Hold the lockout for 2 seconds every rep — feel the VMO. Do not stop short of full extension.',
-check:'Correct: burning in quads especially teardrop at lockout. Wrong: swinging — use less weight.',
-sets:[{t:'Set 1',kg:40,r:15},{t:'Set 2',kg:40,r:15},{t:'Set 3',kg:35,r:20}]},
-{id:'d4_rdl',ss:false,name:'Romanian Deadlift',focus:'Hamstrings and glutes — stretch focused',rest:120,
-form:'Hip hinge — push hips BACK. Slight fixed knee bend. Bar drags down legs. Hamstring stretch at mid-shin. Drive hips forward to stand.',
-pre:'Stand 30cm from a wall. Hip hinge until hips touch wall — that is the correct movement. Feel hamstrings loading.',
-during:'Push the wall behind you with your hips every rep. Feel hamstring stretch from mid-thigh down. If lower back burns, stop — neutral spine always.',
-check:'Correct: strong hamstring pull from mid-thigh down. Wrong: lower back pain — neutral spine, reduce weight.',
-sets:[{t:'Set 1',kg:70,r:10},{t:'Set 2',kg:70,r:10},{t:'Set 3',kg:65,r:12}]}
-]},
-{name:'Glutes and Hips',items:[
-{id:'d4_rev_lunge',ss:true,ssLabel:'Superset — reverse lunge then immediately abductor machine, rest 60 sec',
-name:'Reverse Lunges',focus:'Glutes and quads — unilateral',rest:60,
-form:'Step back onto ball of foot. Back knee toward floor. Front shin vertical. Drive through FRONT HEEL to return. Torso upright.',
-pre:'Bodyweight reverse lunge. At the bottom, press front heel into the floor and feel front glute activate. That heel press is your cue.',
-during:'Feel the front glute doing the work to push you back up. Reverse lunge places more load on front leg glute than forward lunge.',
-check:'Correct: front glute burning, shin stays vertical. Wrong: knee travelling past toes — step back further.',
-sets:[{t:'Set 1',kg:20,r:12},{t:'Set 2',kg:20,r:12},{t:'Set 3',kg:20,r:15}]},
-{id:'d4_abductor',ss:true,ssLabel:'',
-name:'Abductor Machine',focus:'Outer hip — missed by all compounds',rest:60,
-form:'Full range open. Bring together slowly. Squeeze outer hips at widest point. Control the closing.',
-pre:'Sit and place hands on outside of hips. Lift leg out to side — feel the muscle contracting. That is the hip abductor.',
-during:'At the widest point feel the squeeze on the outer hip and side of glute. Go directly from reverse lunges — legs are warmed up.',
-check:'Correct: burning on outer hip and side of glute. Wrong: feeling in quad — focus on hip abduction not knee pushing.',
-sets:[{t:'Set 1',kg:40,r:15},{t:'Set 2',kg:40,r:15},{t:'Set 3',kg:40,r:15}]}
-]},
-{name:'Calves and Abs',items:[
-{id:'d4_calf',ss:false,name:'Calf Raise (Standing)',focus:'Gastrocnemius — full range essential',rest:60,
-form:'Full heel drop below step. Rise ALL the way up on big toe. Hold 1 sec at top. Half reps do nothing.',
-pre:'Rise up on your big toe right now. Hold at top. Feel the hard contraction. Drop heel below step — feel full stretch. Both positions mandatory.',
-during:'Full stretch at the bottom, full contraction at the top, 1 sec hold. Calves need full range — they are used to half range walking all day.',
-check:'Correct: burn from stretch to peak contraction. Wrong: partial reps — calves will not grow without full range.',
-sets:[{t:'Set 1',kg:60,r:15},{t:'Set 2',kg:60,r:15},{t:'Set 3',kg:60,r:20}]},
-{id:'d4_leg_raise',ss:true,ssLabel:'Superset — hanging leg raise then immediately side plank, rest 60 sec',
-name:'Hanging Leg Raise',focus:'Lower abs',rest:60,
-form:'Dead hang. Raise to 90°. Posterior pelvic tilt at the top. Slow lowering.',
-pre:'Same as Day 1 — pelvic tilt drill on floor first. Tilt at top = lower abs, no tilt = hip flexors.',
-during:'Pelvic tilt at the top every single rep. Feel below the belly button contract hard.',
-check:'Correct: lower abs burning. Wrong: only hip flexors — add the pelvic tilt at the top.',
-sets:[{t:'Set 1',kg:0,r:12},{t:'Set 2',kg:0,r:12},{t:'Set 3',kg:0,r:15}]},
-{id:'d4_side_plank',ss:true,ssLabel:'',
-name:'Side Plank',focus:'Obliques — lateral stability',rest:60,
-form:'Elbow under shoulder. Hips elevated — straight line from head to feet. Hold. If easy, add hip dips.',
-pre:'Feel your obliques — the side of your stomach. Side plank is the gold standard for oblique strength without spinal flexion.',
-during:'Push hips UP — do not let them sag. Feel obliques holding you up. If they shake, that is them working.',
-check:'Correct: obliques on fire, hips elevated. Wrong: hips sagging — reduce hold time until obliques are stronger.',
-sets:[{t:'Set 1',kg:0,r:30},{t:'Set 2',kg:0,r:30},{t:'Set 3',kg:0,r:40}]}
-]}
-]},
-{id:'d5',label:'Day 5',title:'Full Body A',muscle:'Full Body',
-note:'70-75% max weight, 3x12-15. Goal: frequency and blood flow, not max tension. Different exercises from targeted days.',
-sections:[
-{name:'Upper Body',items:[
-{id:'d5_inc_db_press',ss:false,name:'Incline Dumbbell Press',focus:'Upper chest — different feel to barbell',rest:90,
-form:'45° bench. Dumbbells allow more natural arc and greater stretch at the bottom. Control the lowering.',
-pre:'Remember the upper chest connection from Day 1. Lighter today — all reps controlled and intentional.',
-during:'Feel the upper chest working through the full arc. Greater range of motion than barbell — feel the extra stretch at the bottom.',
-check:'Correct: upper chest stretch at bottom, contraction at top. Wrong: shoulder pain — dumbbells should feel more natural than barbell.',
-sets:[{t:'Set 1',kg:20,r:12},{t:'Set 2',kg:20,r:12},{t:'Set 3',kg:18,r:15}]},
-{id:'d5_single_row',ss:false,name:'Single Arm Dumbbell Row',focus:'Lat and mid back — unilateral',rest:90,
-form:'Knee and hand on bench. Row elbow back past hip. Full stretch forward between reps. Feel each side independently.',
-pre:'Unilateral means you can feel each side and fix imbalances. Compare left vs right.',
-during:'Full reach forward — lat stretch. Full row back — lat contracted. Feel each side independently.',
-check:'Correct: lat burning on working side. Wrong: twisting torso to lift — elbow drives back, torso stays still.',
-sets:[{t:'Set 1',kg:30,r:12},{t:'Set 2',kg:30,r:12},{t:'Set 3',kg:28,r:15}]},
-{id:'d5_db_press',ss:true,ssLabel:'Superset — DB shoulder press then immediately dips, rest 75 sec',
-name:'Dumbbell Shoulder Press',focus:'Shoulder — full body frequency',rest:75,
-form:'From ear level. Full lockout. Natural wrist rotation. Control lowering.',
-pre:'Lighter than Day 3 — maintenance volume. Connect with the shoulder cap through full range.',
-during:'Feel all three delt heads working. Compare to barbell OHP — dumbbells allow more natural arc.',
-check:'Correct: shoulder burning through full range. Wrong: traps taking over — reduce weight.',
-sets:[{t:'Set 1',kg:18,r:12},{t:'Set 2',kg:18,r:12},{t:'Set 3',kg:16,r:15}]},
-{id:'d5_dips',ss:true,ssLabel:'',
-name:'Chest Dips (Forward Lean)',focus:'Lower chest and triceps',rest:75,
-form:'Wide grip bars. Lean FORWARD — chest emphasis. Lower to 90°. Drive through lower chest to rise.',
-pre:'Lean forward and feel the lower chest. Upright dips = triceps. Leaned dips = lower chest.',
-during:'Feel the lower pec driving you up when leaning forward. Triceps assist but chest leads.',
-check:'Correct: lower chest doing the work. Wrong: upright posture — lean forward more.',
-sets:[{t:'Set 1',kg:0,r:10},{t:'Set 2',kg:0,r:10},{t:'Set 3',kg:0,r:12}]},
-{id:'d5_conc_curl',ss:false,name:'Concentration Curl',focus:'Peak contraction — extreme bicep isolation',rest:75,
-form:'Sit, elbow on inner thigh. Full extension. Curl to shoulder. Hard supinate at top. Hold 1 sec.',
-pre:'Touch the bicep peak. Concentration curls specifically target this peak through extreme isolation.',
-during:'At the top, supinate hard and hold 1 second. The thigh locks the elbow — zero cheating possible.',
-check:'Correct: burning at peak of bicep at top. Wrong: arm swinging off thigh — keep elbow firmly planted.',
-sets:[{t:'Set 1',kg:12,r:12},{t:'Set 2',kg:12,r:12},{t:'Set 3',kg:10,r:15}]}
-]},
-{name:'Legs',items:[
-{id:'d5_goblet',ss:false,name:'Goblet Squat',focus:'Quads and inner thigh',rest:90,
-form:'Dumbbell at chest. Wide stance. Chest up — more upright than back squat. Knees out actively. Full depth.',
-pre:'More upright than barbell squat — perfect for full body day. Feel inner thigh (adductors) working more in wide stance.',
-during:'More upright torso = more quad emphasis. Push knees out actively. Feel the quad burn.',
-check:'Correct: quads burning, upright torso. Wrong: leaning forward — dumbbell at chest forces you upright.',
-sets:[{t:'Set 1',kg:24,r:12},{t:'Set 2',kg:24,r:12},{t:'Set 3',kg:20,r:15}]},
-{id:'d5_leg_press',ss:false,name:'Leg Press',focus:'Quads and glutes — high volume',rest:90,
-form:'Feet mid-platform. Lower until knees at 90°. Press through whole foot. Do not lock out fully at top.',
-pre:'Mid-foot = balanced quad and glute. Compare to Day 4 hack squat — notice the different burn pattern.',
-during:'Maintain constant tension — do not lock out at top. Feel quad loading on the way down.',
-check:'Correct: quads burning throughout. Wrong: back lifting off pad — do not go deeper than flexibility allows.',
-sets:[{t:'Set 1',kg:120,r:12},{t:'Set 2',kg:120,r:12},{t:'Set 3',kg:100,r:15}]}
-]},
-{name:'Abs',items:[
-{id:'d5_dead_bug',ss:true,ssLabel:'Superset — dead bug then immediately hollow hold, rest 60 sec',
-name:'Dead Bug',focus:'TVA — deep core stability',rest:60,
-form:'Lie on back. Arms up, knees 90°. Lower opposite arm and leg slowly. Lower back must stay FLAT on floor throughout.',
-pre:'Press lower back into the floor as hard as possible — feel the TVA engaging deep in the core.',
-during:'Lower back flat on the floor is the entire challenge. If it lifts, you have gone too far. Feel the deep core working.',
-check:'Correct: lower back stays flat, deep core burning. Wrong: back arching — reduce range of motion.',
-sets:[{t:'Set 1',kg:0,r:10},{t:'Set 2',kg:0,r:10},{t:'Set 3',kg:0,r:12}]},
-{id:'d5_hollow',ss:true,ssLabel:'',
-name:'Hollow Body Hold',focus:'Full core — gymnastics foundation',rest:60,
-form:'Lie on back. Arms overhead, legs straight out low. Tuck ribs. Lower back flat. Hold.',
-pre:'Tuck ribs toward hips — this is a rib tuck, not an ab crunch. Feel the entire core engage from ribs to hips.',
-during:'Maintain the rib tuck throughout. Lower back flat. The longer you hold under fatigue the more the core works.',
-check:'Correct: full core working, rib tuck held, lower back flat. Wrong: back arching — raise legs higher.',
-sets:[{t:'Set 1',kg:0,r:30},{t:'Set 2',kg:0,r:30},{t:'Set 3',kg:0,r:40}]}
-]}
-]},
-{id:'d6',label:'Day 6',title:'Full Body B',muscle:'Full Body',
-note:'Different exercise selection from Day 5 — same muscles, new stimulus. No exercise repeats from Day 5.',
-sections:[
-{name:'Upper Body',items:[
-{id:'d6_chest_row',ss:false,name:'Chest Supported Row',focus:'Mid back — zero lower back fatigue',rest:90,
-form:'Chest against pad — eliminates lower back involvement. Full stretch forward. Full contraction back. All load goes to the back.',
-pre:'Chest supported means you cannot cheat. Every rep is purely mid back. Feel each side individually.',
-during:'Full stretch, full contraction, 1 second hold. The pad takes lower back out — pure back isolation.',
-check:'Correct: mid back burning, no lower back. Wrong: upper traps dominating — drive elbows back not up.',
-sets:[{t:'Set 1',kg:50,r:12},{t:'Set 2',kg:50,r:12},{t:'Set 3',kg:45,r:15}]},
-{id:'d6_cross_mid',ss:false,name:'Cable Crossover (Mid / Horizontal)',focus:'Mid chest — horizontal peak contraction',rest:90,
-form:'Cables at chest height. Stand centre. Hands together horizontally at chest height. Elbows slightly bent. Squeeze at peak.',
-pre:'This hits the horizontal mid-chest fibres — different from the diagonal fibres. Feel the chest working at chest height.',
-during:'At peak feel the mid-chest squeeze. Hands meeting at chest height is the key — not above, not below.',
-check:'Correct: mid-chest burning at the contraction. Wrong: shoulders dominating — chest up and lead with elbows.',
-sets:[{t:'Set 1',kg:10,r:15},{t:'Set 2',kg:10,r:15},{t:'Set 3',kg:8,r:20}]},
-{id:'d6_arnold',ss:true,ssLabel:'Superset — Arnold press then immediately overhead DB extension, rest 75 sec',
-name:'Arnold Press',focus:'Shoulder — rotation hits all three heads',rest:75,
-form:'Start with palms facing you at chin height. Press up while rotating palms forward. Full lockout at top.',
-pre:'The rotation progressively loads front delt, then side delt, then all three at lockout.',
-during:'Feel front delt at bottom of rotation, side delt at top. The rotation is what makes this different from a regular press.',
-check:'Correct: feeling different parts of shoulder through the rotation. Wrong: rushing — slow and controlled.',
-sets:[{t:'Set 1',kg:14,r:12},{t:'Set 2',kg:14,r:12},{t:'Set 3',kg:12,r:15}]},
-{id:'d6_overhead_db',ss:true,ssLabel:'',
-name:'Overhead DB Tricep Extension',focus:'Long head — stretch mediated',rest:75,
-form:'One or two dumbbells overhead. Elbows point forward. Let hands drop behind head for full stretch. Press to extension.',
-pre:'Same principle as overhead cable extension — long head only stretches overhead. Feel the deep stretch behind the arm.',
-during:'Feel the stretch behind the upper arm before every press. That stretch is the entire stimulus for long head growth.',
-check:'Correct: stretch in back of upper arm at bottom. Wrong: elbows flaring — keep pointing forward.',
-sets:[{t:'Set 1',kg:20,r:12},{t:'Set 2',kg:20,r:12},{t:'Set 3',kg:18,r:15}]},
-{id:'d6_ez_curl',ss:false,name:'EZ Bar Curl',focus:'Biceps — reduces wrist strain vs straight bar',rest:75,
-form:'EZ bar sits at more natural wrist angle. Same technique as barbell curl — elbows pinned, full extension, supinate at top.',
-pre:'Same bicep activation as straight bar but more sustainable for wrist health long term.',
-during:'Same MMC as barbell curl — pinkies up at the top for peak supination. Full extension at the bottom.',
-check:'Correct: same bicep burn as barbell curl without wrist discomfort. Wrong: same issues as barbell — check elbow position.',
-sets:[{t:'Set 1',kg:22.5,r:12},{t:'Set 2',kg:22.5,r:12},{t:'Set 3',kg:20,r:15}]}
-]},
-{name:'Legs',items:[
-{id:'d6_sumo',ss:false,name:'Sumo Squat (Wide Goblet)',focus:'Inner thigh and glute med',rest:90,
-form:'Wide stance, toes 45° out. Dumbbell at chest. Descend to parallel. Push knees out actively. Drive through heels.',
-pre:'Wide stance shifts load to inner thigh adductors and glute medius. Feel the inner thigh working as you descend.',
-during:'Push knees outward actively throughout. Feel inner thigh and outer glute. Wider than Day 5 goblet squat.',
-check:'Correct: inner thigh burning, glute med working. Wrong: knees caving in — actively push them out.',
-sets:[{t:'Set 1',kg:24,r:12},{t:'Set 2',kg:24,r:12},{t:'Set 3',kg:20,r:15}]},
-{id:'d6_leg_curl',ss:false,name:'Leg Curl',focus:'Hamstrings — second weekly hit',rest:90,
-form:'Same as Day 4. Feet flexed. Full range. 3 sec negative.',
-pre:'Second hamstring hit this week. Use Day 4 dorsiflexion connection.',
-during:'Same cues — toes toward shins, feel back of thigh not calves.',
-check:'Correct: hamstring burn, feet flexed. Wrong: calves — flex those feet.',
-sets:[{t:'Set 1',kg:35,r:12},{t:'Set 2',kg:35,r:12},{t:'Set 3',kg:32.5,r:15}]}
-]},
-{name:'Abs',items:[
-{id:'d6_ab_wheel',ss:true,ssLabel:'Superset — ab wheel then immediately pallof press, rest 60 sec',
-name:'Ab Wheel Rollout',focus:'Full core — stretch mediated',rest:60,
-form:'Brace core before rolling. Roll out on exhale. Keep lower back flat. Roll back using abs.',
-pre:'Brace as hard as you can before every rep. The brace is the entire exercise.',
-during:'Feel abs under tension through the full stretch. Highest ab activation exercise you can do.',
-check:'Correct: abs burning from stretch to contraction. Wrong: back arching — reduce range.',
-sets:[{t:'Set 1',kg:0,r:10},{t:'Set 2',kg:0,r:10},{t:'Set 3',kg:0,r:12}]},
-{id:'d6_pallof',ss:true,ssLabel:'',
-name:'Pallof Press',focus:'Obliques — anti-rotation functional',rest:60,
-form:'Cable at chest height, side on. Press out from chest. Hold 2 sec. Return slowly. Resist pull toward cable.',
-pre:'Feel obliques resisting the cable. This is functional core — the way abs work in real life.',
-during:'The effort is resisting — not pressing. Feel obliques holding you square against the cable pull.',
-check:'Correct: obliques on far side burning. Wrong: rotating — reduce weight significantly.',
-sets:[{t:'Set 1',kg:15,r:12},{t:'Set 2',kg:15,r:12},{t:'Set 3',kg:12,r:15}]}
-]}
-]}
-];
+const P=[{"id":"d1","label":"Day 1","title":"Upper A — Heavy","muscle":"Chest, Back, Shoulders, Arms","note":"Strength focus today — 5–7 reps on main compounds. Rest 2.5–3 min between heavy sets. Face pull 2×15 light before any pressing.","sections":[{"name":"Chest + Back (Push-Pull)","items":[{"id":"d1_inc_bp","ss":false,"ssLabel":"","name":"Incline Barbell Press","focus":"Upper chest — primary heavy compound","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":6},{"t":"Set 2","kg":70,"r":6},{"t":"Set 3","kg":67.5,"r":7},{"t":"Set 4","kg":65,"r":8}],"form":"Bench at 30°. Grip just outside shoulder width. Retract scapula hard — crack a walnut between your shoulder blades. Bar to upper chest in 2 sec. Elbows 45°. Drive up and slightly back.","pre":"Before unracking: squeeze shoulder blades together, push chest up, big breath and brace. Poke your upper chest — feel the muscle you are about to train.","during":"At the bottom feel the upper chest stretch fully. At lockout feel the contraction there, not your front delt.","check":"Correct: upper chest stretch at bottom, squeeze at top. Wrong: feeling front delt — bench angle too steep, lower it."},{"id":"d1_chest_row","ss":false,"ssLabel":"","name":"Chest Supported Row","focus":"Mid back, rhomboids — heavy pull","rest":180,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":55,"r":6},{"t":"Set 2","kg":55,"r":6},{"t":"Set 3","kg":52.5,"r":8},{"t":"Set 4","kg":50,"r":8}],"form":"Chest fully on pad — eliminates lower back entirely. Full stretch forward every rep. Pull elbows back and up past your torso. Squeeze blades together at peak, hold 1 sec.","pre":"Lie on the bench and let arms hang. Feel where your mid back is. That burning between the shoulder blades is your target.","during":"Two distinct positions every rep: full stretch forward (scapula spreads apart), full contraction back (scapula squeezes together). Hold 1 second at the top.","check":"Correct: mid back burning, no lower back involved. Wrong: upper traps dominating — drive elbows back not up."},{"id":"d1_cable_cross","ss":false,"ssLabel":"","name":"Cable Crossover (Low-to-High)","focus":"Upper chest — stretch under tension","rest":75,"sets":[{"t":"Set 1","kg":10,"r":12},{"t":"Set 2","kg":10,"r":12},{"t":"Set 3","kg":8,"r":15}],"form":"Cables at lowest position. Stand centre, slight forward lean. Hands start at hip level palms up. Bring hands UP and together in upward arc to chest height. Elbows fixed at slight bend. Squeeze hard at top. 3 sec return.","pre":"Touch the area just below your collarbone — upper pec. Cable at the bottom creates an upward pull that targets exactly this region.","during":"Feel the upward arc in the upper chest. At the top bring hands together and squeeze the upper pec as hard as you can.","check":"Correct: burning near collarbone at the squeeze. Wrong: shoulders firing — hands are going too high."},{"id":"d1_lat_pull","ss":false,"ssLabel":"","name":"Wide Grip Lat Pulldown","focus":"Lat width — volume back work","rest":90,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":72.5,"r":8},{"t":"Set 2","kg":72.5,"r":8},{"t":"Set 3","kg":67.5,"r":10}],"form":"15° lean back — fixed. Bar to upper chest. Lead with elbows. Full lat stretch at top — shoulder blades rise on every rep. Squeeze lats at bottom.","pre":"Sit and reach up. Feel lats stretching. Now pull elbows down — feel them contract. Knee pad locked snug on thighs.","during":"At the top: full lat stretch, feel both sides spreading. At the bottom: lats contracted against your sides. Two deliberate feelings every rep.","check":"Correct: lat burning from armpit down both sides. Wrong: traps and biceps dominating — think elbows to pockets not hands pulling."}]},{"name":"Shoulders","items":[{"id":"d1_ohp","ss":true,"ssLabel":"Superset — Overhead Press then immediately Cable Lateral Raise, rest 90 sec","name":"Overhead Barbell Press","focus":"All 3 delt heads — heavy compound","rest":90,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":50,"r":6},{"t":"Set 2","kg":50,"r":6},{"t":"Set 3","kg":47.5,"r":8}],"form":"Bar at collarbone. Grip just outside shoulder width. Press up and slightly back — bar should be over mid-foot at lockout. Full lockout with slight shrug. Brace core hard before every rep.","pre":"Touch all three parts of your shoulder — front, side, back. All three fire during this press. The shrug at lockout is not optional — it completes the movement.","during":"Press the ceiling away. At lockout feel the full shoulder cap contracted. Compare left vs right — identify your weaker side.","check":"Correct: burning across the whole shoulder cap. Wrong: only feeling front delt — elbows are too far forward at the start."},{"id":"d1_lat_raise","ss":true,"ssLabel":"","name":"Cable Lateral Raise","focus":"Side delt — constant tension from cable","rest":90,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Single cable at low pulley, side on. Raise arm out to shoulder height. Elbow leads slightly above the hand. 3 sec lowering — this is where side delt works hardest. Cable maintains tension at the bottom unlike dumbbell.","pre":"Touch the outer cap of your shoulder. Cable gives tension through the full range — the bottom is now a loaded position unlike DB where it goes slack.","during":"The 3-second LOWERING is the stimulus. Feel the outer shoulder burning on the way down. Do both sides.","check":"Correct: outer shoulder burning throughout especially on lowering. Wrong: trap shrugging — reduce weight and lead with elbow."}]},{"name":"Arms","items":[{"id":"d1_inc_curl","ss":true,"ssLabel":"Superset — Incline Curl then immediately Overhead Cable Extension, rest 90 sec","name":"Incline Dumbbell Curl","focus":"Bicep long head — best stretch position","rest":90,"sets":[{"t":"Set 1","kg":12,"r":10},{"t":"Set 2","kg":12,"r":10},{"t":"Set 3","kg":10,"r":12}],"form":"45° incline. Arms hanging behind torso. Curl without elbows moving forward. Supinate at top. Hold stretch 1 sec at bottom before each curl.","pre":"Lie on incline and let arms hang. Feel the deep stretch in the lower bicep. That stretch is the long head loaded — only this exercise achieves it.","during":"Hold the full stretch 1 second before every curl. Feel the long head from the bottom. Curl only from the elbow — upper arm stays back.","check":"Correct: deep stretch in lower bicep at bottom, peak at top. Wrong: elbows swinging forward — you lose the stretch entirely."},{"id":"d1_overhead_ext","ss":true,"ssLabel":"","name":"Overhead Cable Extension","focus":"Tricep long head — only stretches overhead","rest":90,"sets":[{"t":"Set 1","kg":35,"r":10},{"t":"Set 2","kg":35,"r":10},{"t":"Set 3","kg":32.5,"r":12}],"form":"Face away from cable set at top. Rope overhead. Let hands drop as far back as possible — full long head stretch. Elbows point forward, fixed. Press to full extension. 1 sec hold.","pre":"Reach one arm overhead and bend the elbow — feel the deep stretch in the back of the upper arm. The long head ONLY stretches in this position.","during":"Before pressing, hold the full stretch 1 second. That stretch is the hypertrophy stimulus. Press out maintaining elbow position.","check":"Correct: deep stretch in back of upper arm overhead. Wrong: elbows flaring out sideways — must stay pointing forward."}]}]},{"id":"d2","label":"Day 2","title":"Lower A — Heavy","muscle":"Quads, Hamstrings, Calves, Abs","note":"Strength focus — heavy squats and RDL today. Rest 3 min after squat sets. This session builds the foundation everything else sits on.","sections":[{"name":"Quads + Posterior Chain","items":[{"id":"d2_squat","ss":false,"ssLabel":"","name":"Barbell Back Squat","focus":"Quads + glutes — king of leg exercises","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":82.5,"r":5},{"t":"Set 2","kg":82.5,"r":5},{"t":"Set 3","kg":80,"r":6},{"t":"Set 4","kg":77.5,"r":7}],"form":"Bar on upper traps. Feet shoulder width, toes 25–30° out. Break at hips and knees simultaneously. Knees track over toes — push them out. At or below parallel. Drive through full foot.","pre":"Bodyweight squat first. At the bottom spread the floor apart with your feet — feel the glutes activate. That cue carries through every working set.","during":"Going down: quads loading. At bottom: spread floor, feel glutes. Coming up: drive hips through, glutes squeeze hard at the top.","check":"Correct: quads on descent, glutes on ascent. Wrong: lower back taking load — too much forward lean, reduce weight."},{"id":"d2_rdl","ss":false,"ssLabel":"","name":"Romanian Deadlift","focus":"Hamstrings + glutes — heavy stretch","rest":150,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":75,"r":6},{"t":"Set 2","kg":75,"r":6},{"t":"Set 3","kg":72.5,"r":8},{"t":"Set 4","kg":70,"r":8}],"form":"Push hips BACK — not down. Slight fixed knee bend throughout. Bar drags down your legs. Stop at strong hamstring stretch (mid-shin). Drive hips forward to stand. Neutral spine always.","pre":"Stand 30cm from a wall. Hip hinge until hips touch wall. Feel hamstrings loading. That hip push-back is the entire movement pattern.","during":"Push the wall behind you with your hips every rep. Feel hamstring stretch from sitting bone down the back of the thigh.","check":"Correct: strong hamstring pull from mid-thigh down. Wrong: lower back pain — neutral spine non-negotiable, reduce weight."},{"id":"d2_hack_sq","ss":true,"ssLabel":"Superset — Hack Squat then immediately Lying Leg Curl, rest 90 sec","name":"Hack Squat","focus":"Quads — deep range with load","rest":90,"sets":[{"t":"Set 1","kg":80,"r":8},{"t":"Set 2","kg":80,"r":8},{"t":"Set 3","kg":75,"r":10}],"form":"Feet mid-plate, hip width, toes slightly out. Descend until thighs are below parallel. Press through full foot. Do not fully lock out at top — constant tension.","pre":"On the machine with no weight — squat down and feel the quad loading through the full range. Hack squat allows more depth than free squat for most people.","during":"Feel quads burning through the full range, especially in the deep position. Slow controlled descent.","check":"Correct: quads burning through full range. Wrong: back lifting off pad — do not go deeper than hip mobility allows."},{"id":"d2_leg_curl","ss":true,"ssLabel":"","name":"Lying Leg Curl","focus":"Hamstrings — isolated, second hit","rest":90,"sets":[{"t":"Set 1","kg":40,"r":10},{"t":"Set 2","kg":40,"r":10},{"t":"Set 3","kg":37.5,"r":12}],"form":"Hips flat on bench. FLEX feet — toes toward shins throughout. Curl to full contraction. Full extension each rep. 3 sec lowering.","pre":"Flex both feet hard before starting. Feel hamstrings activate. That dorsiflexion is the key cue for the entire set.","during":"Toes toward shins the whole set. Feel pull in the back of the thigh not the calf. If feeling calves you are pointing toes.","check":"Correct: hamstring burning from knee to glute. Wrong: calf cramping — flex feet harder."}]},{"name":"Calves + Abs","items":[{"id":"d2_calf_stand","ss":false,"ssLabel":"","name":"Standing Calf Raise","focus":"Gastrocnemius — full range essential","rest":60,"sets":[{"t":"Set 1","kg":60,"r":12},{"t":"Set 2","kg":60,"r":12},{"t":"Set 3","kg":60,"r":15},{"t":"Set 4","kg":60,"r":15}],"form":"Ball of foot on step edge — full heel drop below platform. Rise ALL the way up on big toe. Hold 1 sec at top. Half reps build nothing.","pre":"Rise up on your big toe right now. Hold at the top — feel the hard contraction. Drop heel below step — feel the full stretch. Both positions are mandatory every rep.","during":"Full stretch at the bottom, full contraction at the top, 1 sec hold. Calves are used to half-range walking all day — full range is the only novel stimulus.","check":"Correct: burn from stretch to peak contraction. Wrong: partial reps — calves will not respond."},{"id":"d2_leg_raise","ss":false,"ssLabel":"","name":"Hanging Leg Raise","focus":"Lower abs + hip flexors","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise legs to 90°. Tilt pelvis BACK at the top — posterior pelvic tilt — before lowering. Slow controlled descent.","pre":"Lie on floor first. Flatten lower back by squeezing abs — posterior pelvic tilt. Remember this. Do it at the top of every rep.","during":"Pelvic tilt at the top every single rep. Without it this is hip flexors not lower abs.","check":"Correct: burning below belly button. Wrong: only hip flexors — add the pelvic tilt."}]}]},{"id":"d3","label":"Day 3","title":"Upper B — Volume","muscle":"Chest, Back, Shoulders, Arms","note":"Volume day — 10–15 reps, chase the pump. Different exercises from Upper A for full stimulus variety. Rest 60–90 sec between sets.","sections":[{"name":"Chest + Back (Push-Pull)","items":[{"id":"d3_inc_db","ss":false,"ssLabel":"","name":"Incline Dumbbell Press","focus":"Upper chest — greater stretch than barbell","rest":90,"sets":[{"t":"Set 1","kg":22,"r":10},{"t":"Set 2","kg":22,"r":10},{"t":"Set 3","kg":20,"r":12},{"t":"Set 4","kg":20,"r":12}],"form":"45° bench. Dumbbells allow a natural arc and greater stretch at the bottom compared to barbell. Control the lowering. Feel the upper chest stretch at the bottom before pressing.","pre":"Remember the upper chest connection from Upper A. Lighter weight today — all reps controlled and intentional. Greater ROM than barbell.","during":"Feel the upper chest working through the full natural arc. Greater stretch at the bottom — use it. Chase the contraction at the top.","check":"Correct: upper chest stretch at bottom, contraction at top. Wrong: shoulder pain — dumbbells should feel more natural than barbell."},{"id":"d3_cable_row","ss":false,"ssLabel":"","name":"Seated Cable Row","focus":"Lower lats + mid back — volume","rest":90,"sets":[{"t":"Set 1","kg":57.5,"r":10},{"t":"Set 2","kg":57.5,"r":10},{"t":"Set 3","kg":55,"r":12},{"t":"Set 4","kg":55,"r":12}],"form":"V-bar attachment. Reach forward fully every rep — let scapula protract. Pull to lower sternum. Elbows straight back. No torso rocking. Hold contraction 1 sec.","pre":"Sit and reach as far forward as possible. Feel lats stretching away from your spine. Now pull back — feel them contracting. Full range every rep.","during":"Two deliberate positions: fully stretched forward, fully contracted back. Not a swing. The hold at the back is non-negotiable.","check":"Correct: feeling stretch forward and squeeze back. Wrong: rocking torso — reduce weight and isolate the back."},{"id":"d3_pec_deck","ss":true,"ssLabel":"Superset — Pec Deck then immediately Neutral Grip Pulldown, rest 75 sec","name":"Pec Deck (Machine Fly)","focus":"Inner chest — peak contraction and stretch","rest":75,"sets":[{"t":"Set 1","kg":50,"r":12},{"t":"Set 2","kg":50,"r":12},{"t":"Set 3","kg":47.5,"r":15}],"form":"Sit upright, chest against pad. Forearms flat against pads. Bring together slowly. Pause and squeeze HARD at peak for 2 sec. Control return to full stretch.","pre":"Touch your sternum. The inner chest fibres run from there outward. That burn at the squeeze is exactly what you are chasing.","during":"At the peak squeeze as hard as you possibly can for 2 full seconds. Feel it right in the centre of your chest. The stretch at the open position is equally important.","check":"Correct: burning in inner chest at the peak squeeze. Wrong: feeling it in arms — elbows must lead not hands."},{"id":"d3_neutral_pull","ss":true,"ssLabel":"","name":"Neutral Grip Lat Pulldown","focus":"Lats + lower traps — volume hit","rest":75,"sets":[{"t":"Set 1","kg":65,"r":10},{"t":"Set 2","kg":65,"r":10},{"t":"Set 3","kg":60,"r":12}],"form":"Neutral grip V-bar or parallel handles. Pull to upper chest. Elbows drive down and back. Full lat stretch at top every rep. Slightly different feel from wide grip — hits lower lats more.","pre":"Neutral grip feels more natural for most people and allows slightly heavier weight. Feel the lats engaging when you initiate the pull.","during":"At top: full stretch. At bottom: lats contracted. Compare the feel to Upper A wide grip — notice what is different.","check":"Correct: lats burning, full stretch at top. Wrong: biceps fatiguing first — pull with elbows not hands."}]},{"name":"Shoulders","items":[{"id":"d3_rear_fly","ss":true,"ssLabel":"Superset — Rear Delt Fly then immediately Cable Lateral Raise, rest 75 sec","name":"Bent Over Rear Delt Fly","focus":"Rear delt — often undertrained","rest":75,"sets":[{"t":"Set 1","kg":8,"r":15},{"t":"Set 2","kg":8,"r":15},{"t":"Set 3","kg":6,"r":20}],"form":"Hinge 45°. Raise in wide arc to shoulder height. Lead elbows back and up. Thumbs pointing DOWN — reduces trap involvement. Squeeze rear delts at peak for 2 sec. 3 sec lowering.","pre":"Reach behind and touch the back of your shoulder cap. That is the rear delt. Most people never feel it in isolation — this exercise fixes that.","during":"Lead with elbows going back — not hands going up. At peak feel the contraction SPECIFICALLY at the back of the shoulder cap. Thumbs down.","check":"Correct: burning at the back of the shoulder cap. Wrong: mid traps between blades — arms are going too high."},{"id":"d3_lat_raise_b","ss":true,"ssLabel":"","name":"Cable Lateral Raise","focus":"Side delt — second hit this week","rest":75,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Single cable low pulley, side on. Raise to shoulder height. Elbow leads. 3 sec lowering. Cable keeps tension at the bottom unlike dumbbell.","pre":"Side delt already hit on Upper A. Today is volume — feel the constant cable tension through the full range including the bottom.","during":"3-second lowering is where the side delt works hardest. Do not rush it.","check":"Correct: outer shoulder burning throughout. Wrong: trap shrugging — reduce weight."}]},{"name":"Arms","items":[{"id":"d3_preacher","ss":true,"ssLabel":"Superset — Preacher Curl then immediately Rope Pushdown, rest 90 sec","name":"Preacher Curl","focus":"Bicep short head — lower bicep thickness","rest":90,"sets":[{"t":"Set 1","kg":22,"r":12},{"t":"Set 2","kg":22,"r":12},{"t":"Set 3","kg":20,"r":15}],"form":"Upper arm flat on pad, armpit against top edge. Full extension at bottom. Curl to 90°. Squeeze HARD at 90°. Slow lowering. Pad eliminates all cheating.","pre":"Upper arm on pad — curl slowly with no weight. Feel the short head working. Different from incline curl (long head on Upper A) — this hits the lower, thicker part of the bicep.","during":"Curl to 90° — feel the short head peak there. Not higher. Squeeze hard and hold 1 sec at 90°.","check":"Correct: burn in lower inner belly of the bicep. Wrong: elbow joint pain — too heavy, reduce weight."},{"id":"d3_rope_push","ss":true,"ssLabel":"","name":"Rope Pushdown","focus":"Tricep lateral head — visible outer head","rest":90,"sets":[{"t":"Set 1","kg":52.5,"r":12},{"t":"Set 2","kg":52.5,"r":12},{"t":"Set 3","kg":47.5,"r":15}],"form":"Cable at top. Elbows pinned at sides. Push down and FLARE rope outward at the bottom. Full extension. 1 sec hold. 2 sec return.","pre":"Touch the outer side of the back of your upper arm. That lateral head is what you see when someone flexes their arm. This exercise targets it specifically.","during":"Every rep: at the bottom spread the rope as wide as possible. Feel the contraction on the outer side of the tricep. Hold 1 second.","check":"Correct: feeling outer side of back of arm. Wrong: not feeling outer arm — flare the rope harder at the bottom."}]}]},{"id":"d4","label":"Day 4","title":"Lower B — Volume","muscle":"Glutes, Quads, Hamstrings, Abs","note":"Volume lower day — glute and quad focus. Hip thrust is the single best glute exercise. Chase the pump, 10–12 reps throughout.","sections":[{"name":"Glutes + Quads","items":[{"id":"d4_leg_press","ss":false,"ssLabel":"","name":"Leg Press (Feet High and Wide)","focus":"Glutes + quads — foot position changes target","rest":120,"sets":[{"t":"Warm-up","kg":80,"r":15},{"t":"Set 1","kg":130,"r":10},{"t":"Set 2","kg":130,"r":10},{"t":"Set 3","kg":120,"r":12},{"t":"Set 4","kg":120,"r":12}],"form":"Feet HIGH on platform, WIDE apart, toes angled out. This shifts emphasis to glutes and inner thigh. Lower until knees reach 90°. Press through heels. Do not fully lock out at top.","pre":"Compare to Hack Squat on Lower A — feet were mid-plate there. High and wide here shifts the burn to glutes and hamstrings. Test with light weight to feel the difference.","during":"Feel the glute loading at the bottom, the press through the heel. Compare to Lower A hack squat — completely different muscle emphasis.","check":"Correct: glutes and hamstrings burning, pressing through heels. Wrong: only quads — move feet higher on the platform."},{"id":"d4_hip_thrust","ss":false,"ssLabel":"","name":"Barbell Hip Thrust","focus":"Glutes — the single best glute exercise","rest":120,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":12},{"t":"Set 4","kg":75,"r":12}],"form":"Upper back against bench, bar across hip crease (use pad). Feet flat, hip width, toes slightly out. Drive hips up until body is straight. SQUEEZE glutes hard at the top for 2 sec. Control lowering.","pre":"Set up carefully — bar must sit in the hip crease, not on the lower abdomen. Upper back on the bench at the shoulder blade level. Bar pad is not optional.","during":"At the top: body straight line from knees to shoulders. Squeeze glutes as hard as you possibly can for 2 full seconds every rep. Feel your glutes doing the work, not your lower back.","check":"Correct: glutes on fire at the top, 2-sec squeeze felt clearly. Wrong: lower back arching and burning — hips are not driving high enough, squeeze more."},{"id":"d4_lunge","ss":true,"ssLabel":"Superset — Walking Lunges then immediately Seated Leg Curl, rest 90 sec","name":"Walking Lunges","focus":"Quads + glutes — unilateral volume","rest":90,"sets":[{"t":"Set 1","kg":20,"r":12},{"t":"Set 2","kg":20,"r":12},{"t":"Set 3","kg":20,"r":12}],"form":"Hold dumbbells at sides. Step forward, lower back knee toward floor. Front shin vertical. Drive through front heel to next step. Keep torso upright throughout.","pre":"Unilateral movement — reveals left-right imbalances. Feel each leg independently. If one side feels weaker, start with that side.","during":"Feel the front quad and glute driving you through each step. Back knee hovers just above the floor. Continuous smooth movement.","check":"Correct: quads and glutes burning, smooth stride. Wrong: knee caving inward — drive that knee outward actively."},{"id":"d4_leg_curl_b","ss":true,"ssLabel":"","name":"Seated Leg Curl","focus":"Hamstrings — different head emphasis to lying","rest":90,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":12}],"form":"Seated position changes the hip angle which shifts emphasis to a different part of the hamstring vs lying. Flex feet. Full range. 3 sec negative.","pre":"Compare to lying leg curl on Lower A — seated feels different because the hip is flexed. Feel how the muscle pulls differently.","during":"Toes toward shins. Full extension at the top. Controlled lowering — 3 seconds. Feel the hamstring stretch at the top and contraction at the bottom.","check":"Correct: hamstring burning throughout full range. Wrong: back lifting off seat — reduce weight."}]},{"name":"Calves + Abs","items":[{"id":"d4_calf_seated","ss":true,"ssLabel":"Superset — Seated Calf Raise then immediately Abductor Machine, rest 60 sec","name":"Seated Calf Raise","focus":"Soleus — different muscle to standing calf raise","rest":60,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":37.5,"r":18},{"t":"Set 4","kg":37.5,"r":20}],"form":"Seated calf raise targets the SOLEUS (deep calf) which the standing raise misses. Same full range principle — full drop, full rise, 1 sec hold at top.","pre":"Seated position bends the knee which takes the gastrocnemius (outer calf) out of play. Feel how the deep calf muscle works differently — a different burn.","during":"Full heel drop, full rise on big toe, 1 sec hold. Feel the deep calf burning differently from standing raises.","check":"Correct: burning deep in the calf in a different location than standing raises. Wrong: half reps — always full range."},{"id":"d4_abductor","ss":true,"ssLabel":"","name":"Abductor Machine","focus":"Outer hip — completely missed by all compounds","rest":60,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":40,"r":15}],"form":"Sit fully back. Pads on outer thighs just above knee. Open to maximum range. Squeeze outer hips at widest point. Control the closing.","pre":"Place hands on outside of your hips. Lift leg out to side — feel the muscle contracting. That is the hip abductor. This machine is the only way to directly train it.","during":"At the widest point feel the squeeze on the outer hip and side of the glute. Do not let it snap back — control the return.","check":"Correct: burning on outer hip and side of glute. Wrong: feeling in quad — focus on hip opening not knee pushing."},{"id":"d4_cable_crunch","ss":false,"ssLabel":"","name":"Cable Crunch","focus":"Rectus abdominis — weighted progressive overload","rest":60,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable, rope at neck. Crunch DOWN through elbows — not pulling with hands. Hips stay completely still. Round the spine fully. Pause at the bottom.","pre":"Place hands on abs before starting. Feel the contraction. Cable crunch is abs training with progressive overload — same principles as any other muscle.","during":"Elbows to knees not hands pulling down. Hips stay still — only spine moves. Feel the rectus contracting hard at the bottom.","check":"Correct: burn in centre of stomach. Wrong: feeling it in hip flexors — hips are moving with the weight."}]}]},{"id":"d5","label":"Day 5","title":"Full Body A — Upper Focus","muscle":"Full Body, Upper Emphasis","note":"Upper emphasis full body — 70-75% of your max, 3x10-12. This is the second hit for chest, back, and arms this week. Different exercises from Upper A and B throughout.","sections":[{"name":"Upper Body","items":[{"id":"d5_goblet","ss":false,"ssLabel":"","name":"Goblet Squat","focus":"Quads + inner thigh — warm up legs","rest":75,"sets":[{"t":"Set 1","kg":24,"r":12},{"t":"Set 2","kg":24,"r":12},{"t":"Set 3","kg":20,"r":15}],"form":"Dumbbell at chest. Wide stance, toes out. Chest up — more upright than back squat. Knees out actively. Full depth.","pre":"Lighter and more upright today — perfect for warming up the whole lower body without fatiguing it.","during":"More upright torso = more quad emphasis. Push knees out. Feel the difference from the heavy squats earlier in the week.","check":"Correct: quads burning, upright torso. Wrong: forward lean — dumbbell at chest naturally forces you upright."},{"id":"d5_cable_cross_mid","ss":false,"ssLabel":"","name":"Cable Crossover (Mid / Horizontal)","focus":"Mid chest — horizontal fibres","rest":75,"sets":[{"t":"Set 1","kg":10,"r":12},{"t":"Set 2","kg":10,"r":12},{"t":"Set 3","kg":8,"r":15}],"form":"Cables at chest height. Stand at centre. Hands together horizontally at chest height. Elbows slightly bent. Squeeze at peak. Cables at chest height hit the mid fibres — different from D1 low-to-high.","pre":"Upper A hit upper chest. Upper B hit inner chest. Today hits mid-chest horizontal fibres. Third distinct chest stimulus this week.","during":"At peak feel the mid-chest squeeze. Hands at chest height — not above, not below.","check":"Correct: mid-chest burning. Wrong: shoulders dominating — chest up and lead with elbows."},{"id":"d5_single_row","ss":false,"ssLabel":"","name":"Single Arm Dumbbell Row","focus":"Lat — unilateral, finds imbalances","rest":75,"sets":[{"t":"Set 1","kg":30,"r":12},{"t":"Set 2","kg":30,"r":12},{"t":"Set 3","kg":28,"r":15}],"form":"Knee and hand on bench. Row elbow straight back past hip. Full reach forward every rep. Feel each side independently.","pre":"Unilateral means you feel each side individually. Compare left vs right — many people have a dominant side. Fix it here.","during":"Full reach forward — lat stretch. Full row back — lat contracted. Heavier possible because one arm fully focused.","check":"Correct: lat burning on working side. Wrong: torso rotating to lift — elbow drives back, torso stays still."},{"id":"d5_arnold","ss":true,"ssLabel":"Superset — Arnold Press then immediately Lateral Raise, rest 75 sec","name":"Arnold Press","focus":"Shoulder — rotation hits all three delt heads","rest":75,"sets":[{"t":"Set 1","kg":14,"r":12},{"t":"Set 2","kg":14,"r":12},{"t":"Set 3","kg":12,"r":15}],"form":"Start with palms facing you at chin height. Press up while rotating palms forward. Full lockout at top. The rotation progressively loads front then side delt.","pre":"Different from OHP on Upper A — the rotation means you feel each delt head fire at a different point in the movement.","during":"Feel front delt at the start of rotation, side delt at the top. Slow down the rotation to feel the progression.","check":"Correct: feeling different parts of shoulder through the rotation. Wrong: rushing — slow and deliberate rotation."},{"id":"d5_lat_raise_c","ss":true,"ssLabel":"","name":"Lateral Raise","focus":"Side delt — third weekly hit","rest":75,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Dumbbells this time — slight forward lean, elbow leads, 3 sec lowering.","pre":"Third side delt hit this week. Volume accumulation — even lighter today is fine.","during":"3-second lowering is the stimulus. Feel outer shoulder burning on the way down.","check":"Correct: outer shoulder burning. Wrong: traps — reduce weight."},{"id":"d5_hammer_curl","ss":true,"ssLabel":"Superset — Hammer Curl then immediately Overhead DB Extension, rest 75 sec","name":"Hammer Curl","focus":"Brachialis + bicep — neutral grip hits differently","rest":75,"sets":[{"t":"Set 1","kg":16,"r":12},{"t":"Set 2","kg":16,"r":12},{"t":"Set 3","kg":14,"r":15}],"form":"Neutral grip (thumbs up) throughout — do not rotate. Elbows pinned. Full extension at bottom. Hammer curls target the brachialis which pushes the bicep up from underneath.","pre":"Different from incline curl and preacher curl earlier this week — neutral grip = brachialis emphasis. Feel the different part of the arm firing.","during":"Feel it more in the lower arm and outer bicep than a regular curl. That is the brachialis working.","check":"Correct: burning in outer bicep and lower arm. Wrong: rotating wrist — keep neutral the whole set."},{"id":"d5_overhead_db_ext","ss":true,"ssLabel":"","name":"Overhead DB Tricep Extension","focus":"Tricep long head — stretch mediated","rest":75,"sets":[{"t":"Set 1","kg":20,"r":12},{"t":"Set 2","kg":20,"r":12},{"t":"Set 3","kg":18,"r":15}],"form":"One or two dumbbells overhead. Elbows point forward — fixed. Let hands drop behind head for full stretch. Press to extension.","pre":"Same long head principle as overhead cable extension on Upper A — only position where long head fully stretches.","during":"Feel the stretch behind the upper arm before every press. That stretch is the entire stimulus.","check":"Correct: stretch in back of upper arm at the bottom. Wrong: elbows flaring — must stay pointing forward."}]}]},{"id":"d6","label":"Day 6","title":"Full Body B — Lower Focus","muscle":"Full Body, Lower Emphasis","note":"Lower emphasis full body — recovery pace, 70% max. Second hit for legs and posterior chain. Face pull warm-up 2×15 for shoulder health.","sections":[{"name":"Upper Body (Maintenance)","items":[{"id":"d6_machine_press","ss":false,"ssLabel":"","name":"Machine Chest Press","focus":"Chest — maintenance hit at recovery intensity","rest":75,"sets":[{"t":"Set 1","kg":60,"r":12},{"t":"Set 2","kg":60,"r":12},{"t":"Set 3","kg":55,"r":15}],"form":"Machine allows focus on the muscle without stability demands. Adjust seat so handles are at mid-chest level. Full extension at lockout — squeeze chest. Control the return.","pre":"Recovery pace today — feel the chest working without pushing to failure. Machine removes stability demands so you can focus purely on the muscle.","during":"Feel the chest contracting on every press. Not heavy, not grinding — smooth controlled reps.","check":"Correct: chest burning throughout. Wrong: shoulder pain — adjust seat height until handles are at mid-chest."},{"id":"d6_seated_row","ss":false,"ssLabel":"","name":"Seated Cable Row","focus":"Back — maintenance hit","rest":75,"sets":[{"t":"Set 1","kg":55,"r":12},{"t":"Set 2","kg":55,"r":12},{"t":"Set 3","kg":50,"r":15}],"form":"V-bar. Full reach forward. Pull to lower sternum. 1 sec hold. Recovery pace — not grinding.","pre":"Same as Upper B but lighter. Focus on feel not weight today.","during":"Full range, good form, feel the back. Not a max effort.","check":"Correct: back burning, good form. Wrong: ego lifting on a recovery day — today is about volume not intensity."},{"id":"d6_face_pull","ss":true,"ssLabel":"Superset — Face Pull then immediately Hammer Curl, rest 60 sec","name":"Face Pull","focus":"Rear delt + rotator cuff — shoulder health essential","rest":60,"sets":[{"t":"Set 1","kg":20,"r":15},{"t":"Set 2","kg":20,"r":15},{"t":"Set 3","kg":20,"r":15}],"form":"Cable at eye level. Rope attachment. Pull to face with elbows high and wide. At the end position externally rotate — hands go back and apart. Feel the rear delt and rotator cuff.","pre":"This is shoulder insurance. Every pressing session creates internal rotation stress. Face pull counteracts it. Never skip this.","during":"Pull to face, elbows high and wide, then external rotate at the end. Feel the rear delt and the back of the shoulder firing.","check":"Correct: rear delt and rotator cuff firing, elbows high. Wrong: elbows dropping — they must stay up and wide throughout."},{"id":"d6_hammer_curl_b","ss":true,"ssLabel":"","name":"Hammer Curl","focus":"Brachialis — second hit this week","rest":60,"sets":[{"t":"Set 1","kg":16,"r":12},{"t":"Set 2","kg":16,"r":12},{"t":"Set 3","kg":14,"r":15}],"form":"Neutral grip throughout. Elbows pinned. Full extension. Recovery pace.","pre":"Same as Full Body A but this is your second brachialis hit of the week. Light and controlled.","during":"Feel the brachialis and outer bicep. Smooth controlled reps.","check":"Correct: outer bicep and lower arm burning. Wrong: swinging — reduce weight."}]},{"name":"Legs","items":[{"id":"d6_sumo","ss":false,"ssLabel":"","name":"Sumo Goblet Squat","focus":"Inner thigh + glute med — wide stance","rest":90,"sets":[{"t":"Set 1","kg":24,"r":12},{"t":"Set 2","kg":24,"r":12},{"t":"Set 3","kg":20,"r":15}],"form":"Very wide stance, toes pointing 45° outward. Dumbbell at chest. Squat straight down — knees push out actively. Full depth. Drive through heels.","pre":"Wider than goblet squat on D5 — feel how the inner thigh loads more. Glute med also fires more here.","during":"Push knees outward actively throughout. Feel inner thigh and outer glute. Different burn to D5 goblet squat.","check":"Correct: inner thigh burning, glutes working. Wrong: knees caving in — push them out aggressively."},{"id":"d6_walking_lunge","ss":false,"ssLabel":"","name":"Walking Lunges","focus":"Quads + glutes — second weekly hit","rest":90,"sets":[{"t":"Set 1","kg":20,"r":12},{"t":"Set 2","kg":20,"r":12},{"t":"Set 3","kg":20,"r":12}],"form":"Same as Lower B. Hold dumbbells, step forward, lower back knee, drive through front heel.","pre":"Second hit this week. Lighter or same weight as Lower B — this is recovery volume not max effort.","during":"Feel each leg working. Smooth continuous movement. Focus on front glute drive.","check":"Correct: quads and glutes burning. Wrong: knee caving — drive it outward."},{"id":"d6_leg_curl_c","ss":false,"ssLabel":"","name":"Leg Curl","focus":"Hamstrings — third weekly hit, recovery volume","rest":75,"sets":[{"t":"Set 1","kg":37.5,"r":12},{"t":"Set 2","kg":37.5,"r":12},{"t":"Set 3","kg":35,"r":15}],"form":"Lying or seated depending on availability. Feet flexed. Full range. 3 sec lowering.","pre":"Third hamstring hit this week — Lower A (heavy RDL + lying curl), Lower B (seated curl), now recovery volume.","during":"Light and controlled. Feel the hamstring. Not pushing to failure today.","check":"Correct: hamstring burning, controlled form. Wrong: lower back arching — hips flat."}]},{"name":"Abs","items":[{"id":"d6_cable_crunch_b","ss":true,"ssLabel":"Superset — Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis — weighted","rest":60,"sets":[{"t":"Set 1","kg":25,"r":15},{"t":"Set 2","kg":25,"r":15},{"t":"Set 3","kg":22.5,"r":20}],"form":"Kneel facing cable. Crunch through elbows. Hips fixed. Full spine flexion.","pre":"Recovery pace — lighter than Lower B. Focus on the abs contracting not the weight.","during":"Elbows to knees. Hips still. Feel the burn in the centre of the stomach.","check":"Correct: abs burning. Wrong: hip flexors — hips are moving."},{"id":"d6_leg_raise_b","ss":true,"ssLabel":"","name":"Hanging Leg Raise","focus":"Lower abs — second weekly hit","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90°. Pelvic tilt at the top. Slow lowering.","pre":"Same as Lower A. Pelvic tilt at the top is still the only way this hits lower abs.","during":"Pelvic tilt at top every rep. Feel below the belly button.","check":"Correct: lower abs burning. Wrong: only hip flexors — add the pelvic tilt."}]}]}];
 // ═══════════════════════════════════════
 // STATE & USER
 // ═══════════════════════════════════════
@@ -1345,8 +923,9 @@ function getScriptUrl(){return localStorage.getItem('wt_script_url')||'https://s
 // AUTO DAY by weekday (Mon=0=D1 ... Sat=5=D6, Sun=rest)
 function getDayForToday(){
   const dow=new Date().getDay(); // 0=Sun,1=Mon...6=Sat
-  const map={1:0,2:1,3:2,4:3,5:4,6:5}; // Mon->D1(idx0)...Sat->D6(idx5)
-  return map[dow]; // undefined on Sunday
+  // Mon=UpperA, Tue=LowerA, Wed=Rest, Thu=UpperB, Fri=LowerB, Sat=FBA, Sun=FBB(optional)
+  const map={1:0,2:1,3:undefined,4:2,5:3,6:4,0:5};
+  return map[dow];
 }
 
 function greeting(){
@@ -1358,12 +937,12 @@ function greeting(){
 
 function motivationalLine(dayIdx){
   const lines=[
-    'Chest day. Make those pecs work.',
-    'Back day. Build that V-taper.',
-    'Shoulders and arms — fresh and ready.',
-    'Leg day. No skipping.',
-    'Full body — keep the frequency up.',
-    'Full body B — finish the week strong.'
+    'Upper A — heavy compounds. Strength today.',
+    'Lower A — heavy squat and RDL. Earn it.',
+    'Upper B — volume day. Chase the pump.',
+    'Lower B — glutes and quads. Hip thrust is the priority.',
+    'Full Body A — second hit for upper. Keep it crisp.',
+    'Full Body B — lower focus. Finish the week strong.'
   ];
   return lines[dayIdx]||'Let\'s get it.';
 }
@@ -1402,8 +981,10 @@ function initApp(){
     // Sunday — rest day
     document.getElementById('main-app').style.display='none';
     document.getElementById('rest-screen').style.display='flex';
+    const dow=new Date().getDay();
+    const nextDay=dow===3?'Upper B (Volume)':dow===0?'Upper A (Heavy)':'the next session';
     document.getElementById('rest-msg').textContent=
-      `Rest well, ${user}. Tomorrow is Day 1 — Chest and Triceps. Your muscles grow when you recover.`;
+      `Rest well, ${user}. Next up: ${nextDay}. Your muscles grow when you recover.`;
     return;
   }
 
