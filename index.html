@@ -7,6 +7,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#141210">
 <title>Workout Tracker</title>
+<link rel="manifest" href="/Workout/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="/Workout/icon-180.svg">
+<link rel="apple-touch-icon" sizes="152x152" href="/Workout/icon-152.svg">
+<link rel="apple-touch-icon" sizes="120x120" href="/Workout/icon-120.svg">
+<meta name="apple-mobile-web-app-title" content="Workout">
 <style>
 :root{
   --bg:#141210;--bg2:#1d1a17;--bg3:#272320;--bg4:#312d29;
@@ -2360,6 +2365,16 @@ if(user){
   document.getElementById('onboard').style.display='flex';
 }
 
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/Workout/sw.js')
+      .then(r => console.log('SW registered:', r.scope))
+      .catch(e => console.log('SW error:', e));
+  });
+}
 </script>
 </body>
 </html>
