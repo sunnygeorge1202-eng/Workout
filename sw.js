@@ -1,13 +1,13 @@
-const CACHE = 'workout-v1';
+const CACHE = 'workout-v2';
 const ASSETS = [
   '/Workout/',
   '/Workout/index.html',
   '/Workout/manifest.json',
-  '/Workout/icon-192.svg',
-  '/Workout/icon-512.svg',
-  '/Workout/icon-180.svg',
-  '/Workout/icon-152.svg',
-  '/Workout/icon-120.svg',
+  '/Workout/icon-192.png',
+  '/Workout/icon-512.png',
+  '/Workout/icon-180.png',
+  '/Workout/icon-152.png',
+  '/Workout/icon-120.png',
 ];
 
 // Install: cache everything
