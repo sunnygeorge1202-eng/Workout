@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#141210">
 <title>Workout Tracker</title>
+<meta name="version" content="1785579384">
 <link rel="manifest" href="/Workout/manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="/Workout/icon-180.png">
 <link rel="apple-touch-icon" sizes="152x152" href="/Workout/icon-152.png">
@@ -2386,9 +2390,14 @@ if(user){
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/Workout/sw.js')
-      .then(r => console.log('SW registered:', r.scope))
-      .catch(e => console.log('SW error:', e));
+    // Unregister old SW first, then register fresh
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).then(() => {
+      navigator.serviceWorker.register('/Workout/sw.js?v=4')
+        .then(r => { r.update(); console.log('SW v4 registered'); })
+        .catch(e => console.log('SW error:', e));
+    });
   });
 }
 </script>
