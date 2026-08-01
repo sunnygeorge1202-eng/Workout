@@ -1193,7 +1193,6 @@ function kickTimer(s){
   document.querySelectorAll('.pre-btn').forEach(b=>{const v=b.textContent.trim().split(':');b.classList.toggle('on',parseInt(v[0])*60+parseInt(v[1])===s);});
   document.getElementById('t-start').textContent='▶ Start';
   toggleTimer();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ═══════════════════════════════════════
@@ -1394,7 +1393,6 @@ function refreshRing(exId,dayId){
   if(num){num.className='ex-num'+(allDone?' done-num':ex.ss?' ss-num':'');num.textContent=allDone?'✓':(ex.ss?'SS':ex.sets.length);}
   const card=document.getElementById('c-'+exId);
   if(card)card.classList.toggle('done-card',allDone);
-  buildTabs();
 }
 function updateStats(){
   const day=P[dayIdx];const s=loadSess(day.id);
