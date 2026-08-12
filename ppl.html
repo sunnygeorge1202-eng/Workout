@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#141210">
+<title>Workout Tracker</title>
+<meta name="version" content="1785579384">
+<link rel="manifest" href="/Workout/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="/Workout/icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/Workout/icon-152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/Workout/icon-120.png">
+<meta name="apple-mobile-web-app-title" content="Workout">
+<style>
+:root{
+  --bg:#141210;--bg2:#1d1a17;--bg3:#272320;--bg4:#312d29;
+  --border:#2e2a26;--border2:#3d3830;
+  --text:#f2ede8;--text2:#b8b0a6;--text3:#7a7068;
+  --green:#34d27a;--green-dim:#1a6b3c;--green-bg:#0d2b1a;--green-border:#1e5c34;
+  --amber:#f5a623;--amber-bg:#2a1c06;--amber-border:#8a5a10;
+  --red:#f05050;--blue:#5b9cf6;--blue-bg:#0d1e3a;--blue-border:#1e3d6e;
+  --warm:#e8d5b8;--accent:#f5a623;
+  --r:14px;--rs:10px;
+  --shadow:0 2px 12px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;min-height:100vh;}
+body{padding-bottom:110px;}
+
+/* ONBOARDING */
+#onboard{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+.ob-logo{font-size:52px;margin-bottom:16px;}
+.ob-title{font-size:26px;font-weight:800;color:var(--warm);margin-bottom:8px;letter-spacing:-0.5px;}
+.ob-sub{font-size:14px;color:var(--text3);line-height:1.6;margin-bottom:40px;}
+.ob-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;align-self:flex-start;width:100%;max-width:340px;}
+.ob-input{width:100%;max-width:340px;padding:14px 18px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r);font-size:16px;color:var(--text);text-align:center;font-weight:600;outline:none;margin-bottom:10px;}
+.ob-row{display:flex;gap:8px;width:100%;max-width:340px;margin-bottom:10px;}
+.ob-row .ob-input{margin-bottom:0;flex:1;}
+.ob-input::placeholder{color:var(--text3);font-weight:400;}
+.ob-input:focus{border-color:var(--accent);}
+.ob-btn{width:100%;max-width:340px;padding:17px;background:var(--accent);color:#1a1000;font-size:16px;font-weight:800;border:none;border-radius:var(--r);cursor:pointer;letter-spacing:0.02em;}
+.ob-btn:active{transform:scale(0.97);}
+
+/* REST DAY */
+#rest-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:32px 24px;}
+.rest-icon{font-size:56px;margin-bottom:20px;}
+.rest-title{font-size:24px;font-weight:700;margin-bottom:8px;color:var(--warm);}
+.rest-sub{font-size:14px;color:var(--text3);line-height:1.6;max-width:280px;margin:0 auto 28px;}
+.rest-next{padding:12px 28px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);font-size:13px;color:var(--text2);cursor:pointer;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 16px;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:54px;gap:8px;}
+.nav-left h1{font-size:15px;font-weight:700;color:var(--warm);}
+.nav-left .date{font-size:11px;color:var(--text3);margin-top:1px;}
+.nav-right{display:flex;gap:6px;}
+.nav-btn{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 11px;font-size:13px;color:var(--text2);cursor:pointer;}
+.nav-btn:active{background:var(--bg4);}
+
+/* GREETING */
+.greeting{padding:16px 16px 0;}
+.greet-name{font-size:22px;font-weight:800;color:var(--warm);letter-spacing:-0.4px;}
+.greet-sub{font-size:13px;color:var(--text3);margin-top:3px;line-height:1.5;}
+.greet-streak{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--amber);font-weight:600;}
+
+/* TIMER */
+.timer-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin:12px 16px 0;padding:14px;}
+.timer-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.timer-dig{font-size:36px;font-weight:800;font-variant-numeric:tabular-nums;min-width:88px;letter-spacing:-1.5px;transition:color 0.3s;}
+.timer-dig.idle{color:var(--text3);}
+.timer-dig.running{color:var(--green);}
+.timer-dig.warn{color:var(--amber);}
+.timer-dig.done{color:var(--red);}
+.timer-btns{display:flex;gap:6px;flex:1;}
+.t-btn{flex:1;padding:10px 8px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;}
+.t-btn:active{transform:scale(0.95);}
+.t-btn.go{background:var(--green);border-color:var(--green);color:#001a0a;}
+.presets{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;}
+.presets::-webkit-scrollbar{display:none;}
+.pre-btn{flex-shrink:0;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;}
+.pre-btn.on{background:var(--bg4);color:var(--text);border-color:var(--border2);}
+
+/* DAY TABS */
+.day-scroll-wrap{padding:12px 16px 0;}
+.day-scroll{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.day-scroll::-webkit-scrollbar{display:none;}
+.d-tab{flex-shrink:0;padding:8px 14px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;position:relative;}
+.d-tab.on{background:var(--accent);color:#1a1000;border-color:var(--accent);font-weight:800;}
+.d-tab.today-tab{border-color:var(--green-border);color:var(--green);}
+.d-tab.today-tab.on{background:var(--green);color:#001a0a;border-color:var(--green);}
+.d-tab-prog{display:block;width:100%;height:2px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden;}
+.d-tab-prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 16px;}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;}
+.stat-l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;}
+.stat-v{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+.stat-v.g{color:var(--green);}
+.stat-v.a{color:var(--amber);}
+
+/* EXERCISES */
+.exwrap{padding:0 16px;}
+.sec-head{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--border);}
+.ss-badge{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.ss-line{flex:1;height:1px;background:var(--amber-border);}
+.ss-label{font-size:10px;color:var(--amber);font-weight:700;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;}
+
+.ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s;}
+.ex-card.open{border-color:var(--border2);box-shadow:var(--shadow);}
+.ex-card.ss-card{border-left:3px solid var(--amber-border);}
+.ex-card.done-card{border-color:var(--green-border);}
+
+.ex-hdr{display:flex;align-items:center;padding:13px 13px 12px;cursor:pointer;gap:10px;user-select:none;}
+.ex-num{background:var(--bg4);border:1px solid var(--border);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0;}
+.ex-num.ss-num{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+.ex-num.done-num{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.ex-info{flex:1;min-width:0;}
+.ex-name{font-size:14px;font-weight:700;line-height:1.2;color:var(--text);}
+.ex-focus{font-size:11px;color:var(--text3);margin-top:2px;}
+.ex-ring{position:relative;width:36px;height:36px;flex-shrink:0;}
+.ex-ring svg{transform:rotate(-90deg);}
+.ring-track{fill:none;stroke:var(--bg4);stroke-width:3.5;}
+.ring-fill{fill:none;stroke:var(--green);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:88;stroke-dashoffset:88;transition:stroke-dashoffset 0.5s cubic-bezier(.4,0,.2,1);}
+.ring-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--text3);}
+.chevron{font-size:18px;color:var(--text3);transition:transform 0.25s cubic-bezier(.4,0,.2,1);flex-shrink:0;line-height:1;}
+.ex-card.open .chevron{transform:rotate(180deg);}
+
+.ex-body{display:none;border-top:1px solid var(--border);}
+.ex-card.open .ex-body{display:block;}
+
+/* TABS */
+.body-tabs{display:flex;background:var(--bg3);}
+.b-tab{flex:1;padding:10px 4px;font-size:11px;font-weight:700;color:var(--text3);text-align:center;cursor:pointer;border:none;background:transparent;transition:all 0.15s;border-bottom:2px solid transparent;letter-spacing:0.03em;}
+.b-tab.on{color:var(--text);border-bottom-color:var(--green);}
+.tab-panel{display:none;padding:14px 14px;}
+.tab-panel.on{display:block;}
+
+/* VISUAL TAB */
+.visual-wrap{display:flex;flex-direction:column;gap:10px;}
+.yt-link{display:flex;align-items:center;gap:10px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 13px;text-decoration:none;color:var(--text2);}
+.yt-link:active{background:var(--bg3);}
+.yt-icon{width:38px;height:38px;background:#ff0000;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.yt-text{flex:1;min-width:0;}
+.yt-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.yt-sub{font-size:11px;color:var(--text3);}
+.yt-arr{color:var(--text3);font-size:14px;}
+
+/* FORM TAB */
+.form-txt{font-size:13px;color:var(--text2);line-height:1.7;}
+
+/* MMC TAB */
+.mmc-block{margin-bottom:10px;}
+.setup-section{margin-bottom:10px;}
+.mmc-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}
+.mmc-tag.pre{color:var(--blue);}
+.mmc-tag.during{color:var(--green);}
+.mmc-tag.check{color:var(--amber);}
+.mmc-txt{font-size:13px;color:var(--text2);line-height:1.65;padding:10px 12px;border-radius:var(--rs);border-left:2.5px solid;}
+.mmc-txt.pre{background:var(--blue-bg);border-color:var(--blue);}
+.mmc-txt.during{background:var(--green-bg);border-color:var(--green);}
+.mmc-txt.check{background:var(--amber-bg);border-color:var(--amber);}
+
+/* SETS TAB */
+.sets-hdr{display:grid;grid-template-columns:58px 1fr 1fr 1fr 40px;gap:5px;margin-bottom:6px;}
+.sets-hdr span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;text-align:center;}
+.sets-hdr span:first-child{text-align:left;}
+.set-row{display:grid;grid-template-columns:58px 1fr 1fr 1fr 40px;gap:5px;align-items:center;margin-bottom:6px;border-radius:var(--rs);padding:4px 0;transition:background 0.2s;}
+.set-row.set-done{background:rgba(52,210,122,0.07);}
+.set-tag{font-size:11px;color:var(--text3);padding-left:2px;}
+.s-in{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 3px;font-size:14px;font-weight:700;color:var(--text);text-align:center;width:100%;-moz-appearance:textfield;}
+.s-in::-webkit-outer-spin-button,.s-in::-webkit-inner-spin-button{-webkit-appearance:none;}
+.s-in:focus{outline:none;border-color:var(--accent);}
+.s-in.pre-val{color:var(--text3);font-weight:400;font-size:13px;}
+.s-in.mod{color:var(--amber);border-color:var(--amber-border);}
+.tick{width:36px;height:36px;border-radius:var(--rs);border:1.5px solid var(--border);background:transparent;color:transparent;font-size:17px;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;justify-content:center;}
+.tick:active{transform:scale(0.88);}
+.tick.done{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.pr-badge{display:inline-flex;align-items:center;gap:2px;background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);font-size:9px;font-weight:800;padding:1px 5px;border-radius:5px;margin-left:4px;vertical-align:middle;}
+.rest-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-top:1px solid var(--border);border-radius:0 0 var(--r) var(--r);}
+.rest-txt{font-size:11px;color:var(--text3);}
+.rest-go{padding:6px 16px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-weight:600;}
+.rest-go:active{background:var(--bg4);}
+.hist-wrap{padding:12px 0 4px;}
+.hist-title{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:7px;}
+.hist-row{font-size:11px;color:var(--text3);margin-bottom:5px;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.hist-date{color:var(--text3);white-space:nowrap;min-width:70px;}
+.hist-sets{color:var(--text2);}
+.hist-empty{font-size:12px;color:var(--text3);font-style:italic;}
+
+/* SYNC / DONE */
+.sync-area{padding:14px 16px 8px;display:flex;flex-direction:column;gap:8px;}
+.fin-btn{width:100%;padding:15px;border-radius:var(--r);border:none;background:var(--green);color:#001a0a;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.02em;}
+.fin-btn:active{transform:scale(0.98);}
+.sync-btn{width:100%;padding:12px;border-radius:var(--r);border:1.5px solid var(--blue-border);background:var(--blue-bg);color:#93c5fd;font-size:14px;font-weight:700;cursor:pointer;}
+.sync-btn:active{transform:scale(0.98);}
+.sync-status{font-size:12px;text-align:center;color:var(--text3);min-height:20px;}
+.done-wrap{display:none;text-align:center;padding:52px 24px;}
+.done-wrap.show{display:block;}
+.done-icon{font-size:56px;margin-bottom:16px;}
+.done-title{font-size:24px;font-weight:800;color:var(--warm);margin-bottom:6px;letter-spacing:-0.5px;}
+.done-sub{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:24px;}
+.done-back{padding:12px 28px;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:14px;cursor:pointer;font-weight:600;}
+
+/* MODALS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:flex-end;backdrop-filter:blur(4px);}
+.overlay.show{display:flex;}
+.modal{background:var(--bg2);border-radius:var(--r) var(--r) 0 0;border:1px solid var(--border);padding:20px 16px 40px;width:100%;max-height:82vh;overflow-y:auto;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.modal-hdr h3{font-size:16px;font-weight:800;color:var(--warm);}
+.modal-close{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:6px 14px;font-size:12px;color:var(--text2);cursor:pointer;font-weight:600;}
+.h-entry{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;}
+.h-date{font-size:12px;color:var(--text2);font-weight:700;margin-bottom:6px;}
+.h-sets{font-size:12px;color:var(--text3);line-height:1.75;}
+.setting-row{padding:14px 0;border-bottom:1px solid var(--border);}
+.setting-label{font-size:13px;color:var(--text2);margin-bottom:8px;display:block;font-weight:600;}
+.setting-input{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);width:100%;}
+.setting-input:focus{outline:none;border-color:var(--accent);}
+.setting-hint{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.5;}
+.save-btn{width:100%;padding:13px;border-radius:var(--rs);border:none;background:var(--accent);color:#1a1000;font-size:14px;font-weight:800;cursor:pointer;margin-top:16px;}
+.user-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.user-name-disp{font-size:14px;font-weight:700;color:var(--warm);}
+.user-change{font-size:12px;color:var(--text3);text-decoration:underline;cursor:pointer;background:none;border:none;color:var(--text3);}
+
+/* DAY NOTE */
+.day-note{margin:8px 0 4px;padding:10px 13px;background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--rs);font-size:12px;color:#93c5fd;line-height:1.6;}
+
+/* ANIMATED SVG STYLES */
+@keyframes pressUp{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
+@keyframes curveArc{0%,100%{d:path("M 65 62 Q 100 62 135 62");}50%{d:path("M 65 62 Q 100 38 135 62");}}
+@keyframes armCurl{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-85deg);}}
+@keyframes pullDown{0%,100%{transform:translateY(-16px);}50%{transform:translateY(0);}}
+@keyframes legCurl{0%,100%{transform:rotate(0deg);}50%{transform:rotate(75deg);}}
+@keyframes shrug{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+50%{transform:rotate(0deg);}}
+50%{transform:rotate(20deg);}}
+50%{transform:rotate(-38deg);}}
+50%{transform:rotate(-75deg);}}
+50%{transform:translateX(-22px);}}
+50%{opacity:1;r:6;}}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div id="onboard">
+  <div class="ob-logo">💪</div>
+  <div class="ob-title">Welcome to your gym</div>
+  <div class="ob-sub">This is your personal workout tracker.<br>Let's start by setting up your profile.</div>
+  <div class="ob-label">What's your name?</div>
+  <input class="ob-input" id="ob-name" placeholder="Your name" maxlength="24" autocomplete="off">
+  <div class="ob-row">
+    <input class="ob-input" id="ob-height" placeholder="Height cm" type="number" min="140" max="220">
+    <input class="ob-input" id="ob-weight" placeholder="Weight kg" type="number" min="40" max="200">
+  </div>
+  <div style="font-size:11px;color:var(--text3);max-width:320px;text-align:center;margin-bottom:20px;line-height:1.5">Height personalises machine setup instructions. Weight gives starting weight hints.</div>
+  <button class="ob-btn" onclick="completeOnboard()">Let's go →</button>
+</div>
+
+<!-- REST DAY -->
+<div id="rest-screen">
+  <div class="rest-icon">🌙</div>
+  <div class="rest-title">Rest day</div>
+  <div class="rest-sub" id="rest-msg">Today is your recovery day. Your muscles grow when you rest.</div>
+  <button class="rest-next" onclick="showAnyDay()">Browse the program →</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none">
+  <div class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <h1 id="nav-title">Workout</h1>
+        <div class="date" id="nav-date"></div>
+      </div>
+      <div class="nav-right">
+        <button class="nav-btn" onclick="openSettings()">⚙️</button>
+        <button class="nav-btn" onclick="openHistory()">📋</button>
+        <button class="nav-btn" onclick="clearDay()">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="greeting" id="greeting-area">
+    <div class="greet-name" id="greet-name"></div>
+    <div class="greet-sub" id="greet-sub"></div>
+    <div class="greet-streak" id="greet-streak" style="display:none">🔥 <span id="streak-txt"></span></div>
+  </div>
+
+  <div class="timer-section">
+    <div class="timer-row">
+      <div class="timer-dig idle" id="tdig">2:30</div>
+      <div class="timer-btns">
+        <button class="t-btn go" id="t-start" onclick="toggleTimer()">▶ Start</button>
+        <button class="t-btn" onclick="resetTimer()">↺ Reset</button>
+      </div>
+    </div>
+    <div class="presets">
+      <button class="pre-btn on" onclick="setPre(150)">2:30</button>
+      <button class="pre-btn" onclick="setPre(120)">2:00</button>
+      <button class="pre-btn" onclick="setPre(90)">1:30</button>
+      <button class="pre-btn" onclick="setPre(60)">1:00</button>
+      <button class="pre-btn" onclick="setPre(45)">0:45</button>
+    </div>
+  </div>
+
+  <div class="day-scroll-wrap">
+    <div class="day-scroll" id="day-tabs"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Sets done</div><div class="stat-v g" id="s-sets">0/0</div></div>
+    <div class="stat"><div class="stat-l">Volume kg</div><div class="stat-v a" id="s-vol">0</div></div>
+    <div class="stat"><div class="stat-l">Week</div><div class="stat-v" id="s-week">1</div></div>
+  </div>
+
+  <div class="exwrap" id="exwrap"></div>
+
+  <div class="sync-area" id="sync-area">
+    <button class="fin-btn" onclick="finishDay()">✓ Finish Workout</button>
+    <button class="sync-btn" onclick="syncToSheets()">☁ Sync to Google Sheets</button>
+    <div class="sync-status" id="sync-status"></div>
+  </div>
+
+  <div class="done-wrap" id="done-wrap">
+    <div class="done-icon">🏆</div>
+    <div class="done-title" id="done-title">Session Complete!</div>
+    <div class="done-sub" id="done-sub"></div>
+    <button class="done-back" onclick="backFromDone()">← Back</button>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="overlay" id="hist-modal" onclick="maybeClose(event,'hist-modal')">
+  <div class="modal">
+    <div class="modal-hdr"><h3 id="hist-title">History</h3><button class="modal-close" onclick="closeModal('hist-modal')">✕ Close</button></div>
+    <div id="hist-body"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="settings-modal" onclick="maybeClose(event,'settings-modal')">
+  <div class="modal">
+    <div class="modal-hdr"><h3>⚙️ Settings</h3><button class="modal-close" onclick="closeModal('settings-modal')">✕ Close</button></div>
+    <div class="user-row">
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;">Logged in as</div>
+        <div class="user-name-disp" id="settings-username"></div>
+      </div>
+      <button class="user-change" onclick="changeUser()">Change name</button>
+    </div>
+    <div class="setting-row">
+      <label class="setting-label">Body measurements</label>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1"><input class="setting-input" id="s-height" placeholder="Height cm" type="number" min="140" max="220"><div class="setting-hint">Used for machine setup</div></div>
+        <div style="flex:1"><input class="setting-input" id="s-weight" placeholder="Weight kg" type="number" min="40" max="200"><div class="setting-hint">Used for weight hints</div></div>
+      </div>
+    </div>
+    <div class="setting-row" style="margin-top:8px;">
+      <label class="setting-label">Google Apps Script URL</label>
+      <input class="setting-input" id="script-url-input" placeholder="Already configured">
+      <div class="setting-hint">Deploy Code.gs as a Web App → Execute as Me, Anyone → copy URL here.</div>
+    </div>
+    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// ANIMATED SVGs — CSS keyframe animations
+// ═══════════════════════════════════════
+
+const YT={
+incline_bp:{title:'Incline Barbell Press — search tutorials',url:'https://www.youtube.com/results?search_query=incline%20barbell%20bench%20press%20form%20tutorial%20Jeff%20Nippard',cue:'Watch for: scapula retraction and 45° elbow angle'},
+flat_bp:{title:'Flat Bench Press — search tutorials',url:'https://www.youtube.com/results?search_query=flat%20bench%20press%20perfect%20technique%20Jeff%20Nippard',cue:'Watch for: bar path, elbow angle, scapula pinned'},
+cgbp:{title:'Close Grip Bench Press — search tutorials',url:'https://www.youtube.com/results?search_query=close%20grip%20bench%20press%20form%20tutorial',cue:'Watch for: elbow tuck and wrist alignment'},
+fly:{title:'Cable Fly / Crossover — search tutorials',url:'https://www.youtube.com/results?search_query=cable%20fly%20crossover%20technique%20tutorial',cue:'Watch for: fixed elbow bend and full stretch'},
+pec_deck:{title:'Pec Deck Machine Fly — search tutorials',url:'https://www.youtube.com/results?search_query=pec%20deck%20machine%20fly%20technique%20tutorial',cue:'Watch for: 2-sec peak squeeze and full return'},
+pullups:{title:'Pull-Ups — search tutorials',url:'https://www.youtube.com/results?search_query=pull%20up%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: dead hang start and elbow path'},
+lat_pull:{title:'Lat Pulldown — search tutorials',url:'https://www.youtube.com/results?search_query=lat%20pulldown%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: full lat stretch at top every rep'},
+row:{title:'Barbell Row — search tutorials',url:'https://www.youtube.com/results?search_query=barbell%20row%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: scapula retraction and elbow path'},
+cable_row:{title:'Seated Cable Row — search tutorials',url:'https://www.youtube.com/results?search_query=seated%20cable%20row%20technique%20tutorial',cue:'Watch for: full stretch forward and 1-sec hold'},
+shrugs:{title:'Barbell Shrug — search tutorials',url:'https://www.youtube.com/results?search_query=barbell%20shrug%20technique%20form%20tutorial',cue:'Watch for: straight up movement and 1-2 sec hold'},
+chest_row:{title:'Chest Supported Row — search tutorials',url:'https://www.youtube.com/results?search_query=chest%20supported%20row%20technique%20tutorial',cue:'Watch for: chest stays on pad throughout'},
+single_row:{title:'Single Arm Row — search tutorials',url:'https://www.youtube.com/results?search_query=single%20arm%20dumbbell%20row%20technique%20tutorial',cue:'Watch for: full reach forward between reps'},
+curl:{title:'Barbell Curl — search tutorials',url:'https://www.youtube.com/results?search_query=barbell%20curl%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: elbow stays pinned and supination at top'},
+inc_curl:{title:'Incline Dumbbell Curl — search tutorials',url:'https://www.youtube.com/results?search_query=incline%20dumbbell%20curl%20technique%20Jeff%20Nippard',cue:'Watch for: arms hanging behind torso and long head stretch'},
+preacher:{title:'Preacher Curl — search tutorials',url:'https://www.youtube.com/results?search_query=preacher%20curl%20technique%20tutorial',cue:'Watch for: curl to 90° and hard squeeze'},
+conc_curl:{title:'Concentration Curl — search tutorials',url:'https://www.youtube.com/results?search_query=concentration%20curl%20technique%20tutorial',cue:'Watch for: elbow planted on thigh, peak supination'},
+ez_curl:{title:'EZ Bar Curl — search tutorials',url:'https://www.youtube.com/results?search_query=EZ%20bar%20curl%20technique%20tutorial',cue:'Watch for: elbow position and wrist angle'},
+rope_push:{title:'Rope Pushdown — search tutorials',url:'https://www.youtube.com/results?search_query=rope%20pushdown%20tricep%20technique%20tutorial',cue:'Watch for: elbow pinned and rope flaring at bottom'},
+bar_push:{title:'Straight Bar Pushdown — search tutorials',url:'https://www.youtube.com/results?search_query=straight%20bar%20pushdown%20tricep%20tutorial',cue:'Watch for: wrist neutral and elbows pinned'},
+overhead_ext:{title:'Overhead Cable Extension — search tutorials',url:'https://www.youtube.com/results?search_query=overhead%20cable%20tricep%20extension%20tutorial%20Jeff%20Nippard',cue:'Watch for: elbows pointing forward and long head stretch'},
+overhead_db:{title:'Overhead DB Tricep Extension — search tutorials',url:'https://www.youtube.com/results?search_query=overhead%20dumbbell%20tricep%20extension%20technique',cue:'Watch for: elbows forward and deep stretch behind head'},
+dips:{title:'Chest Dips — search tutorials',url:'https://www.youtube.com/results?search_query=chest%20dips%20technique%20tutorial%20forward%20lean',cue:'Watch for: forward lean for chest emphasis'},
+ohp:{title:'Overhead Press — search tutorials',url:'https://www.youtube.com/results?search_query=overhead%20press%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: bar path and full lockout with shrug'},
+lat_raise:{title:'Lateral Raise — search tutorials',url:'https://www.youtube.com/results?search_query=lateral%20raise%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: elbow leads and 3-sec lowering'},
+front_raise:{title:'Cable Front Raise — search tutorials',url:'https://www.youtube.com/results?search_query=cable%20front%20raise%20technique%20tutorial',cue:'Watch for: shoulder height only, no higher'},
+rear_delt:{title:'Rear Delt Fly — search tutorials',url:'https://www.youtube.com/results?search_query=rear%20delt%20fly%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: thumbs down and elbow path back'},
+arnold:{title:'Arnold Press — search tutorials',url:'https://www.youtube.com/results?search_query=Arnold%20press%20technique%20tutorial',cue:'Watch for: slow rotation through the press'},
+db_press:{title:'Dumbbell Shoulder Press — search tutorials',url:'https://www.youtube.com/results?search_query=dumbbell%20shoulder%20press%20technique%20tutorial',cue:'Watch for: natural arc and full lockout'},
+squat:{title:'Barbell Squat — search tutorials',url:'https://www.youtube.com/results?search_query=barbell%20squat%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: knees out and depth below parallel'},
+hack_squat:{title:'Hack Squat — search tutorials',url:'https://www.youtube.com/results?search_query=hack%20squat%20technique%20foot%20position%20tutorial',cue:'Watch for: foot position and full range'},
+leg_curl:{title:'Leg Curl — search tutorials',url:'https://www.youtube.com/results?search_query=leg%20curl%20technique%20dorsiflexion%20tutorial',cue:'Watch for: feet flexed toes toward shins'},
+leg_ext:{title:'Leg Extension — search tutorials',url:'https://www.youtube.com/results?search_query=leg%20extension%20VMO%20technique%20tutorial',cue:'Watch for: full lockout and VMO squeeze'},
+rdl:{title:'Romanian Deadlift — search tutorials',url:'https://www.youtube.com/results?search_query=Romanian%20deadlift%20technique%20tutorial%20Jeff%20Nippard',cue:'Watch for: hip push back and bar close to legs'},
+rev_lunge:{title:'Reverse Lunge — search tutorials',url:'https://www.youtube.com/results?search_query=reverse%20lunge%20technique%20tutorial',cue:'Watch for: shin vertical and front heel drive'},
+abductor:{title:'Hip Abductor Machine — search tutorials',url:'https://www.youtube.com/results?search_query=hip%20abductor%20machine%20technique%20tutorial',cue:'Watch for: outer hip squeeze at full range'},
+calf:{title:'Standing Calf Raise — search tutorials',url:'https://www.youtube.com/results?search_query=standing%20calf%20raise%20full%20range%20technique',cue:'Watch for: full heel drop and rise to big toe'},
+goblet:{title:'Goblet Squat — search tutorials',url:'https://www.youtube.com/results?search_query=goblet%20squat%20technique%20tutorial',cue:'Watch for: chest up and knees out'},
+leg_press:{title:'Leg Press — search tutorials',url:'https://www.youtube.com/results?search_query=leg%20press%20foot%20position%20technique%20tutorial',cue:'Watch for: foot position and do not lock out'},
+sumo:{title:'Sumo Goblet Squat — search tutorials',url:'https://www.youtube.com/results?search_query=sumo%20goblet%20squat%20wide%20stance%20technique',cue:'Watch for: wide stance and knees pushing out'},
+cable_crunch:{title:'Cable Crunch — search tutorials',url:'https://www.youtube.com/results?search_query=cable%20crunch%20technique%20abs%20tutorial',cue:'Watch for: hips fixed and crunch through elbows'},
+leg_raise:{title:'Hanging Leg Raise — search tutorials',url:'https://www.youtube.com/results?search_query=hanging%20leg%20raise%20technique%20pelvic%20tilt%20tutorial',cue:'Watch for: pelvic tilt at the top'},
+ab_wheel:{title:'Ab Wheel Rollout — search tutorials',url:'https://www.youtube.com/results?search_query=ab%20wheel%20rollout%20technique%20tutorial',cue:'Watch for: lower back flat throughout'},
+pallof:{title:'Pallof Press — search tutorials',url:'https://www.youtube.com/results?search_query=pallof%20press%20anti%20rotation%20core%20tutorial',cue:'Watch for: resist rotation, do not rotate toward cable'},
+decline_crunch:{title:'Weighted Decline Crunch — search tutorials',url:'https://www.youtube.com/results?search_query=weighted%20decline%20crunch%20technique%20tutorial',cue:'Watch for: full spinal flexion, back lifts off bench'},
+russian_twist:{title:'Russian Twist — search tutorials',url:'https://www.youtube.com/results?search_query=russian%20twist%20obliques%20technique%20tutorial',cue:'Watch for: oblique pulling through the rotation'},
+dead_bug:{title:'Dead Bug Core Exercise — search tutorials',url:'https://www.youtube.com/results?search_query=dead%20bug%20exercise%20TVA%20core%20technique%20tutorial',cue:'Watch for: lower back flat on floor always'},
+side_plank:{title:'Side Plank — search tutorials',url:'https://www.youtube.com/results?search_query=side%20plank%20technique%20tutorial',cue:'Watch for: hips elevated, straight line head to feet'},
+hollow_hold:{title:'Hollow Body Hold — search tutorials',url:'https://www.youtube.com/results?search_query=hollow%20body%20hold%20technique%20tutorial',cue:'Watch for: rib tuck and lower back flat'},
+inc_db_press:{title:'Incline DB Press — search tutorials',url:'https://www.youtube.com/results?search_query=incline%20dumbbell%20press%20technique%20tutorial',cue:'Watch for: natural arc and upper chest stretch'},
+cross_horizontal:{title:'Cable Crossover — search tutorials',url:'https://www.youtube.com/results?search_query=cable%20crossover%20chest%20fly%20technique%20tutorial',cue:'Watch for: hands meet at chest height exactly'},
+hip_thrust:{title:'Barbell Hip Thrust — search tutorials',url:'https://www.youtube.com/results?search_query=barbell%20hip%20thrust%20glute%20technique%20tutorial',cue:'Watch for: 2-sec glute squeeze at the top'},
+calf_seated:{title:'Seated Calf Raise — search tutorials',url:'https://www.youtube.com/results?search_query=seated%20calf%20raise%20soleus%20technique%20tutorial',cue:'Watch for: full drop and rise, different burn to standing'},
+hammer:{title:'Hammer Curl — search tutorials',url:'https://www.youtube.com/results?search_query=hammer%20curl%20brachialis%20technique%20tutorial',cue:'Watch for: neutral grip throughout, no rotation'},
+machine_press:{title:'Machine Chest Press — search tutorials',url:'https://www.youtube.com/results?search_query=machine%20chest%20press%20technique%20tutorial',cue:'Watch for: seat height and full extension'},
+face_pull:{title:'Face Pull — search tutorials',url:'https://www.youtube.com/results?search_query=face%20pull%20rotator%20cuff%20rear%20delt%20technique%20Jeff%20Nippard',cue:'Watch for: elbows high and external rotation at end'},
+adductor:{title:'Adductor Machine — search tutorials',url:'https://www.youtube.com/results?search_query=adductor+machine+inner+thigh+technique+tutorial',cue:'Watch for: 1-sec hold at full closure'},
+bicycle_crunch:{title:'Bicycle Crunch — search tutorials',url:'https://www.youtube.com/results?search_query=bicycle+crunch+oblique+technique+tutorial',cue:'Watch for: slow full rotation, no neck pulling'},
+};
+
+const EX_SVG={};
+const EX_YT={
+'d1_inc_bp':'incline_bp',
+'d1_chest_row':'chest_row',
+'d1_ohp':'ohp',
+'d1_shrug':'shrugs',
+'d1_inc_curl':'inc_curl',
+'d1_overhead_ext':'overhead_ext',
+'d1_rope_push':'rope_push',
+'d1_cable_crunch':'cable_crunch',
+'d1_leg_raise':'leg_raise',
+'d1_bicycle_crunch':'cable_crunch',
+'d2_dead_bug':'dead_bug',
+'d2_pallof':'pallof',
+'d2_squat':'squat',
+'d2_rdl':'rdl',
+'d2_hack_sq':'hack_squat',
+'d2_leg_curl':'leg_curl',
+'d2_calf_stand':'calf',
+'d2_leg_raise':'leg_raise',
+'d3_inc_db':'inc_db_press',
+'d3_cable_row':'cable_row',
+'d3_wide_pull':'lat_pull',
+'d3_pec_deck':'pec_deck',
+'d3_cable_fly_htl':'cross_horizontal',
+'d3_rear_delt_fly':'rear_delt',
+'d3_preacher':'preacher',
+'d3_lat_raise':'lat_raise',
+'d3_bar_push':'bar_push',
+'d3_decline_crunch':'decline_crunch',
+'d3_ab_wheel':'ab_wheel',
+'d3_side_plank':'side_plank',
+'d4_leg_press':'leg_press',
+'d4_hip_thrust':'hip_thrust',
+'d4_lunge':'rev_lunge',
+'d4_leg_ext':'leg_ext',
+'d4_adductor':'abductor',
+'d4_calf_seated':'calf_seated',
+'d4_abductor':'abductor',
+'d4_cable_crunch':'cable_crunch',
+'d4_hollow_hold':'hollow_hold',
+'d5_goblet':'goblet',
+'d5_single_row':'single_row',
+'d5_inc_cable_fly':'fly',
+'d5_lat_prayer':'lat_pull',
+'d5_arnold':'arnold',
+'d5_cable_lat_raise':'lat_raise',
+'d5_hammer_curl':'hammer',
+'d5_overhead_db_ext':'overhead_db',
+'d5_plank':'pallof',
+'d5_russian_twist':'russian_twist',
+'d6_sumo':'sumo',
+'d6_leg_curl':'leg_curl',
+'d6_rev_lunge':'rev_lunge',
+'d6_abductor':'abductor',
+'d6_machine_press':'machine_press',
+'d6_face_pull':'face_pull',
+'d6_single_arm_pull':'lat_pull',
+'d6_ez_curl':'ez_curl',
+'d6_pallof':'pallof',
+'d6_dead_bug':'dead_bug'
+};
+const P_AB=[{"id":"d1","label":"Day 1","title":"Push 1 \u2014 Heavy","muscle":"Chest, Shoulders, Triceps, Abs","note":"Heavy push day \u2014 strength focus. 3 min rest after compounds. Quality over speed.","a":{"label":"Week A","exercises":[{"id":"d1a_inc_bp","ss":false,"ssLabel":"","name":"Incline Barbell Press","focus":"Upper chest \u2014 primary heavy compound","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":7},{"t":"Set 2","kg":70,"r":7},{"t":"Set 3","kg":67.5,"r":7},{"t":"Set 4","kg":65,"r":8}],"form":"Bench at 30\u00b0. Grip just outside shoulder width. Retract scapula hard. Bar to upper chest. Elbows 45\u00b0. Drive up and slightly back.","pre":"Squeeze shoulder blades, push chest up, big breath and brace before unracking.","during":"Upper chest stretch at bottom. Contraction at top \u2014 not front delt.","check":"Correct: upper chest stretch at bottom. Wrong: front delt firing \u2014 lower the bench angle."},{"id":"d1a_ohp","ss":false,"ssLabel":"","name":"Overhead Barbell Press","focus":"All 3 delt heads \u2014 heavy compound","rest":180,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":50,"r":7},{"t":"Set 2","kg":50,"r":7},{"t":"Set 3","kg":47.5,"r":7},{"t":"Set 4","kg":47.5,"r":8}],"form":"Bar at collarbone. Grip just outside shoulder width. Press up and slightly back. Full lockout with slight shrug. Brace core before every rep.","pre":"Touch all three parts of your shoulder \u2014 front, side, back. All three fire here.","during":"Press the ceiling away. Full shoulder cap contracted at lockout.","check":"Correct: burning across whole shoulder cap. Wrong: only front delt \u2014 elbows too far forward."},{"id":"d1a_cable_lth","ss":false,"ssLabel":"","name":"Cable Crossover (Low-to-High)","focus":"Upper chest \u2014 cable stretch and tension","rest":75,"sets":[{"t":"Set 1","kg":10,"r":12},{"t":"Set 2","kg":10,"r":12},{"t":"Set 3","kg":8,"r":15}],"form":"Cables at lowest position. Stand centre, slight forward lean. Hands start at hip level. Bring UP and together in upward arc to chest height. Squeeze hard at top 1 sec.","pre":"Cable at bottom creates upward pull targeting upper pec fibres specifically.","during":"Feel the upward arc in the upper chest. Squeeze hard at the top.","check":"Correct: burning near collarbone at the squeeze. Wrong: shoulders firing \u2014 hands going too high."},{"id":"d1a_lat_raise","ss":true,"ssLabel":"Superset \u2014 Lateral Raise then immediately Overhead Cable Extension, rest 90 sec","name":"Lateral Raise","focus":"Side delt \u2014 isolation","rest":0,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Slight forward lean. Elbow leads. Raise to shoulder height. 3 sec lowering.","pre":"3-second lowering is where side delt works hardest.","during":"Feel outer shoulder burning on the way DOWN especially.","check":"Correct: outer shoulder burning. Wrong: traps shrugging \u2014 reduce weight."},{"id":"d1a_overhead_ext","ss":true,"ssLabel":"","name":"Overhead Cable Extension","focus":"Tricep long head \u2014 only stretches overhead","rest":90,"sets":[{"t":"Set 1","kg":35,"r":12},{"t":"Set 2","kg":35,"r":12},{"t":"Set 3","kg":32.5,"r":12}],"form":"Face away from cable. Rope overhead. Hands drop as far back as possible. Elbows forward and fixed. Press to extension. 1 sec hold.","pre":"Long head only fully stretches in this overhead position.","during":"Hold the stretch 1 sec before pressing. That stretch is the stimulus.","check":"Correct: deep stretch in back of upper arm. Wrong: elbows flaring \u2014 must stay forward."},{"id":"d1a_cable_crunch","ss":true,"ssLabel":"Superset \u2014 Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable, rope at neck. Crunch through elbows. Hips fixed. Full spine flexion.","pre":"Hips stay completely still \u2014 only spine moves.","during":"Elbows to knees. Feel burn in centre of stomach.","check":"Correct: abs burning. Wrong: hip flexors \u2014 hips are moving."},{"id":"d1a_leg_raise","ss":true,"ssLabel":"","name":"Hanging Leg Raise","focus":"Lower abs \u2014 pelvic tilt is the key","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top. Slow lowering.","pre":"Pelvic tilt at top makes this lower abs not hip flexors.","during":"Pelvic tilt every rep. Feel below the belly button.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add the pelvic tilt."}]},"b":{"label":"Week B","exercises":[{"id":"d1b_inc_db","ss":false,"ssLabel":"","name":"Incline Dumbbell Press","focus":"Upper chest \u2014 greater stretch than barbell","rest":180,"sets":[{"t":"Warm-up","kg":15,"r":15},{"t":"Set 1","kg":22,"r":7},{"t":"Set 2","kg":22,"r":7},{"t":"Set 3","kg":20,"r":8},{"t":"Set 4","kg":20,"r":8}],"form":"45\u00b0 bench. Natural arc. Greater stretch at bottom than barbell. Control the lowering.","pre":"Dumbbells allow more natural arc and greater ROM than barbell.","during":"Feel upper chest stretch at the bottom. Chase contraction at the top.","check":"Correct: upper chest stretch at bottom. Wrong: shoulder pain \u2014 check wrist angle."},{"id":"d1b_db_press","ss":false,"ssLabel":"","name":"Dumbbell Shoulder Press","focus":"All 3 delt heads \u2014 natural arc vs barbell","rest":180,"sets":[{"t":"Warm-up","kg":10,"r":15},{"t":"Set 1","kg":20,"r":7},{"t":"Set 2","kg":20,"r":7},{"t":"Set 3","kg":18,"r":8},{"t":"Set 4","kg":18,"r":8}],"form":"Dumbbells at shoulder height. Press up in natural arc. Full lockout. Control lowering.","pre":"Each arm works independently \u2014 find left-right imbalances.","during":"Natural arc upward. Full shoulder cap contracted at lockout.","check":"Correct: burning across whole shoulder cap. Wrong: front delt only \u2014 start position too far forward."},{"id":"d1b_inc_cable_fly","ss":false,"ssLabel":"","name":"Incline Cable Fly (Low-to-High)","focus":"Upper chest \u2014 lying cable fly","rest":75,"sets":[{"t":"Set 1","kg":8,"r":12},{"t":"Set 2","kg":8,"r":12},{"t":"Set 3","kg":8,"r":15}],"form":"Bench at 30\u201345\u00b0 between cable columns. Cables at lowest. Arms out to sides, slight elbow bend. Bring hands together in arc above upper chest.","pre":"Lying position gives a different stretch to standing cable crossover.","during":"Feel upper chest stretch as arms open wide. Squeeze at top.","check":"Correct: upper chest stretch at bottom. Wrong: elbows bending too much \u2014 keep fixed slight bend."},{"id":"d1b_cable_lat","ss":true,"ssLabel":"Superset \u2014 Cable Lateral Raise then immediately Overhead DB Extension, rest 90 sec","name":"Cable Lateral Raise","focus":"Side delt \u2014 constant cable tension","rest":0,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Single cable low pulley, side on. Raise to shoulder height. Elbow leads. 3 sec lowering. Cable keeps tension at bottom unlike dumbbell.","pre":"Cable gives constant tension at the bottom \u2014 the bottom is now a loaded position.","during":"3-second lowering is where side delt works hardest.","check":"Correct: outer shoulder burning throughout. Wrong: trap shrugging \u2014 reduce weight."},{"id":"d1b_overhead_db","ss":true,"ssLabel":"","name":"Overhead DB Extension","focus":"Tricep long head \u2014 stretch mediated","rest":90,"sets":[{"t":"Set 1","kg":20,"r":12},{"t":"Set 2","kg":20,"r":12},{"t":"Set 3","kg":18,"r":12}],"form":"Elbows point forward \u2014 fixed. Hands drop behind head for full stretch. Press to extension.","pre":"Same long head principle as cable version \u2014 different feel.","during":"Hold the stretch before every press.","check":"Correct: stretch in back of upper arm at bottom. Wrong: elbows flaring \u2014 stay forward."},{"id":"d1b_decline_crunch","ss":true,"ssLabel":"Superset \u2014 Decline Crunch then immediately Ab Wheel, rest 60 sec","name":"Weighted Decline Crunch","focus":"Upper rectus \u2014 full spinal flexion","rest":0,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":10,"r":20}],"form":"Hold plate at chest. Crunch UP \u2014 round spine fully so lower back lifts off bench. Pause 1 sec at top.","pre":"Full spinal flexion \u2014 lower back lifts off bench at top.","during":"Feel full spinal flexion. Pause at top.","check":"Correct: burn in centre, full spinal flexion. Wrong: just lifting head \u2014 crunch the spine."},{"id":"d1b_ab_wheel","ss":true,"ssLabel":"","name":"Ab Wheel Rollout","focus":"Full core \u2014 highest ab activation","rest":60,"sets":[{"t":"Set 1","kg":0,"r":10},{"t":"Set 2","kg":0,"r":10},{"t":"Set 3","kg":0,"r":12}],"form":"Knees on floor. Roll out as far as possible keeping lower back flat. Roll back using abs.","pre":"Big breath and brace before every rep.","during":"Feel abs under tension through the full stretch.","check":"Correct: abs burning from stretch to contraction. Wrong: lower back arching \u2014 reduce range."}]}},{"id":"d2","label":"Day 2","title":"Pull 1 \u2014 Heavy","muscle":"Back, Biceps, Abs","note":"Heavy pull day \u2014 strength focus. Full stretch on every rep. 3 min rest after compounds.","a":{"label":"Week A","exercises":[{"id":"d2a_bb_row","ss":false,"ssLabel":"","name":"Barbell Row","focus":"Mid back + lats \u2014 heavy compound pull","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":7},{"t":"Set 2","kg":70,"r":7},{"t":"Set 3","kg":67.5,"r":7},{"t":"Set 4","kg":65,"r":8}],"form":"Hinge 45\u00b0. Overhand grip outside shoulder width. Pull bar to lower sternum. Elbows back and up. Squeeze blades at top.","pre":"Hip hinge first \u2014 feel the back loading. Bar stays close to body.","during":"Pull to lower sternum. Elbows go back and up past the torso.","check":"Correct: mid back and lats burning. Wrong: lower back strain \u2014 hinge more."},{"id":"d2a_wide_pull","ss":false,"ssLabel":"","name":"Wide Grip Lat Pulldown","focus":"Lat width \u2014 outer lat emphasis","rest":90,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":8},{"t":"Set 2","kg":70,"r":8},{"t":"Set 3","kg":65,"r":8},{"t":"Set 4","kg":65,"r":8}],"form":"Wide overhand grip. 15\u00b0 lean back. Bar to upper chest. Lead with elbows. Full lat stretch at top every rep.","pre":"Think elbows to pockets not hands pulling.","during":"Full stretch at top. Lats contracted against sides at bottom.","check":"Correct: lat burning from armpit down. Wrong: biceps dominating \u2014 pull with elbows."},{"id":"d2a_bb_curl","ss":false,"ssLabel":"","name":"Barbell Curl","focus":"Biceps overall \u2014 heavy compound curl","rest":120,"sets":[{"t":"Warm-up","kg":20,"r":15},{"t":"Set 1","kg":37.5,"r":8},{"t":"Set 2","kg":37.5,"r":8},{"t":"Set 3","kg":35,"r":8},{"t":"Set 4","kg":35,"r":8}],"form":"Elbows pinned at sides. Full extension at bottom. Supinate at top. No swinging.","pre":"Biceps fresh after back work. Full extension at the bottom every rep.","during":"Full extension at bottom. Supination and squeeze at the top.","check":"Correct: bicep burning from stretch to peak. Wrong: swinging \u2014 reduce weight."},{"id":"d2a_inc_curl","ss":true,"ssLabel":"Superset \u2014 Incline DB Curl then immediately Hammer Curl, rest 90 sec","name":"Incline Dumbbell Curl","focus":"Bicep long head \u2014 best stretch position","rest":0,"sets":[{"t":"Set 1","kg":12,"r":10},{"t":"Set 2","kg":12,"r":10},{"t":"Set 3","kg":10,"r":12}],"form":"45\u00b0 incline. Arms hanging behind torso. Curl without elbows moving forward. Supinate at top. Hold stretch 1 sec at bottom.","pre":"Long head only fully stretches with arm behind torso.","during":"Hold stretch 1 sec before every curl. Upper arm stays back.","check":"Correct: deep stretch in lower bicep at bottom. Wrong: elbows swinging forward."},{"id":"d2a_hammer","ss":true,"ssLabel":"","name":"Hammer Curl","focus":"Brachialis \u2014 pushes bicep up from underneath","rest":90,"sets":[{"t":"Set 1","kg":16,"r":12},{"t":"Set 2","kg":16,"r":12},{"t":"Set 3","kg":14,"r":15}],"form":"Neutral grip throughout. Elbows pinned. Full extension at bottom.","pre":"Neutral grip targets brachialis differently to regular curl.","during":"Feel it in outer bicep and lower arm \u2014 that is the brachialis.","check":"Correct: outer bicep and lower arm burning. Wrong: rotating wrist \u2014 keep neutral."},{"id":"d2a_dead_bug","ss":true,"ssLabel":"Superset \u2014 Dead Bug then immediately Pallof Press, rest 60 sec","name":"Dead Bug","focus":"TVA \u2014 deep core stability","rest":0,"sets":[{"t":"Set 1","kg":0,"r":10},{"t":"Set 2","kg":0,"r":10},{"t":"Set 3","kg":0,"r":12}],"form":"Lie on back. Arms up, knees 90\u00b0. Lower opposite arm and leg. Lower back FLAT throughout.","pre":"Press lower back into floor as hard as possible before starting.","during":"Lower back flat on floor is the entire exercise.","check":"Correct: lower back stays flat. Wrong: back arching \u2014 reduce range."},{"id":"d2a_pallof","ss":true,"ssLabel":"","name":"Pallof Press","focus":"Anti-rotation \u2014 obliques and deep core","rest":60,"sets":[{"t":"Set 1","kg":15,"r":12},{"t":"Set 2","kg":15,"r":12},{"t":"Set 3","kg":15,"r":12}],"form":"Cable at chest height, side on. Press out from chest. Hold 2 sec. Return slowly. Resist rotation.","pre":"The effort is resisting the cable pulling you sideways.","during":"Feel obliques on the far side working to keep you square.","check":"Correct: obliques burning on far side. Wrong: rotating \u2014 reduce weight."}]},"b":{"label":"Week B","exercises":[{"id":"d2b_chest_row","ss":false,"ssLabel":"","name":"Chest Supported Row","focus":"Mid back \u2014 no lower back fatigue","rest":180,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":55,"r":7},{"t":"Set 2","kg":55,"r":7},{"t":"Set 3","kg":52.5,"r":7},{"t":"Set 4","kg":50,"r":8}],"form":"Chest fully on pad. Full stretch forward every rep. Pull elbows back and up past torso. Squeeze blades at peak, hold 1 sec.","pre":"Chest on pad eliminates lower back entirely. Pure mid back stimulus.","during":"Full stretch forward, full contraction back. Hold 1 sec at top.","check":"Correct: mid back burning, no lower back. Wrong: upper traps \u2014 drive elbows back not up."},{"id":"d2b_neutral_pull","ss":false,"ssLabel":"","name":"Neutral Grip Pulldown","focus":"Lats \u2014 lower lat emphasis vs wide grip","rest":90,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":65,"r":8},{"t":"Set 2","kg":65,"r":8},{"t":"Set 3","kg":60,"r":8},{"t":"Set 4","kg":60,"r":8}],"form":"V-bar or parallel handles. Pull to upper chest. Elbows drive down and back. Full lat stretch at top.","pre":"Neutral grip hits lower lats differently to wide grip.","during":"Full stretch at top. Lats contracted at bottom.","check":"Correct: lats burning, full stretch at top. Wrong: biceps first \u2014 pull with elbows."},{"id":"d2b_ez_curl","ss":false,"ssLabel":"","name":"EZ Bar Curl","focus":"Biceps \u2014 wrist-friendly heavy curl","rest":120,"sets":[{"t":"Warm-up","kg":20,"r":15},{"t":"Set 1","kg":35,"r":8},{"t":"Set 2","kg":35,"r":8},{"t":"Set 3","kg":32.5,"r":8},{"t":"Set 4","kg":32.5,"r":8}],"form":"EZ bar natural wrist angle. Elbows pinned. Full extension at bottom. Pinkies up at top.","pre":"Wrist-friendly compared to straight bar. Different feel to barbell curl.","during":"Full extension at bottom. Pinkies up at top for peak supination.","check":"Correct: bicep burning, no wrist discomfort. Wrong: wrist pain \u2014 check grip width."},{"id":"d2b_cable_curl","ss":true,"ssLabel":"Superset \u2014 Cable Curl then immediately Concentration Curl, rest 90 sec","name":"Cable Curl","focus":"Bicep \u2014 constant tension from cable","rest":0,"sets":[{"t":"Set 1","kg":15,"r":12},{"t":"Set 2","kg":15,"r":12},{"t":"Set 3","kg":12.5,"r":15}],"form":"Cable at low pulley. Curl with elbows pinned. Cable maintains tension at bottom unlike dumbbell.","pre":"Cable gives constant tension at bottom \u2014 the bottom position is now loaded.","during":"Feel tension even at full extension. Curl to peak and squeeze.","check":"Correct: bicep burning throughout full range. Wrong: elbows swinging \u2014 pin them."},{"id":"d2b_conc_curl","ss":true,"ssLabel":"","name":"Concentration Curl","focus":"Bicep peak \u2014 maximum isolation","rest":90,"sets":[{"t":"Set 1","kg":10,"r":12},{"t":"Set 2","kg":10,"r":12},{"t":"Set 3","kg":8,"r":15}],"form":"Sit on bench. Elbow planted on inner thigh. Curl and fully supinate at top. Squeeze hard. Full extension at bottom.","pre":"Elbow planted eliminates all cheating. Maximum peak contraction.","during":"Full supination at top \u2014 pinky turns outward. Feel the peak squeeze.","check":"Correct: intense burn at peak contraction. Wrong: elbow leaving thigh \u2014 plant it harder."},{"id":"d2b_dead_bug","ss":true,"ssLabel":"Superset \u2014 Dead Bug then immediately Pallof Press, rest 60 sec","name":"Dead Bug","focus":"TVA \u2014 deep core stability","rest":0,"sets":[{"t":"Set 1","kg":0,"r":10},{"t":"Set 2","kg":0,"r":10},{"t":"Set 3","kg":0,"r":12}],"form":"Lie on back. Arms up, knees 90\u00b0. Lower opposite arm and leg. Lower back FLAT throughout.","pre":"Press lower back into floor. Feel deep core engage.","during":"Lower back flat on floor is the entire exercise.","check":"Correct: lower back stays flat. Wrong: back arching \u2014 reduce range."},{"id":"d2b_pallof","ss":true,"ssLabel":"","name":"Pallof Press","focus":"Anti-rotation \u2014 obliques and deep core","rest":60,"sets":[{"t":"Set 1","kg":15,"r":12},{"t":"Set 2","kg":15,"r":12},{"t":"Set 3","kg":15,"r":12}],"form":"Cable at chest height, side on. Press out. Hold 2 sec. Resist rotation.","pre":"Resist the cable pulling you sideways.","during":"Feel obliques on far side keeping you square.","check":"Correct: obliques burning on far side. Wrong: rotating \u2014 reduce weight."}]}},{"id":"d3","label":"Day 3","title":"Legs 1 \u2014 Heavy","muscle":"Quads, Hamstrings, Glutes, Calves, Abs","note":"Heavy leg day \u2014 squat and RDL are the session. Everything else supports them. 3 min rest after compounds.","a":{"label":"Week A","exercises":[{"id":"d3a_squat","ss":false,"ssLabel":"","name":"Barbell Back Squat","focus":"Quads + glutes \u2014 king of leg exercises","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":82.5,"r":6},{"t":"Set 2","kg":82.5,"r":6},{"t":"Set 3","kg":80,"r":7},{"t":"Set 4","kg":77.5,"r":7}],"form":"Bar on upper traps. Feet shoulder width, toes 25\u201330\u00b0 out. Break at hips and knees simultaneously. Knees track over toes. At or below parallel.","pre":"Bodyweight squat first. At the bottom spread the floor with feet \u2014 feel glutes activate.","during":"Quads loading on descent. Glutes squeeze hard coming up and at the top.","check":"Correct: quads on descent, glutes on ascent. Wrong: lower back taking load \u2014 reduce weight."},{"id":"d3a_rdl","ss":false,"ssLabel":"","name":"Romanian Deadlift","focus":"Hamstrings + glutes \u2014 heavy stretch","rest":150,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":75,"r":7},{"t":"Set 2","kg":75,"r":7},{"t":"Set 3","kg":72.5,"r":7},{"t":"Set 4","kg":70,"r":8}],"form":"Push hips BACK \u2014 not down. Slight fixed knee bend. Bar drags down legs. Stop at strong hamstring stretch. Neutral spine always.","pre":"Hip hinge against a wall \u2014 feel hamstrings loading. That is the movement.","during":"Push the wall behind you with your hips every rep. Feel hamstring stretch from sitting bone down.","check":"Correct: strong hamstring pull from mid-thigh down. Wrong: lower back pain \u2014 neutral spine, reduce weight."},{"id":"d3a_leg_curl","ss":true,"ssLabel":"Superset \u2014 Lying Leg Curl then immediately Standing Calf Raise, rest 90 sec","name":"Lying Leg Curl","focus":"Hamstrings \u2014 isolated after RDL","rest":0,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":12}],"form":"Hips flat on bench. FLEX feet \u2014 toes toward shins throughout. Curl to full contraction. Full extension each rep. 3 sec lowering.","pre":"Hamstrings primed from RDL. Leg curl isolates them through the curl range.","during":"Toes toward shins the whole set. Feel pull in back of thigh not calf.","check":"Correct: hamstring burning from knee to glute. Wrong: calf cramping \u2014 flex feet harder."},{"id":"d3a_calf_stand","ss":true,"ssLabel":"","name":"Standing Calf Raise","focus":"Gastrocnemius \u2014 full range essential","rest":90,"sets":[{"t":"Set 1","kg":60,"r":15},{"t":"Set 2","kg":60,"r":15},{"t":"Set 3","kg":60,"r":15}],"form":"Ball of foot on step edge. Full heel drop below platform. Rise ALL the way up on big toe. Hold 1 sec at top.","pre":"Full stretch at bottom, full contraction at top. Half reps build nothing.","during":"Full stretch, full rise, 1 sec hold every rep.","check":"Correct: burn from stretch to peak contraction. Wrong: partial reps \u2014 calves will not respond."},{"id":"d3a_hollow","ss":true,"ssLabel":"Superset \u2014 Hollow Body Hold then immediately Ab Wheel, rest 60 sec","name":"Hollow Body Hold","focus":"Full core \u2014 static tension","rest":0,"sets":[{"t":"Set 1","kg":0,"r":30},{"t":"Set 2","kg":0,"r":35},{"t":"Set 3","kg":0,"r":40}],"form":"Lie on back. Arms overhead, legs straight and low. Tuck ribs toward hips. Lower back flat. Hold.","pre":"Rib tuck not a crunch. Feel the entire core engage from ribs to pelvis.","during":"Maintain rib tuck. Lower back flat. Hold under fatigue.","check":"Correct: full core working, lower back flat. Wrong: back arching \u2014 raise legs higher."},{"id":"d3a_ab_wheel","ss":true,"ssLabel":"","name":"Ab Wheel Rollout","focus":"Full core \u2014 highest ab activation","rest":60,"sets":[{"t":"Set 1","kg":0,"r":10},{"t":"Set 2","kg":0,"r":10},{"t":"Set 3","kg":0,"r":12}],"form":"Knees on floor. Roll out as far as possible keeping lower back flat. Roll back using abs.","pre":"Big breath and brace before every rep.","during":"Feel abs under tension through the full stretch.","check":"Correct: abs burning from stretch to contraction. Wrong: lower back arching \u2014 reduce range."}]},"b":{"label":"Week B","exercises":[{"id":"d3b_squat","ss":false,"ssLabel":"","name":"Barbell Back Squat","focus":"Quads + glutes \u2014 foundation movement","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":82.5,"r":6},{"t":"Set 2","kg":82.5,"r":6},{"t":"Set 3","kg":80,"r":7},{"t":"Set 4","kg":77.5,"r":7}],"form":"Bar on upper traps. Feet shoulder width, toes 25\u201330\u00b0 out. At or below parallel. Knees track over toes.","pre":"Progressive overload session \u2014 aim to beat last week by 1 rep or 2.5kg.","during":"Quads loading on descent. Glutes squeeze hard at the top.","check":"Correct: quads on descent, glutes on ascent. Wrong: lower back \u2014 reduce weight."},{"id":"d3b_rdl","ss":false,"ssLabel":"","name":"Romanian Deadlift","focus":"Hamstrings + glutes \u2014 heavy stretch","rest":150,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":75,"r":7},{"t":"Set 2","kg":75,"r":7},{"t":"Set 3","kg":72.5,"r":7},{"t":"Set 4","kg":70,"r":8}],"form":"Push hips BACK. Slight fixed knee bend. Bar drags down legs. Stop at strong hamstring stretch. Neutral spine.","pre":"Progressive overload \u2014 aim to beat last week.","during":"Push hips back every rep. Feel hamstring stretch from sitting bone down.","check":"Correct: hamstring pull from mid-thigh down. Wrong: lower back pain \u2014 reduce weight."},{"id":"d3b_leg_press_curl","ss":true,"ssLabel":"Superset \u2014 Leg Press then immediately Seated Leg Curl, rest 90 sec","name":"Leg Press","focus":"Quads \u2014 mid position for quad emphasis","rest":0,"sets":[{"t":"Set 1","kg":120,"r":10},{"t":"Set 2","kg":120,"r":10},{"t":"Set 3","kg":110,"r":12}],"form":"Feet mid-plate, hip width, toes slightly out. Lower until knees at 90\u00b0. Press through full foot. No full lockout.","pre":"Week B adds leg press as quad volume after squats.","during":"Feel quads loading through full range. Constant tension.","check":"Correct: quads burning. Wrong: knees caving \u2014 push them outward."},{"id":"d3b_seated_curl","ss":true,"ssLabel":"","name":"Seated Leg Curl","focus":"Hamstrings \u2014 different angle to lying curl","rest":90,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":12}],"form":"Seated changes hip angle shifting emphasis vs lying. Flex feet. Full range. 3 sec negative.","pre":"Different to lying curl \u2014 seated hip angle shifts which part of hamstring is most loaded.","during":"Toes toward shins. Full extension at top. 3-second lowering.","check":"Correct: hamstring burning throughout. Wrong: back lifting off seat \u2014 reduce weight."},{"id":"d3b_calf_stand","ss":false,"ssLabel":"","name":"Standing Calf Raise","focus":"Gastrocnemius \u2014 full range","rest":60,"sets":[{"t":"Set 1","kg":60,"r":15},{"t":"Set 2","kg":60,"r":15},{"t":"Set 3","kg":60,"r":15}],"form":"Ball of foot on step. Full heel drop. Rise ALL the way up on big toe. Hold 1 sec.","pre":"Full range only. Half reps build nothing.","during":"Full stretch, full rise, 1 sec hold every rep.","check":"Correct: burn from stretch to peak. Wrong: partial reps."},{"id":"d3b_hollow","ss":true,"ssLabel":"Superset \u2014 Hollow Body Hold then immediately Side Plank, rest 60 sec","name":"Hollow Body Hold","focus":"Full core \u2014 static tension","rest":0,"sets":[{"t":"Set 1","kg":0,"r":30},{"t":"Set 2","kg":0,"r":35},{"t":"Set 3","kg":0,"r":40}],"form":"Lie on back. Arms overhead, legs low. Rib tuck. Lower back flat. Hold.","pre":"Rib tuck \u2014 feel the entire core engage.","during":"Maintain rib tuck. Lower back flat.","check":"Correct: full core working. Wrong: back arching \u2014 raise legs higher."},{"id":"d3b_side_plank","ss":true,"ssLabel":"","name":"Side Plank","focus":"Lateral core + obliques","rest":60,"sets":[{"t":"Set 1","kg":0,"r":30},{"t":"Set 2","kg":0,"r":35},{"t":"Set 3","kg":0,"r":40}],"form":"Forearm on floor, body in straight line. Hips elevated. Hold. Both sides.","pre":"Reps are seconds. Feel lateral core from hip to armpit.","during":"Hips up throughout. Feel oblique and lateral core.","check":"Correct: lateral core burning. Wrong: hips sagging \u2014 raise them."}]}},{"id":"d4","label":"Day 4","title":"Push 2 \u2014 Volume","muscle":"Chest, Shoulders, Triceps, Abs","note":"Volume push day \u2014 pump focus. No heavy compound today. Chase the contraction. 60\u201390 sec rest.","a":{"label":"Week A","exercises":[{"id":"d4a_pec_deck","ss":false,"ssLabel":"","name":"Pec Deck","focus":"Inner chest \u2014 peak contraction and stretch","rest":75,"sets":[{"t":"Set 1","kg":50,"r":12},{"t":"Set 2","kg":50,"r":12},{"t":"Set 3","kg":47.5,"r":15},{"t":"Set 4","kg":47.5,"r":15}],"form":"Forearms flat against pads. Bring together slowly. Squeeze HARD at peak for 2 sec. Control return to full stretch.","pre":"Touch your sternum \u2014 inner chest fibres run from there outward.","during":"At peak squeeze as hard as possible for 2 full seconds.","check":"Correct: burning in inner chest at peak squeeze. Wrong: feeling in arms \u2014 elbows lead not hands."},{"id":"d4a_flat_db","ss":false,"ssLabel":"","name":"Flat Dumbbell Press","focus":"Overall chest \u2014 full pec stretch","rest":90,"sets":[{"t":"Set 1","kg":24,"r":10},{"t":"Set 2","kg":24,"r":10},{"t":"Set 3","kg":22,"r":12},{"t":"Set 4","kg":22,"r":12}],"form":"Flat bench. Natural arc. Lower to full stretch. Press up and slightly in.","pre":"Greater ROM than barbell. Feel the full pec stretch at the bottom.","during":"Full stretch at bottom. Squeeze at top. Natural arc not straight up.","check":"Correct: full chest stretch at bottom. Wrong: shoulder pain \u2014 dumbbells more natural than bar."},{"id":"d4a_arnold","ss":true,"ssLabel":"Superset \u2014 Arnold Press then immediately Rear Delt Fly, rest 75 sec","name":"Arnold Press","focus":"All 3 delt heads \u2014 rotation hits all of them","rest":0,"sets":[{"t":"Set 1","kg":14,"r":12},{"t":"Set 2","kg":14,"r":12},{"t":"Set 3","kg":12,"r":15}],"form":"Start palms facing you at chin. Press up while rotating palms forward. Full lockout at top.","pre":"Rotation progressively loads front then side delt through the movement.","during":"Feel front delt at start of rotation, side delt at top. Slow deliberate rotation.","check":"Correct: feeling different delt heads through rotation. Wrong: rushing \u2014 slow down."},{"id":"d4a_rear_delt","ss":true,"ssLabel":"","name":"Rear Delt Fly","focus":"Rear delt \u2014 often undertrained","rest":75,"sets":[{"t":"Set 1","kg":8,"r":15},{"t":"Set 2","kg":8,"r":15},{"t":"Set 3","kg":6,"r":20}],"form":"Hinge 45\u00b0. Raise in wide arc to shoulder height. Thumbs DOWN. Elbows lead back and up. Squeeze rear delts at peak 2 sec.","pre":"Thumbs down reduces trap involvement. Feel contraction at BACK of shoulder cap.","during":"Lead with elbows going back. Feel contraction at back of shoulder cap.","check":"Correct: burning at back of shoulder cap. Wrong: mid traps \u2014 arms going too high."},{"id":"d4a_skull_crusher","ss":true,"ssLabel":"Superset \u2014 Skull Crusher then immediately Rope Pushdown, rest 90 sec","name":"Skull Crusher","focus":"Tricep long + medial head \u2014 full ROM","rest":0,"sets":[{"t":"Set 1","kg":30,"r":12},{"t":"Set 2","kg":30,"r":12},{"t":"Set 3","kg":27.5,"r":12}],"form":"EZ bar. Lie flat. Lower bar to forehead \u2014 elbows stay pointing up. Press to full extension. 1 sec hold.","pre":"Elbows point toward ceiling throughout. Lower to forehead not behind head.","during":"Feel stretch at bottom, full contraction at lockout.","check":"Correct: tricep stretching at bottom, contracting at top. Wrong: elbows flaring \u2014 point them up."},{"id":"d4a_rope_push","ss":true,"ssLabel":"","name":"Rope Pushdown","focus":"Tricep lateral head \u2014 outer visible head","rest":90,"sets":[{"t":"Set 1","kg":52.5,"r":12},{"t":"Set 2","kg":52.5,"r":12},{"t":"Set 3","kg":47.5,"r":15}],"form":"Cable at top. Elbows pinned. Push down and FLARE rope outward at bottom. Full extension. 1 sec hold.","pre":"Flare at the bottom targets the lateral head specifically.","during":"At bottom spread rope as wide as possible.","check":"Correct: outer side of back of arm burning. Wrong: not feeling outer arm \u2014 flare harder."},{"id":"d4a_bicycle","ss":true,"ssLabel":"Superset \u2014 Bicycle Crunch then immediately Russian Twist, rest 60 sec","name":"Bicycle Crunch","focus":"Obliques + rectus \u2014 rotational combination","rest":0,"sets":[{"t":"Set 1","kg":0,"r":20},{"t":"Set 2","kg":0,"r":20},{"t":"Set 3","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel the oblique pulling you into each rotation. Slow reps worth 10x fast ones.","during":"Full rotation each side. Feel oblique contracting at each peak.","check":"Correct: obliques burning, slow controlled rotation. Wrong: neck pulling \u2014 hands just rest."},{"id":"d4a_russian_twist","ss":true,"ssLabel":"","name":"Russian Twist","focus":"Obliques \u2014 rotational strength","rest":60,"sets":[{"t":"Set 1","kg":10,"r":20},{"t":"Set 2","kg":10,"r":20},{"t":"Set 3","kg":8,"r":25}],"form":"Sit at 45\u00b0. Feet off floor. Rotate side to side \u2014 touch weight to floor each side. Pause 1 sec.","pre":"Feel the obliques pulling you through the rotation.","during":"Oblique PULLS you through the rotation. Pause 1 sec each side.","check":"Correct: burning on sides of stomach. Wrong: just swinging arms \u2014 slow down."}]},"b":{"label":"Week B","exercises":[{"id":"d4b_cable_htl","ss":false,"ssLabel":"","name":"Cable Fly (High-to-Low)","focus":"Lower chest \u2014 downward arc targets lower pec","rest":75,"sets":[{"t":"Set 1","kg":10,"r":12},{"t":"Set 2","kg":10,"r":12},{"t":"Set 3","kg":8,"r":15},{"t":"Set 4","kg":8,"r":15}],"form":"Cables at HIGHEST position. Stand centre. Hands at shoulder height, bring DOWN and together to hip level. Squeeze hard at bottom.","pre":"Lower pec fibres run at a downward angle \u2014 this is the only exercise that directly targets them.","during":"Feel the downward arc pulling at the lower chest. Squeeze where hands meet at hip level.","check":"Correct: burning at bottom of chest near ribcage. Wrong: mid chest only \u2014 hands further down."},{"id":"d4b_machine_press","ss":false,"ssLabel":"","name":"Machine Chest Press","focus":"Overall chest \u2014 constant tension no stability demand","rest":90,"sets":[{"t":"Set 1","kg":60,"r":10},{"t":"Set 2","kg":60,"r":10},{"t":"Set 3","kg":55,"r":12},{"t":"Set 4","kg":55,"r":12}],"form":"Seat so handles at mid-chest. Full extension at lockout \u2014 squeeze chest. Control the return.","pre":"Machine removes stability demand \u2014 focus purely on feeling the chest work.","during":"Smooth controlled reps. Feel the chest contracting on every press.","check":"Correct: chest burning throughout. Wrong: shoulder pain \u2014 adjust seat height."},{"id":"d4b_db_lat","ss":true,"ssLabel":"Superset \u2014 DB Lateral Raise then immediately Rear Delt Cable Pull, rest 75 sec","name":"DB Lateral Raise","focus":"Side delt \u2014 pump focus","rest":0,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Slight forward lean. Elbow leads. Raise to shoulder height. 3 sec lowering.","pre":"Volume hit for side delt today \u2014 lighter and more reps than Push 1.","during":"3-second LOWERING is the working portion.","check":"Correct: outer shoulder burning on lowering. Wrong: traps \u2014 reduce weight."},{"id":"d4b_rear_cable","ss":true,"ssLabel":"","name":"Rear Delt Cable Pull","focus":"Rear delt \u2014 cable constant tension version","rest":75,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":8,"r":20}],"form":"Cable at face height, single handle. Pull elbow back and out past your ear. Keep elbow high.","pre":"Cable version of rear delt fly. Constant tension differs from dumbbell.","during":"Elbow goes back and OUT \u2014 not just back. Feel contraction at back of shoulder cap.","check":"Correct: rear delt burning. Wrong: trap engaging \u2014 elbow stays high throughout."},{"id":"d4b_bar_push","ss":true,"ssLabel":"Superset \u2014 Straight Bar Pushdown then immediately Overhead DB Extension, rest 90 sec","name":"Straight Bar Pushdown","focus":"Tricep medial head \u2014 different to rope","rest":0,"sets":[{"t":"Set 1","kg":47.5,"r":12},{"t":"Set 2","kg":47.5,"r":12},{"t":"Set 3","kg":42.5,"r":15}],"form":"Straight bar at top. Elbows pinned. Push straight down. Wrist neutral. Full extension. 1 sec hold.","pre":"Straight bar targets medial head differently to rope flare.","during":"Wrist neutral throughout.","check":"Correct: back of arm burning. Wrong: wrist pain \u2014 ensure neutral wrist."},{"id":"d4b_overhead_db_b","ss":true,"ssLabel":"","name":"Overhead DB Extension","focus":"Tricep long head \u2014 stretch mediated","rest":90,"sets":[{"t":"Set 1","kg":20,"r":12},{"t":"Set 2","kg":20,"r":12},{"t":"Set 3","kg":18,"r":15}],"form":"Elbows point forward \u2014 fixed. Hands drop behind head for full stretch. Press to extension.","pre":"Long head only fully stretches in this overhead position.","during":"Hold the stretch before every press.","check":"Correct: stretch in back of upper arm at bottom. Wrong: elbows flaring."},{"id":"d4b_bicycle","ss":true,"ssLabel":"Superset \u2014 Bicycle Crunch then immediately Russian Twist, rest 60 sec","name":"Bicycle Crunch","focus":"Obliques + rectus","rest":0,"sets":[{"t":"Set 1","kg":0,"r":20},{"t":"Set 2","kg":0,"r":20},{"t":"Set 3","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel the oblique pulling you into each rotation.","during":"Full rotation each side.","check":"Correct: obliques burning. Wrong: neck pulling \u2014 hands just rest."},{"id":"d4b_russian_twist","ss":true,"ssLabel":"","name":"Russian Twist","focus":"Obliques \u2014 rotational strength","rest":60,"sets":[{"t":"Set 1","kg":10,"r":20},{"t":"Set 2","kg":10,"r":20},{"t":"Set 3","kg":8,"r":25}],"form":"Sit at 45\u00b0. Feet off floor. Rotate side to side. Pause 1 sec each side.","pre":"Feel obliques pulling through the rotation.","during":"Pause 1 sec each side.","check":"Correct: sides burning. Wrong: just swinging arms."}]}},{"id":"d5","label":"Day 5","title":"Pull 2 \u2014 Volume","muscle":"Back, Biceps, Abs","note":"Volume pull day \u2014 pump focus. Different exercises to Pull 1. Chase the stretch and contraction.","a":{"label":"Week A","exercises":[{"id":"d5a_cable_row","ss":false,"ssLabel":"","name":"Seated Cable Row","focus":"Lower lats + mid back thickness","rest":90,"sets":[{"t":"Set 1","kg":57.5,"r":12},{"t":"Set 2","kg":57.5,"r":12},{"t":"Set 3","kg":55,"r":12},{"t":"Set 4","kg":55,"r":12}],"form":"V-bar. Reach forward fully every rep. Pull to lower sternum. No torso rocking. Hold 1 sec.","pre":"Full reach forward \u2014 lat stretch. Full row back \u2014 lat contracted.","during":"Two deliberate positions every rep. Hold at the back.","check":"Correct: feeling stretch and squeeze. Wrong: rocking torso \u2014 reduce weight."},{"id":"d5a_single_pull","ss":false,"ssLabel":"","name":"Single Arm Lat Pulldown","focus":"Lat \u2014 unilateral fixes imbalances","rest":90,"sets":[{"t":"Set 1","kg":25,"r":12},{"t":"Set 2","kg":25,"r":12},{"t":"Set 3","kg":22.5,"r":12},{"t":"Set 4","kg":22.5,"r":12}],"form":"Single handle. Pull elbow straight down to hip. Full stretch at top. Feel one lat at a time.","pre":"Feel each side individually. Compare left vs right.","during":"One lat fully stretching at top, fully contracting at bottom.","check":"Correct: one lat burning fully. Wrong: leaning too far \u2014 keep torso upright."},{"id":"d5a_preacher","ss":false,"ssLabel":"","name":"Preacher Curl","focus":"Bicep short head \u2014 lower bicep thickness","rest":90,"sets":[{"t":"Set 1","kg":22,"r":12},{"t":"Set 2","kg":22,"r":12},{"t":"Set 3","kg":20,"r":15},{"t":"Set 4","kg":20,"r":15}],"form":"Upper arm flat on pad. Full extension at bottom. Curl to 90\u00b0. Squeeze HARD. Slow lowering.","pre":"Pad eliminates all cheating. Different from incline curl \u2014 short head emphasis.","during":"Curl to 90\u00b0 and squeeze hard. Hold 1 sec.","check":"Correct: burn in lower inner belly of bicep. Wrong: elbow joint pain \u2014 reduce weight."},{"id":"d5a_shrugs","ss":true,"ssLabel":"Superset \u2014 Barbell Shrug then immediately Cable Curl, rest 90 sec","name":"Barbell Shrug","focus":"Upper traps \u2014 completely missed by all other exercises","rest":0,"sets":[{"t":"Set 1","kg":80,"r":12},{"t":"Set 2","kg":80,"r":12},{"t":"Set 3","kg":80,"r":12}],"form":"Barbell at hips. Shrug STRAIGHT UP. Hold 2 sec at the top. Full lowering. Do not roll shoulders.","pre":"Purely vertical movement. Feel upper trap from neck to outer shoulder.","during":"Straight up, 2 sec hold, full drop every rep.","check":"Correct: burning from neck to outer shoulder at top. Wrong: rolling shoulders \u2014 straight up only."},{"id":"d5a_cable_curl","ss":true,"ssLabel":"","name":"Cable Curl","focus":"Bicep \u2014 constant tension from cable","rest":90,"sets":[{"t":"Set 1","kg":15,"r":12},{"t":"Set 2","kg":15,"r":12},{"t":"Set 3","kg":12.5,"r":15}],"form":"Cable at low pulley. Curl with elbows pinned. Cable maintains tension at bottom unlike dumbbell.","pre":"Cable gives constant tension at bottom \u2014 the bottom is now a loaded position.","during":"Feel tension even at full extension. Curl to peak and squeeze.","check":"Correct: bicep burning throughout full range. Wrong: elbows swinging \u2014 pin them."},{"id":"d5a_side_plank","ss":true,"ssLabel":"Superset \u2014 Side Plank then immediately Bicycle Crunch, rest 60 sec","name":"Side Plank","focus":"Lateral core + obliques","rest":0,"sets":[{"t":"Set 1","kg":0,"r":30},{"t":"Set 2","kg":0,"r":35},{"t":"Set 3","kg":0,"r":40}],"form":"Forearm on floor, body straight. Hips elevated. Hold. Both sides.","pre":"Reps are seconds. Feel lateral core from hip to armpit.","during":"Hips up throughout.","check":"Correct: lateral core burning. Wrong: hips sagging \u2014 raise them."},{"id":"d5a_bicycle","ss":true,"ssLabel":"","name":"Bicycle Crunch","focus":"Obliques + rectus \u2014 rotational","rest":60,"sets":[{"t":"Set 1","kg":0,"r":20},{"t":"Set 2","kg":0,"r":20},{"t":"Set 3","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel oblique pulling you into each rotation.","during":"Full rotation each side. Feel oblique contracting at peak.","check":"Correct: obliques burning. Wrong: neck pulling \u2014 hands just rest."}]},"b":{"label":"Week B","exercises":[{"id":"d5b_single_row","ss":false,"ssLabel":"","name":"Single Arm Dumbbell Row","focus":"Lat \u2014 unilateral max load","rest":90,"sets":[{"t":"Set 1","kg":30,"r":12},{"t":"Set 2","kg":30,"r":12},{"t":"Set 3","kg":28,"r":12},{"t":"Set 4","kg":28,"r":12}],"form":"Knee and hand on bench. Row elbow straight back past hip. Full reach forward every rep.","pre":"Unilateral \u2014 heavier effective load per lat. Compare left vs right.","during":"Full reach forward \u2014 lat stretch. Full row back \u2014 lat contracted.","check":"Correct: lat burning on working side. Wrong: torso rotating \u2014 elbow drives back."},{"id":"d5b_lat_prayer","ss":false,"ssLabel":"","name":"Straight Arm Lat Pulldown","focus":"Lat isolation \u2014 zero bicep involvement","rest":90,"sets":[{"t":"Set 1","kg":30,"r":12},{"t":"Set 2","kg":30,"r":12},{"t":"Set 3","kg":27.5,"r":12},{"t":"Set 4","kg":27.5,"r":12}],"form":"Stand facing high cable. Arms straight \u2014 do NOT bend elbows. Pull bar down in arc from overhead to hips.","pre":"Arms stay straight the entire set. Zero bicep involvement. Pure lat.","during":"Feel the lat pulling your upper arm down. Very intense contraction at bottom.","check":"Correct: burning deep in lat from armpit down. Wrong: elbows bending \u2014 reduce weight."},{"id":"d5b_inc_db_curl","ss":false,"ssLabel":"","name":"Incline Dumbbell Curl","focus":"Bicep long head \u2014 best stretch position","rest":90,"sets":[{"t":"Set 1","kg":12,"r":12},{"t":"Set 2","kg":12,"r":12},{"t":"Set 3","kg":10,"r":15},{"t":"Set 4","kg":10,"r":15}],"form":"45\u00b0 incline. Arms hanging behind torso. Curl without elbows moving forward. Supinate at top.","pre":"Long head only fully stretches with arm behind torso.","during":"Hold stretch 1 sec before every curl. Upper arm stays back.","check":"Correct: deep stretch in lower bicep. Wrong: elbows swinging forward."},{"id":"d5b_shrugs","ss":true,"ssLabel":"Superset \u2014 Barbell Shrug then immediately Hammer Curl, rest 90 sec","name":"Barbell Shrug","focus":"Upper traps \u2014 direct stimulus","rest":0,"sets":[{"t":"Set 1","kg":80,"r":12},{"t":"Set 2","kg":80,"r":12},{"t":"Set 3","kg":80,"r":12}],"form":"Barbell at hips. Shrug STRAIGHT UP. Hold 2 sec at top. Full lowering. No rolling.","pre":"Straight up only. Feel upper trap contracting hard at the top.","during":"Straight up, 2 sec hold, full drop.","check":"Correct: neck to outer shoulder burning. Wrong: rolling \u2014 straight up only."},{"id":"d5b_hammer","ss":true,"ssLabel":"","name":"Hammer Curl","focus":"Brachialis \u2014 neutral grip variation","rest":90,"sets":[{"t":"Set 1","kg":16,"r":12},{"t":"Set 2","kg":16,"r":12},{"t":"Set 3","kg":14,"r":15}],"form":"Neutral grip throughout. Elbows pinned. Full extension at bottom.","pre":"Neutral grip targets brachialis which pushes the bicep up from underneath.","during":"Feel it in outer bicep and lower arm.","check":"Correct: outer bicep and lower arm burning. Wrong: rotating wrist \u2014 keep neutral."},{"id":"d5b_side_plank","ss":true,"ssLabel":"Superset \u2014 Side Plank then immediately Pallof Press, rest 60 sec","name":"Side Plank","focus":"Lateral core + obliques","rest":0,"sets":[{"t":"Set 1","kg":0,"r":30},{"t":"Set 2","kg":0,"r":35},{"t":"Set 3","kg":0,"r":40}],"form":"Forearm on floor, body straight. Hips elevated. Hold. Both sides.","pre":"Feel lateral core from hip to armpit.","during":"Hips up throughout.","check":"Correct: lateral core burning. Wrong: hips sagging."},{"id":"d5b_pallof","ss":true,"ssLabel":"","name":"Pallof Press","focus":"Anti-rotation \u2014 obliques and deep core","rest":60,"sets":[{"t":"Set 1","kg":15,"r":12},{"t":"Set 2","kg":15,"r":12},{"t":"Set 3","kg":15,"r":12}],"form":"Cable at chest height, side on. Press out. Hold 2 sec. Resist rotation.","pre":"Resist the cable pulling you sideways.","during":"Feel obliques on far side keeping you square.","check":"Correct: obliques burning on far side. Wrong: rotating \u2014 reduce weight."}]}},{"id":"d6","label":"Day 6","title":"Legs 2 \u2014 Volume","muscle":"Glutes, Quads, Hamstrings, Calves, Abs","note":"Volume leg day \u2014 hip thrust leads. All supersets after the thrust. Chase the pump. 90 sec rest.","a":{"label":"Week A","exercises":[{"id":"d6a_hip_thrust","ss":false,"ssLabel":"","name":"Barbell Hip Thrust","focus":"Glutes \u2014 the single best glute exercise","rest":120,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":10},{"t":"Set 4","kg":75,"r":10}],"form":"Upper back against bench at shoulder blade level. Bar across hip crease \u2014 use pad. Drive hips up. SQUEEZE glutes for 2 sec at top.","pre":"Bar in the hip crease not the lower abdomen. Bar pad is not optional.","during":"At top: body straight from knees to shoulders. Squeeze glutes as hard as possible for 2 full seconds.","check":"Correct: glutes on fire, 2-sec squeeze. Wrong: lower back arching \u2014 squeeze glutes more."},{"id":"d6a_leg_press","ss":true,"ssLabel":"Superset \u2014 Leg Press then immediately Leg Extension, rest 90 sec","name":"Leg Press","focus":"Quads \u2014 mid position for quad emphasis","rest":0,"sets":[{"t":"Set 1","kg":120,"r":12},{"t":"Set 2","kg":120,"r":12},{"t":"Set 3","kg":110,"r":12}],"form":"Feet mid-plate, hip width. Lower until knees at 90\u00b0. Press through full foot. No full lockout.","pre":"Mid plate for quad emphasis \u2014 different to high/wide position.","during":"Quads loading through full range. Constant tension.","check":"Correct: quads burning. Wrong: knees caving \u2014 push them outward."},{"id":"d6a_leg_ext","ss":true,"ssLabel":"","name":"Leg Extension","focus":"VMO + quad isolation \u2014 end range contraction","rest":90,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":15}],"form":"Sit fully back. Pad just above ankle. Extend to FULL lockout. Hold 1 sec. 3 sec lowering.","pre":"After leg press \u2014 mechanical drop set. Hits VMO at end-range that compounds miss.","during":"Full lockout and 1 sec hold every rep. Feel teardrop muscle above the knee.","check":"Correct: quads burning especially above knee. Wrong: lifting off seat \u2014 reduce weight."},{"id":"d6a_leg_curl_ss","ss":true,"ssLabel":"Superset \u2014 Leg Curl then immediately Seated Calf Raise, rest 90 sec","name":"Lying Leg Curl","focus":"Hamstrings \u2014 volume hit after hip thrust","rest":0,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":12}],"form":"Hips flat on bench. FLEX feet. Curl to full contraction. Full extension. 3 sec lowering.","pre":"Hamstrings already primed from hip thrust. Isolation finisher.","during":"Toes toward shins. Feel pull in back of thigh.","check":"Correct: hamstring burning. Wrong: calf cramping \u2014 flex feet harder."},{"id":"d6a_calf_seated","ss":true,"ssLabel":"","name":"Seated Calf Raise","focus":"Soleus \u2014 different muscle to standing calf raise","rest":90,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":37.5,"r":18}],"form":"Seated targets the SOLEUS. Full drop, full rise, 1 sec hold at top.","pre":"Seated bends the knee taking the gastrocnemius out. Different burn location to standing.","during":"Full heel drop, full rise on big toe, 1 sec hold.","check":"Correct: burning deep in calf \u2014 different location to standing raises. Wrong: half reps."},{"id":"d6a_abductor","ss":true,"ssLabel":"Superset \u2014 Abductor then immediately Adductor, rest 75 sec","name":"Abductor Machine","focus":"Outer hip \u2014 missed by all compounds","rest":0,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":40,"r":15}],"form":"Sit fully back. Pads on outer thighs above knee. Open to maximum range. Squeeze outer hips at widest point.","pre":"Outer hip gets no stimulus from any compound movement.","during":"At widest point feel the squeeze on outer hip and side of glute.","check":"Correct: outer hip and glute burning. Wrong: feeling in quad \u2014 focus on hip opening."},{"id":"d6a_adductor","ss":true,"ssLabel":"","name":"Adductor Machine","focus":"Inner thigh \u2014 completely missed by all compounds","rest":75,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":40,"r":15}],"form":"Sit fully back. Pads on inner thighs. Squeeze legs together. Pause 1 sec at full closure. Control return.","pre":"Inner thigh gets zero stimulus from any other exercise.","during":"Pause 1 sec at full closure \u2014 feel the inner thigh contracting.","check":"Correct: inner thigh burning. Wrong: feeling outer hip \u2014 squeeze inward not push."},{"id":"d6a_cable_crunch","ss":true,"ssLabel":"Superset \u2014 Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable. Crunch through elbows. Hips fixed. Full spine flexion.","pre":"Hips stay completely still.","during":"Elbows to knees. Feel burn in centre of stomach.","check":"Correct: abs burning. Wrong: hip flexors \u2014 hips are moving."},{"id":"d6a_leg_raise","ss":true,"ssLabel":"","name":"Hanging Leg Raise","focus":"Lower abs","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top.","pre":"Pelvic tilt at top makes this lower abs not hip flexors.","during":"Pelvic tilt every rep.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add the pelvic tilt."}]},"b":{"label":"Week B","exercises":[{"id":"d6b_hip_thrust","ss":false,"ssLabel":"","name":"Barbell Hip Thrust","focus":"Glutes \u2014 progressive overload session","rest":120,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":10},{"t":"Set 4","kg":75,"r":10}],"form":"Upper back against bench. Bar across hip crease \u2014 use pad. Drive hips up. SQUEEZE glutes 2 sec.","pre":"Aim to beat last week \u2014 add 2.5kg or 1 rep.","during":"2-sec squeeze at the top every single rep.","check":"Correct: glutes on fire at top. Wrong: lower back arching \u2014 squeeze glutes more."},{"id":"d6b_hack_sq","ss":true,"ssLabel":"Superset \u2014 Hack Squat then immediately Leg Extension, rest 90 sec","name":"Hack Squat","focus":"Quads \u2014 deep range quad isolation","rest":0,"sets":[{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":12}],"form":"Feet mid-plate, hip width. Descend until thighs below parallel. Press through full foot. No full lockout.","pre":"Week B uses hack squat instead of leg press for a different quad stimulus.","during":"Feel quads burning through full range. Slow controlled descent.","check":"Correct: quads burning through full range. Wrong: back lifting off pad \u2014 reduce depth."},{"id":"d6b_leg_ext","ss":true,"ssLabel":"","name":"Leg Extension","focus":"VMO \u2014 end range contraction after hack squat","rest":90,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":15}],"form":"Sit fully back. Extend to full lockout. Hold 1 sec. 3 sec lowering.","pre":"After hack squat \u2014 mechanical drop set finishing the quads.","during":"Full lockout and 1 sec hold every rep.","check":"Correct: quads burning above knee. Wrong: lifting off seat \u2014 reduce weight."},{"id":"d6b_seated_curl","ss":true,"ssLabel":"Superset \u2014 Seated Leg Curl then immediately Seated Calf Raise, rest 90 sec","name":"Seated Leg Curl","focus":"Hamstrings \u2014 different angle to lying","rest":0,"sets":[{"t":"Set 1","kg":40,"r":12},{"t":"Set 2","kg":40,"r":12},{"t":"Set 3","kg":37.5,"r":12}],"form":"Seated position shifts emphasis to different hamstring region. Flex feet. Full range. 3 sec negative.","pre":"Different to lying curl on Legs 1 \u2014 seated hip angle shifts which part of hamstring is loaded.","during":"Toes toward shins. Full extension at top. 3-second lowering.","check":"Correct: hamstring burning throughout. Wrong: back lifting off seat \u2014 reduce weight."},{"id":"d6b_calf_seated","ss":true,"ssLabel":"","name":"Seated Calf Raise","focus":"Soleus \u2014 deep calf muscle","rest":90,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":37.5,"r":18}],"form":"Seated targets the SOLEUS. Full drop, full rise, 1 sec hold.","pre":"Different burn location to standing calf raise.","during":"Full heel drop, full rise, 1 sec hold.","check":"Correct: burning deep in calf. Wrong: half reps \u2014 always full range."},{"id":"d6b_abductor","ss":true,"ssLabel":"Superset \u2014 Abductor then immediately Adductor, rest 75 sec","name":"Abductor Machine","focus":"Outer hip \u2014 second weekly hit","rest":0,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":40,"r":15}],"form":"Sit fully back. Open to maximum range. Squeeze outer hips at widest point.","pre":"Outer hip gets no stimulus from any compound.","during":"Squeeze at widest point. Control the return.","check":"Correct: outer hip and glute burning. Wrong: feeling in quad \u2014 focus on hip opening."},{"id":"d6b_adductor","ss":true,"ssLabel":"","name":"Adductor Machine","focus":"Inner thigh \u2014 only direct stimulus","rest":75,"sets":[{"t":"Set 1","kg":40,"r":15},{"t":"Set 2","kg":40,"r":15},{"t":"Set 3","kg":40,"r":15}],"form":"Sit fully back. Squeeze legs together. Pause 1 sec at full closure. Control return.","pre":"Inner thigh gets zero stimulus from any compound.","during":"Pause 1 sec at full closure.","check":"Correct: inner thigh burning. Wrong: feeling outer hip \u2014 squeeze inward."},{"id":"d6b_cable_crunch","ss":true,"ssLabel":"Superset \u2014 Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable. Crunch through elbows. Hips fixed.","pre":"Hips stay completely still.","during":"Elbows to knees.","check":"Correct: abs burning. Wrong: hip flexors."},{"id":"d6b_leg_raise","ss":true,"ssLabel":"","name":"Hanging Leg Raise","focus":"Lower abs","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top.","pre":"Pelvic tilt at top.","during":"Pelvic tilt every rep.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add pelvic tilt."}]}}];
+function getWeekVariant(){
+  const now=new Date();
+  const jan1=new Date(now.getFullYear(),0,1);
+  const weekNo=Math.ceil(((now-jan1)/86400000+jan1.getDay()+1)/7);
+  return weekNo%2===1?"a":"b";
+}
+function getCurrentDay(){
+  const v=getWeekVariant();
+  const day=P_AB[dayIdx];
+  return {id:day.id,label:day.label,title:day.title,muscle:day.muscle,note:day.note,weekLabel:day[v].label,exercises:day[v].exercises};
+}
+
+// ═══════════════════════════════════════
+// STATE & USER
+// ═══════════════════════════════════════
+let dayIdx=0,tSec=150,tPre=150,tRun=false,tInt=null;
+
+function getUser(){return localStorage.getItem('wt_user')||'';}
+function setUser(n){localStorage.setItem('wt_user',n.trim());}
+function userKey(k){return `${getUser()}__${k}`;}
+function pad(n){return String(n).padStart(2,'0');}
+function fmt(s){return `${Math.floor(s/60)}:${pad(s%60)}`;}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function sessionKey(id){return userKey(`wt_s_${id}_${todayStr()}`);}
+function histKey(id){return userKey(`wt_h_${id}`);}
+function prKey(exId){return userKey(`wt_pr_${exId}`);}
+function weekNum(){
+  let s=localStorage.getItem(userKey('wt_start'));
+  if(!s){s=new Date().toISOString();localStorage.setItem(userKey('wt_start'),s);}
+  return Math.floor((new Date()-new Date(s))/(7*86400000))+1;
+}
+function loadSess(id){try{return JSON.parse(localStorage.getItem(sessionKey(id))||'{}');}catch(e){return {};}}
+function saveSess(id,d){localStorage.setItem(sessionKey(id),JSON.stringify(d));}
+function loadHist(id){try{return JSON.parse(localStorage.getItem(histKey(id))||'[]');}catch(e){return [];}}
+function saveHist(id,entry){const h=loadHist(id);h.unshift(entry);if(h.length>12)h.pop();localStorage.setItem(histKey(id),JSON.stringify(h));}
+function getScriptUrl(){return localStorage.getItem('wt_script_url')||'https://script.google.com/macros/s/AKfycbwaMRVr3gqoD8Kopf8Ask0WnNY9F3pRvOsUtoGjwiLDoMXD56FJJxBbjMpvhWmsO4XlAg/exec';}
+
+// AUTO DAY by weekday (Mon=0=D1 ... Sat=5=D6, Sun=rest)
+function getDayForToday(){
+  const dow=new Date().getDay();
+  const map={1:0,2:1,3:2,4:3,5:4,6:5,0:undefined};
+  return map[dow];
+}
+
+function greeting(){
+  const h=new Date().getHours();
+  if(h<12)return 'Good morning';
+  if(h<17)return 'Good afternoon';
+  return 'Good evening';
+}
+
+function motivationalLine(dayIdx){
+  const v=getWeekVariant();
+  const a=['Push 1 — Heavy. Strength today.','Pull 1 — Heavy. Barbell row leads.','Legs 1 — Heavy. Squat and RDL.','Push 2 — Volume. Chase the pump.','Pull 2 — Volume. Cable work and biceps.','Legs 2 — Volume. Hip thrust leads.'];
+  const b=['Push 1 — Heavy. Incline DB and DB press.','Pull 1 — Heavy. Chest supported row.','Legs 1 — Heavy. Beat last week.','Push 2 — Volume. High-to-low fly today.','Pull 2 — Volume. Single arm row leads.','Legs 2 — Volume. Hack squat superset.'];
+  return (v==="a"?a:b)[dayIdx]||'Let\'s get it.';
+}
+
+// ═══════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════
+function completeOnboard(){
+  const n=document.getElementById('ob-name').value.trim();
+  if(!n){document.getElementById('ob-name').style.borderColor='var(--red)';return;}
+  setUser(n);
+  const h=parseInt(document.getElementById('ob-height').value)||null;
+  const w=parseInt(document.getElementById('ob-weight').value)||null;
+  saveProfile({height:h,weight:w});
+  document.getElementById('onboard').style.display='none';
+  initApp();
+}
+document.getElementById('ob-name').addEventListener('keydown',e=>{if(e.key==='Enter')completeOnboard();});
+
+function changeUser(){
+  const newName=prompt('Enter new name:','');
+  if(newName&&newName.trim()){setUser(newName.trim());document.getElementById('settings-username').textContent=newName.trim();closeModal('settings-modal');initApp();}
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function initApp(){
+  const user=getUser();
+  if(!user){document.getElementById('onboard').style.display='flex';return;}
+  document.getElementById('onboard').style.display='none';
+
+  const todayDayIdx=getDayForToday();
+
+  if(todayDayIdx===undefined){
+    // Sunday — rest day
+    document.getElementById('main-app').style.display='none';
+    document.getElementById('rest-screen').style.display='flex';
+    const dow=new Date().getDay();
+    const nextDay=dow===3?'Upper B (Volume)':dow===0?'Upper A (Heavy)':'the next session';
+    document.getElementById('rest-msg').textContent=
+      `Rest well, ${user}. Next up: ${nextDay}. Your muscles grow when you recover.`;
+    return;
+  }
+
+  document.getElementById('rest-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  dayIdx=todayDayIdx;
+
+  // Greeting
+  const greetName=document.getElementById('greet-name');
+  const greetSub=document.getElementById('greet-sub');
+  greetName.textContent=`${greeting()}, ${user} 👋`;
+  greetSub.textContent=`${P_AB[dayIdx].label} — ${P_AB[dayIdx].title}. ${motivationalLine(dayIdx)}`;
+
+  // Streak (days logged in last 7)
+  let streak=0;
+  for(let i=0;i<7;i++){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const dk=d.toISOString().split('T')[0];
+    const found=Object.keys(localStorage).some(k=>k.startsWith(user+'__wt_s_')&&k.includes(dk));
+    if(found)streak++;else if(i>0)break;
+  }
+  if(streak>1){
+    document.getElementById('greet-streak').style.display='inline-flex';
+    document.getElementById('streak-txt').textContent=`${streak} day streak`;
+  }
+
+  // Nav
+  document.getElementById('nav-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'});
+  document.getElementById('settings-username').textContent=user;
+  document.getElementById('s-week').textContent=weekNum();
+
+  buildTabs();
+  renderDay();
+}
+
+function showAnyDay(){
+  document.getElementById('rest-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  dayIdx=0;
+  const user=getUser();
+  document.getElementById('greet-name').textContent=`${greeting()}, ${user} 👋`;
+  document.getElementById('greet-sub').textContent='Sunday rest — browse the program anytime.';
+  document.getElementById('s-week').textContent=weekNum();
+  document.getElementById('nav-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'});
+  buildTabs();renderDay();
+}
+
+// ═══════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════
+function updateTdig(){
+  const el=document.getElementById('tdig');
+  if(tSec<=0){el.textContent='GO!';el.className='timer-dig done';}
+  else if(tSec<=10){el.textContent=fmt(tSec);el.className='timer-dig warn';}
+  else{el.textContent=fmt(tSec);el.className=tRun?'timer-dig running':'timer-dig idle';}
+}
+function setPre(s){
+  clearInterval(tInt);tRun=false;tPre=s;tSec=s;updateTdig();
+  document.getElementById('t-start').textContent='▶ Start';
+  document.querySelectorAll('.pre-btn').forEach(b=>{
+    const v=b.textContent.trim().split(':');
+    b.classList.toggle('on',parseInt(v[0])*60+parseInt(v[1])===s);
+  });
+}
+function toggleTimer(){
+  const btn=document.getElementById('t-start');
+  if(tRun){clearInterval(tInt);tRun=false;btn.textContent='▶ Resume';}
+  else{
+    tRun=true;btn.textContent='⏸ Pause';
+    tInt=setInterval(()=>{
+      tSec--;updateTdig();
+      if(tSec<=0){clearInterval(tInt);tRun=false;btn.textContent='▶ Start';if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+    },1000);
+  }
+}
+function resetTimer(){clearInterval(tInt);tRun=false;tSec=tPre;updateTdig();document.getElementById('t-start').textContent='▶ Start';}
+function kickTimer(s){
+  clearInterval(tInt);tRun=false;tPre=s;tSec=s;updateTdig();
+  document.querySelectorAll('.pre-btn').forEach(b=>{const v=b.textContent.trim().split(':');b.classList.toggle('on',parseInt(v[0])*60+parseInt(v[1])===s);});
+  document.getElementById('t-start').textContent='▶ Start';
+  toggleTimer();
+}
+
+// ═══════════════════════════════════════
+// DAY TABS
+// ═══════════════════════════════════════
+function buildTabs(){
+  const c=document.getElementById('day-tabs');c.innerHTML='';
+  const todayIdx=getDayForToday();
+  const shorts=['Push 1','Pull 1','Legs 1','Push 2','Pull 2','Legs 2'];
+  P_AB.forEach((d,i)=>{
+    const tb=document.createElement('div');
+    tb.className='day-tab'+(i===dayIdx?' active':'');
+    tb.innerHTML=`<div>${d.label}</div><div style="font-size:9px;opacity:0.7">${shorts[i]||''}</div>`;
+    tb.onclick=()=>{dayIdx=i;renderDay();document.querySelectorAll('.day-tab').forEach((t,j)=>t.className='day-tab'+(j===i?' active':''));};
+    document.getElementById('day-tabs').appendChild(tb);
+    const v=getWeekVariant();
+    const exs=d[v].exercises;
+    const sess=loadSess(d.id);
+    const tot=exs.reduce((s,e)=>s+e.sets.filter(x=>x.t!=='Warm-up').length,0);
+    const done=exs.reduce((s,e)=>s+e.sets.filter((_,idx)=>sess[e.id+'_done_'+idx]).length,0);
+    const pct=tot?Math.round(done/tot*100):0;
+    const b=document.createElement('button');
+    b.className='d-tab'+(i===dayIdx?' on':'')+(i===todayIdx?' today-tab':'');
+    b.innerHTML=`${d.label}<br><span style="font-size:10px;opacity:0.7">${shorts[i]||''}</span><span class="d-tab-prog"><span class="d-tab-prog-fill" style="width:${pct}%"></span></span>`;
+    b.onclick=()=>switchDay(i);
+    c.appendChild(b);
+  });
+}
+
+
+function switchDay(i){dayIdx=i;buildTabs();renderDay();}
+
+// ═══════════════════════════════════════
+// RENDER DAY
+// ═══════════════════════════════════════
+function renderDay(){
+  const dayData=getCurrentDay();
+  const day={id:dayData.id,label:dayData.label,title:dayData.title,muscle:dayData.muscle,note:dayData.note,sections:[{name:'',items:dayData.exercises}]};
+  document.getElementById('nav-title').textContent=`${day.label} — ${day.title} (${dayData.weekLabel})`;
+  document.getElementById('done-wrap').classList.remove('show');
+  document.getElementById('sync-area').style.display='block';
+  document.getElementById('sync-status').textContent='';
+  const wrap=document.getElementById('exwrap');wrap.innerHTML='';
+  const sess=loadSess(day.id);
+  if(day.note){
+    const n=document.createElement('div');n.className='day-note';
+    n.innerHTML=`<strong>📌 Note:</strong> ${day.note}`;
+    wrap.appendChild(n);
+  }
+  day.sections.forEach(sec=>{
+    if(sec.name){const sh=document.createElement('div');sh.className='sec-head';sh.textContent=sec.name;wrap.appendChild(sh);}
+    sec.items.forEach(ex=>{
+      if(ex.ss&&ex.ssLabel){
+        const badge=document.createElement('div');badge.className='ss-badge';
+        badge.innerHTML=`<div class="ss-line"></div><div class="ss-label">⚡ ${ex.ssLabel}</div><div class="ss-line"></div>`;
+        wrap.appendChild(badge);
+      }
+      wrap.appendChild(buildCard(ex,sess,day.id));
+    });
+  });
+  updateStats();
+}
+
+// ═══════════════════════════════════════
+// BUILD CARD
+// ═══════════════════════════════════════
+function buildCard(ex,sess,dayId){
+  const card=document.createElement('div');
+  const tot=ex.sets.length;
+  const done=ex.sets.filter((_,i)=>sess[ex.id+'_done_'+i]).length;
+  const allDone=done===tot&&tot>0;
+  card.className='ex-card'+(ex.ss?' ss-card':'')+(allDone?' done-card':'');
+  card.id='c-'+ex.id;
+  const off=Math.round(88-(done/tot)*88);
+  const svgKey=EX_SVG[ex.id];
+    const ytKey=EX_YT[ex.id];const yt=ytKey&&YT[ytKey]?YT[ytKey]:null;
+  const ytHtml=yt?`<a href="${yt.url}" target="_blank" rel="noopener" class="yt-link"><div class="yt-icon">▶</div><div class="yt-text"><div class="yt-title">${yt.title}</div><div class="yt-sub">📍 ${yt.cue}</div></div><span class="yt-arr">→</span></a>`:'';
+  const hist=getExHistRows(ex.id,dayId);
+  const numDisp=allDone?'✓':(ex.ss?'SS':tot);
+  const numClass=allDone?'done-num':ex.ss?'ss-num':'';
+
+  card.innerHTML=`
+<div class="ex-hdr" onclick="toggle('${ex.id}')">
+  <div class="ex-num ${numClass}">${numDisp}</div>
+  <div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-focus">${ex.focus}</div></div>
+  <div class="ex-ring"><svg viewBox="0 0 36 36" width="36" height="36"><circle class="ring-track" cx="18" cy="18" r="14"/><circle class="ring-fill" cx="18" cy="18" r="14" style="stroke-dashoffset:${off}"/></svg><div class="ring-lbl">${done}/${tot}</div></div>
+  <span class="chevron">⌄</span>
+</div>
+<div class="ex-body" id="b-${ex.id}">
+  <div class="body-tabs">
+    <button class="b-tab on" onclick="showTab(event,'${ex.id}','sets')">Sets</button>
+    <button class="b-tab" onclick="showTab(event,'${ex.id}','form')">Form</button>
+    <button class="b-tab" onclick="showTab(event,'${ex.id}','mmc')">MMC</button>
+    <button class="b-tab" onclick="showTab(event,'${ex.id}','setup')">Setup</button>
+    <button class="b-tab" onclick="showTab(event,'${ex.id}','visual')">Visual</button>
+  </div>
+  <div class="tab-panel" id="tp-visual-${ex.id}">
+    <div class="visual-wrap">${ytHtml}</div>
+  </div>
+  <div class="tab-panel" id="tp-form-${ex.id}"><div class="form-txt">${ex.form}</div></div>
+  <div class="tab-panel" id="tp-mmc-${ex.id}">
+    <div class="mmc-block"><div class="mmc-tag pre">⚡ Pre-set ritual</div><div class="mmc-txt pre">${ex.pre}</div></div>
+    <div class="mmc-block"><div class="mmc-tag during">🎯 During the rep</div><div class="mmc-txt during">${ex.during}</div></div>
+    <div class="mmc-block"><div class="mmc-tag check">✓ Check</div><div class="mmc-txt check">${ex.check}</div></div>
+  </div>
+  <div class="tab-panel" id="tp-setup-${ex.id}">${renderSetupTab(ex.id)}</div>
+  <div class="tab-panel on" id="tp-sets-${ex.id}">
+    <div class="sets-hdr"><span></span><span>Target</span><span>Actual kg</span><span>Reps</span><span></span></div>
+    ${ex.sets.map((s,i)=>{
+      const aKg=sess[ex.id+'_kg_'+i]!==undefined?sess[ex.id+'_kg_'+i]:s.kg;
+      const aR=sess[ex.id+'_r_'+i]!==undefined?sess[ex.id+'_r_'+i]:s.r;
+      const isDone=sess[ex.id+'_done_'+i]||false;
+      const isPR=sess[ex.id+'_pr_'+i]||false;
+      return `<div class="set-row${isDone?' set-done':''}" id="sr-${ex.id}-${i}">
+        <span class="set-tag">${s.t}${isPR?'<span class="pr-badge">🏆 PR</span>':''}</span>
+        <input class="s-in pre-val" type="number" value="${s.kg}" readonly step="2.5">
+        <input class="s-in${parseFloat(aKg)!==s.kg?' mod':''}" type="number" value="${aKg}" step="2.5" min="0"
+          onchange="logKg('${dayId}','${ex.id}',${i},this.value,${s.kg})" onfocus="this.select()">
+        <input class="s-in${parseInt(aR)!==s.r?' mod':''}" type="number" value="${aR}" step="1" min="0"
+          onchange="logR('${dayId}','${ex.id}',${i},this.value,${s.r})" onfocus="this.select()">
+        <button class="tick${isDone?' done':''}" id="tk-${ex.id}-${i}"
+          onclick="tickSet('${dayId}','${ex.id}',${i},${ex.rest})">${isDone?'✓':''}</button>
+      </div>`;
+    }).join('')}
+    <div class="rest-row">
+      <span class="rest-txt">⏱ Rest: ${fmt(ex.rest)}</span>
+      <button class="rest-go" onclick="kickTimer(${ex.rest})">Start rest ↑</button>
+    </div>
+    <div class="hist-wrap">
+      <div class="hist-title">Previous sessions</div>
+      ${hist||'<div class="hist-empty">No history yet — complete a set to start tracking</div>'}
+    </div>
+  </div>
+</div>`;
+  return card;
+}
+
+function toggle(id){
+  const card=document.getElementById('c-'+id);
+  const wasOpen=card.classList.contains('open');
+  card.classList.toggle('open');
+  if(!wasOpen){
+    const sess=loadSess(P_AB[dayIdx].id);
+    const hasActivity=Object.keys(sess).some(k=>k.startsWith(id+'_done_')&&sess[k]);
+    if(hasActivity)showTabById(id,'sets');
+  }
+}
+function showTab(e,id,type){
+  showTabById(id,type);
+  e.currentTarget.closest('.body-tabs').querySelectorAll('.b-tab').forEach(t=>t.classList.remove('on'));
+  e.currentTarget.classList.add('on');
+}
+function showTabById(id,type){
+  ['visual','form','mmc','setup','sets'].forEach(t=>{
+    const el=document.getElementById('tp-'+t+'-'+id);
+    if(el)el.classList.toggle('on',t===type);
+  });
+}
+
+// ═══════════════════════════════════════
+// LOGGING
+// ═══════════════════════════════════════
+function logKg(dayId,exId,i,val,pre){
+  const s=loadSess(dayId);s[exId+'_kg_'+i]=parseFloat(val);
+  checkPR(exId,i,s);saveSess(dayId,s);
+  const inp=document.querySelectorAll(`#sr-${exId}-${i} .s-in:not(.pre-val)`)[0];
+  if(inp)inp.className='s-in'+(parseFloat(val)!==pre?' mod':'');
+  updateStats();
+}
+function logR(dayId,exId,i,val,pre){
+  const s=loadSess(dayId);s[exId+'_r_'+i]=parseInt(val);
+  checkPR(exId,i,s);saveSess(dayId,s);updateStats();
+}
+function checkPR(exId,i,sess){
+  let ex=null;
+  for(const d of P)for(const sec of d.sections)for(const e of sec.items)if(e.id===exId)ex=e;
+  if(!ex)return;
+  const kg=sess[exId+'_kg_'+i]!==undefined?sess[exId+'_kg_'+i]:ex.sets[i].kg;
+  const r=sess[exId+'_r_'+i]!==undefined?sess[exId+'_r_'+i]:ex.sets[i].r;
+  const vol=kg*r;
+  const prev=parseFloat(localStorage.getItem(prKey(exId))||'0');
+  if(vol>prev){localStorage.setItem(prKey(exId),vol);sess[exId+'_pr_'+i]=true;}
+}
+function tickSet(dayId,exId,i,rest){
+  const s=loadSess(dayId);const k=exId+'_done_'+i;s[k]=!s[k];saveSess(dayId,s);
+  const btn=document.getElementById('tk-'+exId+'-'+i);
+  btn.className='tick'+(s[k]?' done':'');btn.textContent=s[k]?'✓':'';
+  const row=document.getElementById('sr-'+exId+'-'+i);
+  if(row)row.className='set-row'+(s[k]?' set-done':'');
+  refreshRing(exId,dayId);updateStats();
+  if(s[k])kickTimer(rest);
+}
+function refreshRing(exId,dayId){
+  let ex=null;for(const d of P)for(const sec of d.sections)for(const e of sec.items)if(e.id===exId)ex=e;
+  if(!ex)return;
+  const s=loadSess(dayId);
+  const done=ex.sets.filter((_,i)=>s[exId+'_done_'+i]).length;
+  const off=Math.round(88-(done/ex.sets.length)*88);
+  const fill=document.querySelector('#c-'+exId+' .ring-fill');
+  const lbl=document.querySelector('#c-'+exId+' .ring-lbl');
+  const num=document.querySelector('#c-'+exId+' .ex-num');
+  if(fill)fill.style.strokeDashoffset=off;
+  if(lbl)lbl.textContent=done+'/'+ex.sets.length;
+  const allDone=done===ex.sets.length;
+  if(num){num.className='ex-num'+(allDone?' done-num':ex.ss?' ss-num':'');num.textContent=allDone?'✓':(ex.ss?'SS':ex.sets.length);}
+  const card=document.getElementById('c-'+exId);
+  if(card)card.classList.toggle('done-card',allDone);
+}
+function updateStats(){
+  const day=P_AB[dayIdx];const s=loadSess(day.id);
+  let tot=0,done=0,vol=0;
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    ex.sets.forEach((set,i)=>{
+      tot++;
+      if(s[ex.id+'_done_'+i]){done++;
+        const kg=s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg;
+        const r=s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r;
+        vol+=kg*r;
+      }
+    });
+  }));
+  document.getElementById('s-sets').textContent=done+'/'+tot;
+  document.getElementById('s-vol').textContent=Math.round(vol).toLocaleString('en-IN');
+}
+function getExHistRows(exId,dayId){
+  const h=loadHist(dayId);
+  const rows=h.slice(0,4).map(entry=>{
+    const sets=entry.sets&&entry.sets[exId];
+    if(!sets)return null;
+    const doneStr=sets.filter(s=>s.done).map(s=>`${s.kg}×${s.r}${s.pr?'🏆':''}`).join('  ');
+    if(!doneStr)return null;
+    return `<div class="hist-row"><span class="hist-date">${entry.date}</span><span class="hist-sets">${doneStr}</span></div>`;
+  }).filter(Boolean);
+  return rows.join('')||null;
+}
+function clearDay(){if(!confirm('Reset today\'s session for this day?'))return;localStorage.removeItem(sessionKey(P_AB[dayIdx].id));renderDay();}
+
+// ═══════════════════════════════════════
+// FINISH + SYNC
+// ═══════════════════════════════════════
+function finishDay(){
+  const day=P_AB[dayIdx];const s=loadSess(day.id);
+  const sets={};
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    sets[ex.id]=ex.sets.map((set,i)=>({
+      kg:s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg,
+      r:s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r,
+      done:s[ex.id+'_done_'+i]||false,
+      pr:s[ex.id+'_pr_'+i]||false
+    }));
+  }));
+  saveHist(day.id,{date:todayStr(),sets});
+  let done=0,tot=0,vol=0;
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    ex.sets.forEach((set,i)=>{tot++;
+      if(s[ex.id+'_done_'+i]){done++;
+        const kg=s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg;
+        const r=s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r;
+        vol+=kg*r;
+      }
+    });
+  }));
+  const user=getUser();
+  document.getElementById('exwrap').innerHTML='';
+  document.getElementById('sync-area').style.display='none';
+  document.getElementById('done-wrap').classList.add('show');
+  document.getElementById('done-title').textContent=`Great work, ${user}! 🏆`;
+  document.getElementById('done-sub').textContent=`${done} sets completed · ${Math.round(vol).toLocaleString('en-IN')} kg total volume · Week ${weekNum()}`;
+}
+function backFromDone(){renderDay();}
+
+async function syncToSheets(){
+  const url=getScriptUrl();
+  if(!url){document.getElementById('sync-status').textContent='Add your script URL in ⚙️ Settings first';return;}
+  const day=P_AB[dayIdx];const s=loadSess(day.id);
+  const setsArr=[];
+  day.sections.forEach(sec=>sec.items.forEach(ex=>{
+    ex.sets.forEach((set,i)=>{
+      if(s[ex.id+'_done_'+i]){
+        setsArr.push({
+          user:getUser(),muscleGroup:sec.name,exercise:ex.name,setNum:i+1,
+          targetKg:set.kg,
+          actualKg:s[ex.id+'_kg_'+i]!==undefined?s[ex.id+'_kg_'+i]:set.kg,
+          reps:s[ex.id+'_r_'+i]!==undefined?s[ex.id+'_r_'+i]:set.r,
+          pr:s[ex.id+'_pr_'+i]||false
+        });
+      }
+    });
+  }));
+  if(!setsArr.length){document.getElementById('sync-status').textContent='No completed sets to sync yet.';return;}
+  document.getElementById('sync-status').textContent='Syncing...';
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'session',user:getUser(),date:todayStr(),week:weekNum(),dayId:day.id,dayTitle:day.title,sets:setsArr})});
+    const data=await res.json();
+    document.getElementById('sync-status').textContent=data.status==='success'?'✓ Synced to Google Sheets!':'Error: '+data.message;
+  }catch(err){document.getElementById('sync-status').textContent='Sync failed — check your script URL.';}
+}
+
+// ═══════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════
+function openHistory(){
+  const day=P_AB[dayIdx];
+  document.getElementById('hist-title').textContent=`${day.label} — ${day.title} History`;
+  const hist=loadHist(day.id);
+  const body=document.getElementById('hist-body');
+  if(!hist.length){body.innerHTML='<p style="font-size:13px;color:var(--text3);font-style:italic;">No sessions saved yet.</p>';}
+  else{
+    body.innerHTML=hist.map(h=>{
+      const rows=Object.entries(h.sets||{}).map(([exId,sets])=>{
+        let name=exId;
+        for(const d of P)for(const sec of d.sections)for(const e of sec.items)if(e.id===exId)name=e.name;
+        const done=sets.filter(s=>s.done).map(s=>`${s.kg}×${s.r}${s.pr?'🏆':''}`).join('  ');
+        return done?`<div>${name}: ${done}</div>`:'';
+      }).filter(Boolean).join('');
+      return `<div class="h-entry"><div class="h-date">${h.date}</div><div class="h-sets">${rows||'No sets logged'}</div></div>`;
+    }).join('');
+  }
+  document.getElementById('hist-modal').classList.add('show');
+}
+function openSettings(){
+  document.getElementById('script-url-input').value=getScriptUrl();
+  document.getElementById('settings-username').textContent=getUser();
+  document.getElementById('settings-modal').classList.add('show');
+}
+function saveSettings(){
+  const url=document.getElementById('script-url-input').value.trim();
+  localStorage.setItem('wt_script_url',url);
+  const h=parseInt(document.getElementById('s-height').value)||null;
+  const w=parseInt(document.getElementById('s-weight').value)||null;
+  saveProfile({height:h,weight:w});
+  closeModal('settings-modal');
+  if(url)document.getElementById('sync-status').textContent='Script URL saved';
+}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function maybeClose(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+
+// ═══════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════
+
+
+// ═══ SETUP DATA ═══
+const SETUP_DATA = {"d1_inc_bp":{"machine":{"S":"Set bench to 30° (lowest incline notch on most benches). Rack height: bar should be at chin level when lying down — adjust so you unrack without fully extending arms. Grip the bar before lying down to check width.","M":"Set bench to 30–35°. Rack height: bar at nose/chin level when lying. Standard adjustment — most benches default here.","T":"Keep bench at 30° max — taller lifters tend to go too steep which shifts load to front delt. Rack height may need to go one notch higher than standard so you can unrack without shoulder strain."},"position":"Grip just outside shoulder width (index fingers on the smooth-to-knurling boundary). Feet flat on floor. Squeeze shoulder blades together before unracking — hold this throughout. 5 contact points: both feet, both glutes, upper back.","feel":"upper_chest","feel_txt":"Top of the pec, just below collarbone","not_here":"Front shoulder (delt) — if you feel it there, reduce bench angle"},"d1_flat_bp":{"machine":{"S":"Rack height: bar at chin level when lying. You may need a spotter or use safety bars — shorter reach means less margin at unrack.","M":"Rack height: bar at nose level when lying. Standard setup.","T":"Rack height one pin higher than standard — longer arms need more clearance. Check that wrists stay straight at the bottom."},"position":"Grip: index fingers on the knurling edge (just outside shoulder width). Bar touches lower chest/sternum at the bottom, not upper chest. Elbows at 45° to torso — not flared out, not tucked in.","feel":"mid_chest","feel_txt":"Centre of the chest, across the sternum","not_here":"Front shoulder or upper chest — if so, widen grip slightly or lower the bar path"},"d1_cross_lth":{"machine":{"S":"Set both cable pulleys to LOWEST position (floor level). Stand in the exact centre of the cable station. The cables should pull upward at a 45° angle toward your hands.","M":"Cables at lowest position. Standard centre stance.","T":"Cables at lowest position. You may need to step slightly further back from the columns to get the correct upward pull angle — test with light weight first."},"position":"Step one foot forward for balance. Lean slightly forward from hips. Start with hands at hip level, palms facing up. Bring hands UP and together in an arc finishing at chest height. Elbows fixed at a slight bend throughout.","feel":"upper_chest","feel_txt":"Upper pec near the collarbone — the squeeze at the top","not_here":"Shoulder or arm — if so, your hands are going too high (above chest)"},"d1_pec_deck":{"machine":{"S":"Seat height: pad handles should be at exact shoulder height when sitting upright. For shorter users this usually means raising the seat 2–3 notches above the middle position. Sit all the way back so your chest touches the chest pad.","M":"Seat at middle position. Handles at shoulder height.","T":"Seat at lowest or one above lowest. Check that handles don't catch your elbows — you may need to keep elbows slightly below shoulder level."},"position":"Forearms flat against the pads (not just hands on handles). Sit tall, chest pressed into the chest pad. The movement is your chest closing — not your arms pushing. Pause for 2 full seconds at peak squeeze.","feel":"inner_chest","feel_txt":"Inner chest along the sternum — deep burn at peak squeeze","not_here":"Arms or front shoulder — keep elbows driving, not hands"},"d1_cgbp":{"machine":{"S":"Same bench setup as flat bench. Grip: hands shoulder-width apart (closer than flat bench). Check that wrists stay directly above elbows at the bottom.","M":"Standard flat bench. Shoulder-width grip — not too narrow or you strain the wrists.","T":"Same as flat bench. For taller lifters shoulder-width may feel wider than expected — that is correct, do not go narrower."},"position":"Elbows stay close to torso — they should graze your sides on the way down. Bar touches lower chest. Full lockout at the top with a hard tricep squeeze. Keep shoulders pinned back throughout.","feel":"tricep_all","feel_txt":"Back of the upper arm — the whole horseshoe contracts at lockout","not_here":"Chest — if chest dominates, your grip is too wide"},"d1_overhead_ext":{"machine":{"S":"Set cable to highest position. Attach rope. Face away from the cable. Step far enough forward that the cable pulls upward-backward at 45°. Shorter users may need to stand closer to the column.","M":"Cable at top. Face away. Standard distance from column.","T":"Cable at top. Step further from the column — longer torso needs more cable travel room. Make sure at full extension arms are straight overhead, not pulled back."},"position":"Rope overhead, elbows pointing forward. Let hands drop as far back behind your head as possible — this is the stretch. Press out to straight arms. Elbows stay fixed pointing forward throughout. Do NOT let them flare sideways.","feel":"tricep_long","feel_txt":"Deep stretch in the back of the upper arm, near the armpit","not_here":"Elbow joint pain — means elbows are flaring; keep them forward"},"d1_rope_push":{"machine":{"S":"Cable at top. Rope attachment. Stand 30–40cm from the machine — closer than average so the cable angle isn't too steep for shorter arms.","M":"Cable at top. Rope. Standard standing distance.","T":"Cable at top. Stand slightly further back. Your longer arms mean you need more cable travel — if the rope hits your thighs at the bottom, step back slightly."},"position":"Elbows pinned at sides — they must not move. Hands start at chest height. Press down and at the very bottom, spread the rope ends outward as far as possible. Hold 1 second at full extension.","feel":"tricep_lateral","feel_txt":"Outer side of the back of the upper arm — the visible head","not_here":"Shoulder — means elbows drifted forward; re-pin them to your sides"},"d1_cable_crunch":{"machine":{"S":"Cable at top. Rope attachment. Kneel about 60cm from the machine. Shorter distance keeps the angle correct for shorter torso.","M":"Cable at top. Rope. Kneel 60–70cm from machine.","T":"Cable at top. Kneel 70–80cm from machine — longer torso needs more clearance so the rope doesn't run out of travel."},"position":"Hold rope at sides of head — not pulling with hands. Hips stay completely still over knees throughout. Only your spine moves. Crunch DOWN through your elbows toward your knees. Pause at the bottom.","feel":"abs_upper","feel_txt":"Centre of the stomach — rectus abdominis contracting hard","not_here":"Hip flexors — if you feel it there your hips are moving with the weight"},"d1_leg_raise":{"machine":{"S":"Find a pull-up bar you can fully hang from without feet touching the floor. For shorter users this may be any standard bar. Grip just outside shoulder width.","M":"Standard pull-up bar. Overhand grip shoulder-width.","T":"You need a higher bar or you'll need to bend knees slightly to avoid floor contact at the hanging position."},"position":"Start in a dead hang — shoulders relaxed, no shoulder engagement yet. Raise legs together to 90° (parallel to floor). At the top, tilt your pelvis backward (flatten your lower back) before lowering. This converts the movement from hip flexors to lower abs.","feel":"abs_lower","feel_txt":"Below the belly button — the lower abs fire only with the pelvic tilt","not_here":"Hip flexors — add the pelvic tilt at the top"},"d2_pullups":{"machine":{"S":"Use an assisted pull-up machine or band if needed. Grip just outside shoulder width overhand. Bar should be high enough that arms are fully extended in the dead hang.","M":"Standard pull-up bar. Overhand grip slightly wider than shoulders.","T":"You may need to bend knees to get a full dead hang. Grip wider if shoulder width feels cramped."},"position":"Start every rep from a dead hang — full arm extension, shoulder blades relaxed up. Initiate by pulling shoulder blades DOWN (depress the scapula) before bending the elbows. Drive elbows down and back toward your hip pockets.","feel":"lat","feel_txt":"The sides of your back, under your armpits — lats spreading","not_here":"Biceps giving out first means you are pulling with arms not lats"},"d2_lat_pull":{"machine":{"S":"Knee pad should press firmly down on your thighs — raise the pad until it locks your thighs. Shorter users often need pad at the highest setting. Sit so the bar is directly overhead when arms are extended.","M":"Knee pad 1–2 notches above middle. Bar directly overhead.","T":"Knee pad at lowest setting — longer thighs need more clearance. Ensure you can reach the bar with straight arms without leaning excessively."},"position":"Lean back 15° and hold that position — do not rock. Grip just outside shoulder width. Pull bar to upper chest, elbows driving down toward your hip pockets. Full stretch at the top — let shoulder blades rise.","feel":"lat","feel_txt":"Lats on both sides of your back — feel them stretch at the top","not_here":"Traps and biceps — you are pulling with your arms instead of elbows"},"d2_tbar":{"machine":{"S":"Hinge until torso is at 45°. The bar should hang directly below your chest at the start. Shorter stance — feet closer together.","M":"45° torso angle. Standard foot stance hip-width.","T":"45° torso requires a slightly wider stance for balance. Longer torso may naturally hinge deeper — check that your back stays neutral, not rounded."},"position":"Overhand grip on handles. Pull bar to your lower chest — not your belly button. Elbows travel back and up past your torso. Squeeze shoulder blades together at the top and hold 1 second. 2–3 second lowering.","feel":"mid_back","feel_txt":"Between the shoulder blades — the rhomboids and mid traps","not_here":"Lower back burning — means you are rounding; reduce weight"},"d2_cable_row":{"machine":{"S":"Sit on the seated row machine. Feet on the platform, knees slightly bent. Cable should be at mid-torso height (belly button level). Use the close-grip V-bar attachment.","M":"V-bar attachment. Feet on platform. Cable at navel height.","T":"You may need to sit further back on the seat. Cable at navel height — check that at full extension your arms are parallel to the floor."},"position":"Start each rep with a full forward reach — let your shoulder blades protract (spread apart). Pull to your lower sternum. Elbows go straight back — not flaring up. No torso rocking. Hold the contraction 1 second.","feel":"lat_lower","feel_txt":"Lower lats and mid back — the squeeze when pulled in fully","not_here":"Biceps or upper traps — slow down and focus on elbows"},"d2_shrugs":{"machine":{"S":"Bar in squat rack at mid-thigh height for shorter users (so arms are straight at start). Standard barbell or trap bar.","M":"Bar at mid-thigh. Arms straight at start — adjust rack accordingly.","T":"Bar slightly lower than mid-thigh for taller users as arms are longer. Verify the bar doesn't hit your thighs during the shrug."},"position":"Overhand grip slightly wider than hips. Arms stay straight throughout — this is NOT a curl movement. Shrug straight up toward your ears. Hold 1–2 seconds at the top. Full drop to feel the stretch. No circular motion.","feel":"trap","feel_txt":"Top of the shoulders into the neck — upper trapezius","not_here":"If you feel nothing at the top, you are not holding long enough"},"d2_bar_curl":{"machine":{"S":"Stand with bar hanging at thigh level. Shorter users may benefit from a slightly narrower grip for wrist comfort.","M":"Bar hanging at thigh level. Shoulder-width grip.","T":"Slightly wider grip than shoulder width may feel more natural. Check wrists stay neutral."},"position":"Elbows pinned at your sides — they must not drift forward. Curl the bar up while rotating your wrists outward (pinky toward ceiling) as you approach the top. Full extension at the bottom every single rep.","feel":"bicep","feel_txt":"The full bicep belly — especially the peak at the top with wrist rotation","not_here":"Forearm only — you are not supinating at the top"},"d2_inc_curl":{"machine":{"S":"Set incline bench to 45–50°. Shorter users can go slightly steeper (50°) — the key is that arms hang behind the torso plane.","M":"45° incline. Arms must hang behind the torso — adjust until they do.","T":"40–45° incline. Longer arms naturally get a better stretch — make sure the full arm is behind the torso line at the bottom."},"position":"Lie back and let both arms hang completely — gravity should pull them straight back behind your torso. Curl without letting elbows drift forward. Supinate at the top. The stretch at the bottom is the whole point — hold it 1 second before each curl.","feel":"bicep_long","feel_txt":"Deep stretch in the lower bicep and front of shoulder at bottom","not_here":"Elbows drifting forward means you have lost the stretch — reset"},"d2_pallof":{"machine":{"S":"Cable at chest height (your specific chest height in cm). Stand side-on 60–70cm from the machine. Shorter distance keeps tension manageable.","M":"Cable at chest height. Side-on, 70–80cm from machine.","T":"Cable at chest height. Stand 80–90cm from machine — longer arms need more distance to get a meaningful pressing movement."},"position":"Hold cable handle at your sternum. Press directly outward from your chest and hold 2 full seconds with arms extended. Return slowly. The challenge is resisting rotation toward the cable — your obliques on the far side are fighting the pull.","feel":"oblique","feel_txt":"Obliques on the side AWAY from the cable — deep burn when pressed out","not_here":"Rotating toward the cable — you are too heavy; reduce load"},"d2_ab_wheel":{"machine":{"S":"Kneel on a mat. Start with the wheel directly under your shoulders. Shorter torso — do not roll out as far.","M":"Wheel under shoulders. Roll to where lower back stays flat.","T":"Longer torso can achieve more range — but only if lower back stays flat throughout. Do not sacrifice position for range."},"position":"Before rolling: big breath in, brace abs as if bracing for a punch. Roll out slowly on exhale. Stop the moment your lower back starts to arch. Roll back by pulling with your abs — not pushing with your hips.","feel":"abs_full","feel_txt":"Full abs from ribs to pelvis — especially the deep stretch going out","not_here":"Lower back — means you have gone too far; reduce range"},"d3_ohp":{"machine":{"S":"Set the bar in a rack at upper chest height (collarbone level). Shorter users should check that the rack is not so high they need to tip-toe to unrack.","M":"Bar at collarbone/upper chest height in rack.","T":"Bar at upper chest height. Taller lifters often need the rack one notch higher. Verify the bar path clears your chin on the way up."},"position":"Grip just outside shoulder width. Bar rests on your upper chest/collarbone at the start. Press up and very slightly back — the bar should be directly over your mid-foot at the top. Brace your core hard before every rep. Slight shrug at full lockout.","feel":"delt_all","feel_txt":"Entire shoulder cap — front, side and rear all fire","not_here":"Upper traps only — means you are shrugging before pressing"},"d3_lat_raise":{"machine":{"S":"Stand with dumbbells at sides. No machine adjustment needed. Shorter users — slightly lighter weight to maintain form; cheating is harder to disguise.","M":"Standing with dumbbells. Standard.","T":"Standing. Longer arms create more leverage — you may need lighter weight than expected."},"position":"Slight forward lean from the hips (10°). Lead with your elbows — the elbow should be slightly higher than the hand throughout. Raise to just above shoulder height. The critical part is the 3-second LOWERING — this is where the side delt works hardest.","feel":"delt_lateral","feel_txt":"The outer cap of the shoulder — feel it especially on the lowering","not_here":"Traps rising as you lift — means you are shrugging; reduce weight"},"d3_front_raise":{"machine":{"S":"Cable at ankle height on a low pulley behind you. Shorter users — stand 40–50cm in front of the pulley.","M":"Low pulley cable. Stand 50–60cm in front.","T":"Low pulley. Stand 60–70cm in front — longer arms need more cable length."},"position":"Single cable handle or rope. Raise forward to exactly shoulder height — going higher shifts work to traps. Keep torso upright; do not lean back to cheat the weight up. Control the return fully.","feel":"delt_front","feel_txt":"Front of the shoulder cap — anterior deltoid","not_here":"Leaning back to lift — reduce weight and keep torso vertical"},"d3_rear_fly":{"machine":{"S":"Hinge forward to 45°. For shorter users, a bench set at 30° to rest the chest on can help isolate the movement.","M":"45° hinge or chest on incline bench.","T":"45° hinge. Longer torso may naturally go steeper — check that you are at 45° not 60° (too steep reduces rear delt emphasis)."},"position":"Thumbs pointing DOWN (internal rotation) — this reduces trap involvement. Arms travel in a wide arc, leading with the elbows going back and up. Raise to just below shoulder height. Squeeze rear delts for 2 seconds at peak. 3-second lowering.","feel":"delt_rear","feel_txt":"Back of the shoulder cap — rear deltoid specifically","not_here":"Mid traps between shoulder blades — means arms are going too high"},"d3_preacher":{"machine":{"S":"Adjust seat so your armpits rest on top of the pad. Shorter users usually raise the seat so the pad hits the upper arm correctly.","M":"Seat so armpit sits just above the pad top.","T":"Lower seat so the pad is fully under the upper arm. Taller users sometimes find the upper arm is too short for the pad — if so use a slight forward lean."},"position":"Upper arm fully on the pad, armpit pressed against the top edge. Full extension at the bottom — feel the bicep stretch. Curl to 90° (not further). Squeeze hard at 90° and hold 1 second. The pad eliminates all cheating.","feel":"bicep_short","feel_txt":"Lower belly of the bicep — the short head, near the elbow","not_here":"Elbow joint pain — too heavy; reduce weight significantly"},"d3_bar_push":{"machine":{"S":"Cable at top. Straight bar attachment. Stand 40–50cm from machine.","M":"Cable at top. Straight bar. Stand 50–60cm from machine.","T":"Cable at top. Stand 60–70cm from machine — longer arms need the extra distance."},"position":"Overhand grip, hands shoulder-width. Elbows pinned to sides. Wrists stay straight (neutral) throughout — do not let them curl under. Press to full extension. Hold 1 second. 2-second return.","feel":"tricep_all","feel_txt":"The whole back of the upper arm at full extension","not_here":"Wrists bending under the bar — neutral wrists always"},"d3_decline_crunch":{"machine":{"S":"Decline bench at 30–40°. Feet hooked under pads. For shorter users, ensure you can hook feet securely without the bench being too steep.","M":"30–40° decline. Feet secured.","T":"Same setup. Longer torso means more range of motion — do not hold a plate behind your head initially until core is strong enough."},"position":"Hold a weight plate at your chest (not behind head initially). Crunch UP — round your spine fully so lower back lifts off the bench. Pause 1 second at the top. 2-second controlled lowering. Exhale on the way up.","feel":"abs_upper","feel_txt":"Upper rectus abdominis — the burn when fully crunched","not_here":"Hip flexors at the start of the movement — initiate with abs not hips"},"d3_russian_twist":{"machine":{"S":"No machine. Sit on mat. 45° lean back — shorter torso makes this position feel more natural.","M":"Mat. 45° lean. Feet off floor or crossed.","T":"45° lean. Longer torso can create more rotation range — use this advantage."},"position":"Sit at 45° with feet off the floor (harder) or crossed on floor (easier). Hold a weight with both hands. Rotate fully to each side — the weight should touch near the floor on each side. Pause 1 second at maximum rotation each side.","feel":"oblique","feel_txt":"Obliques on the side you rotate TOWARD — the pulling side","not_here":"Just arm swinging — slow down and feel the oblique initiate the rotation"},"d4_squat":{"machine":{"S":"Set J-hooks so bar is at collarbone height. For shorter users this is usually the 3rd or 4th pin from the bottom. Safety bars one pin below the bottom of your squat.","M":"Bar at collarbone/upper chest height. Safety bars at parallel depth.","T":"Bar may need to be 1–2 pins higher than collarbone height. Safety bars set lower to accommodate greater depth range."},"position":"Bar on upper traps (not neck). Feet shoulder-width, toes 25–30° outward. Break at hips and knees simultaneously. Push knees out over toes throughout. Reach parallel or below. Drive through full foot — heel and mid-foot.","feel":"quad_glute","feel_txt":"Quads on the descent, glutes squeezing hard on the drive up","not_here":"Lower back taking load — means forward lean is too much; reduce weight"},"d4_hack":{"machine":{"S":"Foot plate: place feet HIGH (upper third of plate) and WIDE (outside edge of plate), toes angled 30–40° out. Shoulder pads: adjust so you can fully straighten legs and have a slight bend at lockout.","M":"Feet high and wide on plate. Shoulder pads snug at standing height.","T":"Feet higher on the plate — taller femurs need higher foot position to emphasise glutes. Set shoulder pads one notch higher than usual."},"position":"High and wide foot position. Descend with control — hips go straight down. Press through your heels (not toes). At the top do not fully lock out knees — maintain slight bend for constant tension.","feel":"glute","feel_txt":"Glutes and hamstrings — the burn shifts from quad when feet are high","not_here":"Quad only — means feet are too low; move them up the plate"},"d4_leg_curl":{"machine":{"S":"Lie face down. Roller pad should sit just above your Achilles tendon (NOT on the calf muscle). Adjust the roller position on the machine arm for this. For shorter users the roller will be at a lower setting.","M":"Roller just above Achilles tendon. Hip crease at the edge of the bench pad.","T":"Roller setting higher than standard. Check that your hips lie flat — taller users sometimes have hips elevated; adjust the thigh pad under the hips if available."},"position":"Hips flat on the bench throughout. Flex your feet (toes toward shins) before curling — hold this flexion the entire set. Curl to full contraction. Full extension every rep. 3-second lowering.","feel":"hamstring","feel_txt":"Back of the thigh from the knee up — not the calf","not_here":"Calf cramping — you are pointing toes; flex your feet harder"},"d4_leg_ext":{"machine":{"S":"Sit with your back fully against the pad. Roller should sit on top of your shins, just above the ankle. Raise the roller arm so it contacts correctly. Shorter users may need the seat pushed forward.","M":"Roller above ankle. Back against pad. Knee at the edge of the seat.","T":"Seat may need to be pulled back. Check that your knee is at the edge of the seat — this is the pivot point for the movement."},"position":"Both legs together or one at a time. Extend to FULL lockout — hold 1–2 seconds. The VMO (teardrop muscle above inner knee) only fires at full extension. 3-second lowering. Do not let the weight stack slam down.","feel":"quad_vmo","feel_txt":"Entire quad, especially the teardrop shape above your inner knee at lockout","not_here":"Not feeling the lockout — you are stopping short of full extension"},"d4_rdl":{"machine":{"S":"Bar in rack at hip height (your hip height). Arms straight at start. Shorter users: bar around the 3rd–4th pin.","M":"Bar at hip height. Standard.","T":"Bar at hip height — taller lifters this will be a higher pin setting. Ensure you can load without excessive forward lean at the start."},"position":"Push hips BACK — not down. Slight fixed knee bend throughout (do not change it). Bar drags down your shins and thighs close to the body. Stop when you feel a strong hamstring stretch (usually mid-shin level). Drive hips forward to return.","feel":"hamstring_stretch","feel_txt":"Hamstring pull from the sitting bone down the back of the thigh","not_here":"Lower back pain — means you are rounding; stop and reset with neutral spine"},"d4_rev_lunge":{"machine":{"S":"No machine. Use dumbbells at sides or barbell on back. Shorter stride for shorter legs.","M":"Dumbbells or barbell. Standard stride length.","T":"Longer stride needed to get the shin vertical on the front leg. Test without weight first to find your stride length."},"position":"Step back onto the ball of your back foot. Front shin stays vertical — knee does not travel past toes. Back knee descends toward (but does not touch) the floor. Drive back up through the front heel exclusively.","feel":"glute_front","feel_txt":"Front leg glute — the pressing movement to stand up","not_here":"Front knee pain — shin is not vertical; step back further"},"d4_abductor":{"machine":{"S":"Sit fully back in the seat. Back against pad. Adjust the lever arm so pads sit on the outside of your thighs just above the knee. For shorter users this is usually the lowest pad position.","M":"Pads just above knee on outer thigh. Back against pad.","T":"Pads above the knee — may need higher setting. Check that at full open position hips do not lift off the seat."},"position":"Sit tall, back against the pad. Open to maximum range — feel the outer hip stretch. Squeeze the outer hips at the widest point. Control the closing — do not let it snap back.","feel":"hip_abductor","feel_txt":"Outer hip and side of the glute — the hip abductor","not_here":"Inner thigh or quad — you are pushing with the knee, not the hip"},"d4_calf":{"machine":{"S":"Standing calf raise machine: shoulder pad should sit comfortably — shorter users may need to stand on an additional plate under the calf raise platform to get a full drop below the step.","M":"Shoulder pad adjusted to height. Ball of foot on edge of step.","T":"Shoulder pad at highest position. Make sure you get a full heel drop below the platform level — the full stretch is mandatory."},"position":"Ball of foot on the step edge — heel hangs off. Drop heel as far as possible for the full stretch. Rise all the way up onto your big toe. Hold 1 second at the top. This full range is the only way calves respond — half reps do nothing.","feel":"calf","feel_txt":"Full calf from the stretch at the bottom to the hard contraction at the top","not_here":"If you feel nothing — you are doing half reps; go full range"},"d4_side_plank":{"machine":{"S":"Mat only. Elbow directly under shoulder.","M":"Mat. Elbow under shoulder.","T":"Mat. Longer body creates more leverage — may feel harder than expected at the same time as shorter people."},"position":"Elbow directly under shoulder (not forward). Stack feet or stagger them. Lift hips until body is a straight line from head to feet. Push the hip UP actively — do not just hold. If easy, add hip dips (dip hip toward floor and raise).","feel":"oblique","feel_txt":"Obliques on the top side — the muscles holding your hip up","not_here":"Shoulder pain — your elbow is not under your shoulder"},"d5_inc_db_press":{"machine":{"S":"Bench at 30–35°. Sit on the bench and kick the dumbbells up using your knees to get them into position.","M":"30–35° bench. Standard dumbbell position.","T":"30° bench max. Longer arms get more stretch at the bottom — use this advantage but don't go too deep and strain the shoulder."},"position":"Dumbbells allow a natural arc — let them follow a slight inward arc at the top. Greater range of motion than barbell. Feel the stretch at the bottom before pressing.","feel":"upper_chest","feel_txt":"Upper chest stretch at bottom, contraction at top","not_here":"Shoulder pain — dumbbells allow more natural path, check wrist angle"},"d5_single_row":{"machine":{"S":"One knee and same-side hand on a flat bench. Shorter users: bench may need to be slightly lower so the working arm can fully extend.","M":"Knee and hand on bench. Working arm fully extended at start.","T":"Same setup. Longer arm gets a bigger stretch — use the full range."},"position":"Torso parallel to floor. Row elbow straight back past your hip. Full reach forward between every rep — let the shoulder blade spread. Feel each side independently.","feel":"lat","feel_txt":"Lat on the working side — feel it spread at the bottom","not_here":"Torso rotating to lift — stabilise and let only the arm move"},"d5_db_press":{"machine":{"S":"Seated or standing. Dumbbells at ear level to start.","M":"From ear level. Full lockout at top.","T":"From ear level. Natural wrist rotation as you press."},"position":"From ear height, press overhead. Natural arc — wrists rotate slightly as you press. Full lockout. Control the lowering.","feel":"delt_all","feel_txt":"Shoulder cap through full range","not_here":"Traps rising before the press — reduce weight"},"d5_dips":{"machine":{"S":"Parallel bars. Shorter users may need a step to mount. Grip width: slightly wider than shoulder width for chest emphasis.","M":"Parallel bars. Grip outside shoulder width.","T":"Wider bars if available. Longer arms get more chest stretch at the bottom."},"position":"Lean FORWARD throughout — this shifts emphasis from triceps to lower chest. Lower until upper arms are parallel to floor. Drive through the lower chest to rise.","feel":"lower_chest","feel_txt":"Lower pec — the pressing movement when leaning forward","not_here":"Upright torso = tricep dip not chest dip; lean forward more"},"d5_conc_curl":{"machine":{"S":"Sit on a bench. Elbow pressed against the inside of the thigh just above the knee.","M":"Elbow against inner thigh. Torso slightly forward.","T":"Same. Longer arms — check elbow stays planted on the thigh throughout."},"position":"Elbow pressed firmly against inner thigh — cannot move. Full extension at bottom. Curl to shoulder. Hard supination at the top — hold 1 second. The thigh acts as an anchor eliminating all cheating.","feel":"bicep","feel_txt":"Bicep peak — the highest point of contraction","not_here":"Arm swinging off thigh — re-plant the elbow before continuing"},"d5_goblet":{"machine":{"S":"Hold one dumbbell vertically at chest. Feet slightly wider than shoulder width. Toes 30° out.","M":"Dumbbell at chest. Wider than shoulder stance.","T":"Same. Longer legs — go deeper naturally."},"position":"Dumbbell at chest forces upright torso — this is the key. Squat down keeping chest tall. Push knees out actively. Full depth.","feel":"quad_inner","feel_txt":"Quads and inner thigh (adductors) in wide stance","not_here":"Forward lean — the dumbbell at chest prevents this; if leaning, it is too heavy"},"d5_leg_press":{"machine":{"S":"Feet at mid-platform, hip width. For shorter users, check that at 90° bend knees are not past the platform edge excessively.","M":"Feet mid-platform, hip width, toes slightly out.","T":"May need feet slightly higher on platform to avoid excessive forward lean at the bottom."},"position":"Lower until knees reach 90° — not further than your flexibility allows. Press through the full foot. Do not fully lock out at the top — maintain tension.","feel":"quad_glute","feel_txt":"Quads throughout the movement","not_here":"Back lifting off the seat — you have gone deeper than your hip mobility allows"},"d5_dead_bug":{"machine":{"S":"Mat only. Lie on back. Press lower back INTO the floor before starting.","M":"Mat. Lower back flat throughout.","T":"Same. Longer limbs create more challenge — reduce range if back arches."},"position":"Arms straight up, knees at 90°. Lower opposite arm and leg simultaneously and slowly. Lower back MUST stay flat on the floor — this is the entire exercise. If it lifts, you have gone too far.","feel":"abs_deep","feel_txt":"Deep core (TVA) — the internal brace maintaining the flat back","not_here":"Lower back lifting — reduce range of motion"},"d5_hollow":{"machine":{"S":"Mat. Lie flat. Shorter torso — you can hold a longer lever (legs lower) if core is strong.","M":"Mat. Arms overhead, legs low.","T":"Mat. Longer limbs = harder. Start with legs higher (45°) and arms by sides; progress from there."},"position":"Tuck your RIBS toward your hips — this is a rib tuck not a crunch. Everything lifts off the floor except your lower back. Arms straight overhead. Legs straight and low. Hold.","feel":"abs_full","feel_txt":"Entire core from ribs to pelvis under constant tension","not_here":"Lower back arching — raise your legs until you can maintain the tuck"},"d6_chest_row":{"machine":{"S":"Incline bench at 30°, chest against it. For shorter users, you may need a plate under the bench feet or to use a lower incline setting.","M":"30° incline. Chest fully against pad. Arms hang straight down.","T":"30° bench. Longer torso — check that hips are also supported by the bench, not just the chest."},"position":"Chest fully supported eliminates lower back. Full reach down between every rep. Pull elbows back and up — not just up. Squeeze 1 second at the top.","feel":"mid_back","feel_txt":"Mid back between shoulder blades — pure isolation, no lower back","not_here":"Upper traps — drive elbows back not upward"},"d6_cross_mid":{"machine":{"S":"Set both cables to chest height (your chest height). Stand at centre. For shorter users this is usually the 3rd or 4th pulley setting.","M":"Cables at chest height. Stand at centre.","T":"Cables at chest height — taller chest height means a higher pulley setting."},"position":"Stand in the centre, one foot forward for balance. Bring hands together horizontally at chest height — not above, not below. Elbows slightly bent and fixed. Squeeze at centre.","feel":"mid_chest","feel_txt":"Mid chest horizontal fibres — different from high-to-low cables","not_here":"Shoulders — keep chest up and lead with elbows not hands"},"d6_arnold":{"machine":{"S":"Seated on a bench. Dumbbells at chin height, palms facing you to start.","M":"Seated. Start palms facing you at chin. Rotate to press.","T":"Same. Longer arms — the rotation path feels more natural."},"position":"Start with palms facing your face at chin height. As you press UP, rotate palms forward so at lockout they face away. This rotation progressively loads front then side delt.","feel":"delt_all","feel_txt":"Feel front delt at start of rotation, side delt at the top","not_here":"Rushing the rotation — go slow to feel the progression across delt heads"},"d6_overhead_db":{"machine":{"S":"Seated or standing. One or two dumbbells held overhead. Shorter users — seated is safer.","M":"Seated or standing. Elbows forward throughout.","T":"Standing. Longer arms get a deeper stretch — use it but keep elbows pointing forward."},"position":"Elbows point forward and stay fixed. Let the weight drop behind your head as far as possible — this is the long head stretch. Press to full extension.","feel":"tricep_long","feel_txt":"Deep stretch behind the upper arm at the bottom","not_here":"Elbows flaring sideways — must stay pointing forward"},"d6_ez_curl":{"machine":{"S":"EZ bar at thigh level. The angled grip reduces wrist strain. Shorter users — slightly narrower grip on the inner curve.","M":"EZ bar. Grip the inner angled curve for shoulder-width.","T":"EZ bar. Slightly wider grip on the outer curve."},"position":"Same as barbell curl. The EZ bar sits at a more natural wrist angle. Elbows pinned. Full extension. Supinate at the top (the bar limits how much, but still try).","feel":"bicep","feel_txt":"Bicep — same as barbell curl with less wrist discomfort","not_here":"Wrist pain — this is why we use EZ bar; if still hurting check grip width"},"d6_sumo":{"machine":{"S":"No machine. Wide stance — feet outside shoulder width, toes at 45°. Hold dumbbell at chest.","M":"Wide stance, toes 45° out. Dumbbell at chest.","T":"Even wider stance available with longer legs — use it to feel inner thigh."},"position":"Very wide stance, toes pointing significantly outward. Dumbbell at chest. Squat straight down — knees push out actively. Full depth. Drive through heels.","feel":"inner_thigh","feel_txt":"Inner thigh (adductors) and outer glute (glute med)","not_here":"Knees caving in — push them out actively over your toes"},"d6_ab_wheel":{"machine":{"S":"Same as Day 2. Wheel under shoulders on knees.","M":"Wheel under shoulders. Roll to flat-back limit.","T":"Same. More range available — only use range where back stays flat."},"position":"Brace before every single rep. Roll out slowly. Lower back flat is non-negotiable. Pull back with abs.","feel":"abs_full","feel_txt":"Entire core under stretch tension going out","not_here":"Lower back — reduce range"},"d6_pallof":{"machine":{"S":"Cable at chest height. Side-on 60–70cm from machine.","M":"Cable at chest height. 70–80cm.","T":"Cable at chest height. 80–90cm."},"position":"Same as Day 2. Press out, hold 2 sec, return. Resist the rotation.","feel":"oblique","feel_txt":"Obliques on the far side from the cable","not_here":"Rotating toward the cable — reduce weight"},"d1_shrug":{"machine":{"S":"Barbell at hips or use Smith machine. Stand shoulder width, arms straight.","M":"Barbell at hips. Stand shoulder width, arms straight, slight knee bend.","T":"Barbell at hips. Longer arms give a natural advantage here — full drop at bottom."},"position":"Stand tall, barbell at hip level, arms fully straight. No bend in elbows.","feel":"trap","not_here":"Shoulders should NOT roll forward — purely straight up movement."},"d1_bicycle_crunch":{"machine":{"S":"Floor mat. Lie on back, knees up, hands lightly behind head.","M":"Floor mat. Lie on back, knees up, hands lightly behind head.","T":"Floor mat. Same position — longer legs make the movement more challenging."},"position":"Lie on back, knees at 90°, hands behind head lightly.","feel":"oblique","not_here":"Neck should NOT strain — hands just support, obliques rotate the torso."},"d2_hack_sq":{"machine":{"S":"Feet mid-plate shoulder width, toes slightly out. Shoulders under pads, back flat.","M":"Feet mid-plate hip width, toes slightly out. Back fully against pad.","T":"Feet mid-plate slightly wider. Longer legs may need feet slightly higher on platform."},"position":"Back fully against pad, shoulders under pads. Feet mid-plate.","feel":"quad","not_here":"Lower back should NOT leave the pad — if it does, reduce the depth."},"d2_leg_curl":{"machine":{"S":"Roller just above ankle. Lie flat, hips flush against bench. Flex feet before starting.","M":"Roller just above ankle. Hips flat throughout. Flex feet — toes toward shins.","T":"Adjust roller higher for longer legs. Hips stay flat throughout."},"position":"Face down, hips flat on bench, roller above ankle, feet flexed.","feel":"hamstring","not_here":"Calves should NOT cramp — flex feet harder (toes toward shins throughout)."},"d2_calf_stand":{"machine":{"S":"Standing calf machine or step. Ball of foot on edge, heel fully free.","M":"Ball of foot on step edge. Heel drops fully below platform each rep.","T":"Same — longer levers make the stretch more intense at the bottom."},"position":"Ball of foot on step edge, heel below platform to start each rep.","feel":"calf_upper","not_here":"Do NOT do partial reps — calves only respond to full stretch to full contraction."},"d3_cable_fly_htl":{"machine":{"S":"Cables at HIGHEST setting. Stand centre between columns, slight forward lean.","M":"Cables at highest. Stand centre, slight forward lean, small step forward.","T":"Cables at highest. Stand slightly further back — longer arms need more arc room."},"position":"Stand centre, cables at top. Hands at shoulder height. Slight forward lean.","feel":"chest_lower","not_here":"Should NOT feel in shoulders — chest up and elbows lead slightly."},"d3_rear_delt_fly":{"machine":{"S":"Light dumbbells. Sit on bench edge and hinge forward or stand hinging 45°.","M":"Dumbbells. Hinge forward 45°. Slight elbow bend fixed throughout.","T":"Dumbbells. Hinge 45°. Longer torso — keep the hinge strict to protect lower back."},"position":"Hinge 45° at hips. Arms hanging, slight elbow bend fixed.","feel":"rear_delt","not_here":"Should NOT feel between shoulder blades — that is mid trap. Arms going too high."},"d3_side_plank":{"machine":{"S":"Floor mat. Forearm on floor, feet stacked or split for balance.","M":"Floor mat. Forearm on floor, feet stacked, body in straight line.","T":"Floor mat. Same. Longer body means more leverage — focus on squeezing harder."},"position":"Forearm on floor, elbow under shoulder. Body straight. Hips elevated.","feel":"oblique","not_here":"Hips should NOT sag — if they do, use the modified version with knees bent."},"d4_adductor":{"machine":{"S":"Sit fully back. Pads on inner thighs above knee. Start at comfortable wide position.","M":"Sit fully back. Pads on inner thighs. Full width at start.","T":"Same — sit fully back so lower back is supported throughout."},"position":"Sit fully back, pads on inner thighs above knees, full width starting position.","feel":"inner_thigh","not_here":"Should NOT feel in quads — squeeze inward from the inner thigh not the knee."},"d4_calf_seated":{"machine":{"S":"Knee pad just above knee. Ball of foot on platform edge, heel fully free.","M":"Knee pad above knee. Ball of foot on edge. Heel drops below platform each rep.","T":"Same setup. Knee pad fits over larger legs — adjust if tight."},"position":"Sit with knee pad locked. Ball of foot on edge. Heel below platform at start.","feel":"calf_lower","not_here":"Feel should be LOWER and DEEPER than standing calf — that is the soleus. Different location entirely."},"d4_hollow_hold":{"machine":{"S":"Floor mat. Arms overhead, legs straight. Start with legs higher if lower back lifts.","M":"Floor mat. Arms overhead, legs straight and low.","T":"Floor mat. Longer limbs make this harder — start with legs higher if needed."},"position":"Lie on back. Arms overhead. Legs straight and low. Lower back pressed flat.","feel":"abs_full","not_here":"Lower back should NOT arch off floor — raise legs higher until it stays flat."},"d5_plank":{"machine":{"S":"Floor mat. Forearms on floor, elbows under shoulders, feet together.","M":"Floor mat. Forearms on floor, elbows under shoulders.","T":"Floor mat. Same — longer body means more leverage."},"position":"Forearms on floor. Body in straight line head to heels. Squeeze abs AND glutes.","feel":"abs_full","not_here":"Hips should NOT sag OR pike up — perfectly straight line only."},"d6_rev_lunge":{"machine":{"S":"Dumbbells at sides. Stand tall. Step directly backward — not diagonal.","M":"Dumbbells at sides. Step backward far enough for front shin to stay vertical.","T":"Dumbbells at sides. Longer legs need a longer stride back."},"position":"Stand tall. Step back, lower back knee toward floor. Front shin vertical.","feel":"quad","not_here":"Front knee should NOT go past toes — step back further if it does."}};
+const BODY_REGION_MAP = {
+  "upper_chest": "chest_upper",
+  "mid_chest": "chest_mid",
+  "inner_chest": "chest_inner",
+  "lower_chest": "chest_lower",
+  "lat": "lat",
+  "lat_lower": "lat_lower",
+  "mid_back": "mid_back",
+  "trap": "trap",
+  "delt_all": "delt_all",
+  "delt_lateral": "delt_lateral",
+  "delt_front": "delt_front",
+  "delt_rear": "delt_rear",
+  "bicep": "bicep",
+  "bicep_long": "bicep_long",
+  "bicep_short": "bicep_short",
+  "tricep_all": "tricep_all",
+  "tricep_long": "tricep_long",
+  "tricep_lateral": "tricep_lateral",
+  "quad_glute": "quad_glute",
+  "quad_vmo": "quad_vmo",
+  "quad_inner": "quad_inner",
+  "glute": "glute",
+  "glute_front": "glute_front",
+  "hamstring": "hamstring",
+  "hamstring_stretch": "hamstring",
+  "calf": "calf",
+  "inner_thigh": "inner_thigh",
+  "hip_abductor": "hip_abductor",
+  "oblique": "oblique",
+  "abs_upper": "abs_upper",
+  "abs_lower": "abs_lower",
+  "abs_full": "abs_full",
+  "abs_deep": "abs_full"
+};
+
+// ═══ BODY SVG ═══
+// Body silhouette SVGs with highlighted muscle regions
+// Front view (chest, biceps, quads, abs, delts) and Back view (lats, traps, hamstrings, triceps, glutes)
+
+function getBodySVG(region) {
+  const hi = '#34d27a'; // highlight colour
+  const body = '#3d3830'; // body fill
+  const outline = '#7a7068';
+
+  // Define which regions appear on front vs back
+  const backRegions = ['lat','lat_lower','mid_back','trap','tricep_all','tricep_long','tricep_lateral','glute','glute_front','hamstring','hip_abductor','delt_rear'];
+  const isBack = backRegions.includes(region);
+
+  const fc = (r) => r === region ? hi : body; // fill colour helper
+  const fo = (r) => r === region ? hi : outline; // outline colour helper
+
+  if (!isBack) {
+    // FRONT VIEW
+    return `<svg viewBox="0 0 120 260" xmlns="http://www.w3.org/2000/svg" style="width:80px;flex-shrink:0">
+  <!-- head -->
+  <circle cx="60" cy="18" r="14" fill="${body}" stroke="${outline}" stroke-width="1.5"/>
+  <!-- neck -->
+  <rect x="54" y="30" width="12" height="10" rx="3" fill="${body}"/>
+  <!-- TRAPS (front view - top of shoulders) -->
+  <ellipse cx="38" cy="46" rx="14" ry="7" fill="${fc('trap')}" stroke="${fo('trap')}" stroke-width="1"/>
+  <ellipse cx="82" cy="46" rx="14" ry="7" fill="${fc('trap')}" stroke="${fo('trap')}" stroke-width="1"/>
+  <!-- DELTOID ALL -->
+  <ellipse cx="28" cy="58" rx="12" ry="9" fill="${fc('delt_all')}" stroke="${fo('delt_all')}" stroke-width="1" transform="rotate(-15 28 58)"/>
+  <ellipse cx="92" cy="58" rx="12" ry="9" fill="${fc('delt_all')}" stroke="${fo('delt_all')}" stroke-width="1" transform="rotate(15 92 58)"/>
+  <!-- DELT FRONT -->
+  <ellipse cx="30" cy="54" rx="9" ry="7" fill="${fc('delt_front')}" stroke="${fo('delt_front')}" stroke-width="1" transform="rotate(-20 30 54)"/>
+  <ellipse cx="90" cy="54" rx="9" ry="7" fill="${fc('delt_front')}" stroke="${fo('delt_front')}" stroke-width="1" transform="rotate(20 90 54)"/>
+  <!-- DELT LATERAL -->
+  <ellipse cx="24" cy="62" rx="8" ry="6" fill="${fc('delt_lateral')}" stroke="${fo('delt_lateral')}" stroke-width="1" transform="rotate(-10 24 62)"/>
+  <ellipse cx="96" cy="62" rx="8" ry="6" fill="${fc('delt_lateral')}" stroke="${fo('delt_lateral')}" stroke-width="1" transform="rotate(10 96 62)"/>
+  <!-- CHEST UPPER -->
+  <ellipse cx="60" cy="56" rx="22" ry="9" fill="${fc('chest_upper')}" stroke="${fo('chest_upper')}" stroke-width="1"/>
+  <!-- CHEST MID -->
+  <ellipse cx="60" cy="68" rx="22" ry="9" fill="${fc('chest_mid')}" stroke="${fo('chest_mid')}" stroke-width="1"/>
+  <!-- CHEST INNER -->
+  <ellipse cx="60" cy="62" rx="10" ry="14" fill="${fc('chest_inner')}" stroke="${fo('chest_inner')}" stroke-width="1"/>
+  <!-- CHEST LOWER -->
+  <ellipse cx="60" cy="78" rx="20" ry="7" fill="${fc('chest_lower')}" stroke="${fo('chest_lower')}" stroke-width="1"/>
+  <!-- torso body -->
+  <rect x="38" y="44" width="44" height="55" rx="8" fill="none" stroke="${outline}" stroke-width="1.5"/>
+  <!-- BICEP left -->
+  <ellipse cx="22" cy="82" rx="8" ry="16" fill="${fc('bicep')}" stroke="${fo('bicep')}" stroke-width="1" transform="rotate(8 22 82)"/>
+  <!-- BICEP right -->
+  <ellipse cx="98" cy="82" rx="8" ry="16" fill="${fc('bicep')}" stroke="${fo('bicep')}" stroke-width="1" transform="rotate(-8 98 82)"/>
+  <!-- BICEP LONG head (lower) -->
+  <ellipse cx="22" cy="92" rx="6" ry="10" fill="${fc('bicep_long')}" stroke="${fo('bicep_long')}" stroke-width="1" transform="rotate(8 22 92)"/>
+  <ellipse cx="98" cy="92" rx="6" ry="10" fill="${fc('bicep_long')}" stroke="${fo('bicep_long')}" stroke-width="1" transform="rotate(-8 98 92)"/>
+  <!-- BICEP SHORT head (upper) -->
+  <ellipse cx="22" cy="74" rx="6" ry="9" fill="${fc('bicep_short')}" stroke="${fo('bicep_short')}" stroke-width="1" transform="rotate(8 22 74)"/>
+  <ellipse cx="98" cy="74" rx="6" ry="9" fill="${fc('bicep_short')}" stroke="${fo('bicep_short')}" stroke-width="1" transform="rotate(-8 98 74)"/>
+  <!-- forearms -->
+  <rect x="14" y="100" width="14" height="30" rx="5" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <rect x="92" y="100" width="14" height="30" rx="5" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- ABS UPPER -->
+  <rect x="46" y="84" width="28" height="16" rx="4" fill="${fc('abs_upper')}" stroke="${fo('abs_upper')}" stroke-width="1"/>
+  <!-- ABS LOWER -->
+  <rect x="46" y="100" width="28" height="14" rx="4" fill="${fc('abs_lower')}" stroke="${fo('abs_lower')}" stroke-width="1"/>
+  <!-- ABS FULL -->
+  <rect x="46" y="84" width="28" height="30" rx="4" fill="${fc('abs_full')}" stroke="${fo('abs_full')}" stroke-width="1"/>
+  <!-- OBLIQUE left -->
+  <ellipse cx="38" cy="98" rx="8" ry="18" fill="${fc('oblique')}" stroke="${fo('oblique')}" stroke-width="1" transform="rotate(12 38 98)"/>
+  <!-- OBLIQUE right -->
+  <ellipse cx="82" cy="98" rx="8" ry="18" fill="${fc('oblique')}" stroke="${fo('oblique')}" stroke-width="1" transform="rotate(-12 82 98)"/>
+  <!-- hips -->
+  <ellipse cx="60" cy="122" rx="26" ry="12" fill="${body}" stroke="${outline}" stroke-width="1.5"/>
+  <!-- QUAD left -->
+  <rect x="34" y="134" width="20" height="52" rx="8" fill="${fc('quad_glute')}" stroke="${fo('quad_glute')}" stroke-width="1"/>
+  <!-- QUAD right -->
+  <rect x="66" y="134" width="20" height="52" rx="8" fill="${fc('quad_glute')}" stroke="${fo('quad_glute')}" stroke-width="1"/>
+  <!-- QUAD VMO left (inner lower quad) -->
+  <ellipse cx="48" cy="182" rx="7" ry="6" fill="${fc('quad_vmo')}" stroke="${fo('quad_vmo')}" stroke-width="1"/>
+  <ellipse cx="72" cy="182" rx="7" ry="6" fill="${fc('quad_vmo')}" stroke="${fo('quad_vmo')}" stroke-width="1"/>
+  <!-- INNER THIGH -->
+  <ellipse cx="52" cy="158" rx="8" ry="20" fill="${fc('inner_thigh')}" stroke="${fo('inner_thigh')}" stroke-width="1"/>
+  <ellipse cx="68" cy="158" rx="8" ry="20" fill="${fc('inner_thigh')}" stroke="${fo('inner_thigh')}" stroke-width="1"/>
+  <!-- knees -->
+  <ellipse cx="44" cy="190" rx="10" ry="8" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <ellipse cx="76" cy="190" rx="10" ry="8" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- shins -->
+  <rect x="36" y="198" width="16" height="44" rx="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <rect x="68" y="198" width="16" height="44" rx="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- CALF front -->
+  <ellipse cx="44" cy="216" rx="8" ry="14" fill="${fc('calf')}" stroke="${fo('calf')}" stroke-width="1"/>
+  <ellipse cx="76" cy="216" rx="8" ry="14" fill="${fc('calf')}" stroke="${fo('calf')}" stroke-width="1"/>
+  <!-- feet -->
+  <ellipse cx="44" cy="246" rx="12" ry="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <ellipse cx="76" cy="246" rx="12" ry="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- view label -->
+  <text x="60" y="258" text-anchor="middle" fill="${outline}" font-size="7" font-family="sans-serif">FRONT</text>
+</svg>`;
+  } else {
+    // BACK VIEW
+    return `<svg viewBox="0 0 120 260" xmlns="http://www.w3.org/2000/svg" style="width:80px;flex-shrink:0">
+  <!-- head -->
+  <circle cx="60" cy="18" r="14" fill="${body}" stroke="${outline}" stroke-width="1.5"/>
+  <!-- neck -->
+  <rect x="54" y="30" width="12" height="10" rx="3" fill="${body}"/>
+  <!-- TRAP (upper back) -->
+  <path d="M 46 38 Q 60 44 74 38 Q 74 52 60 56 Q 46 52 46 38Z" fill="${fc('trap')}" stroke="${fo('trap')}" stroke-width="1"/>
+  <!-- DELT REAR left -->
+  <ellipse cx="28" cy="58" rx="12" ry="9" fill="${fc('delt_rear')}" stroke="${fo('delt_rear')}" stroke-width="1" transform="rotate(15 28 58)"/>
+  <ellipse cx="92" cy="58" rx="12" ry="9" fill="${fc('delt_rear')}" stroke="${fo('delt_rear')}" stroke-width="1" transform="rotate(-15 92 58)"/>
+  <!-- MID BACK (rhomboids) -->
+  <ellipse cx="60" cy="68" rx="18" ry="12" fill="${fc('mid_back')}" stroke="${fo('mid_back')}" stroke-width="1"/>
+  <!-- LAT left -->
+  <path d="M 38 58 Q 22 82 26 110 Q 38 108 42 80 Q 46 68 38 58Z" fill="${fc('lat')}" stroke="${fo('lat')}" stroke-width="1"/>
+  <path d="M 82 58 Q 98 82 94 110 Q 82 108 78 80 Q 74 68 82 58Z" fill="${fc('lat')}" stroke="${fo('lat')}" stroke-width="1"/>
+  <!-- LAT LOWER -->
+  <path d="M 38 88 Q 24 108 28 118 Q 40 114 44 96Z" fill="${fc('lat_lower')}" stroke="${fo('lat_lower')}" stroke-width="1"/>
+  <path d="M 82 88 Q 96 108 92 118 Q 80 114 76 96Z" fill="${fc('lat_lower')}" stroke="${fo('lat_lower')}" stroke-width="1"/>
+  <!-- torso outline -->
+  <rect x="38" y="44" width="44" height="76" rx="8" fill="none" stroke="${outline}" stroke-width="1.5"/>
+  <!-- TRICEP ALL left -->
+  <ellipse cx="22" cy="82" rx="8" ry="18" fill="${fc('tricep_all')}" stroke="${fo('tricep_all')}" stroke-width="1" transform="rotate(-8 22 82)"/>
+  <ellipse cx="98" cy="82" rx="8" ry="18" fill="${fc('tricep_all')}" stroke="${fo('tricep_all')}" stroke-width="1" transform="rotate(8 98 82)"/>
+  <!-- TRICEP LONG head (upper) -->
+  <ellipse cx="22" cy="74" rx="6" ry="10" fill="${fc('tricep_long')}" stroke="${fo('tricep_long')}" stroke-width="1" transform="rotate(-8 22 74)"/>
+  <ellipse cx="98" cy="74" rx="6" ry="10" fill="${fc('tricep_long')}" stroke="${fo('tricep_long')}" stroke-width="1" transform="rotate(8 98 74)"/>
+  <!-- TRICEP LATERAL head (lower/outer) -->
+  <ellipse cx="20" cy="92" rx="6" ry="9" fill="${fc('tricep_lateral')}" stroke="${fo('tricep_lateral')}" stroke-width="1" transform="rotate(-8 20 92)"/>
+  <ellipse cx="100" cy="92" rx="6" ry="9" fill="${fc('tricep_lateral')}" stroke="${fo('tricep_lateral')}" stroke-width="1" transform="rotate(8 100 92)"/>
+  <!-- forearms -->
+  <rect x="14" y="100" width="14" height="30" rx="5" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <rect x="92" y="100" width="14" height="30" rx="5" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- lower back -->
+  <rect x="44" y="100" width="32" height="20" rx="5" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- hips -->
+  <ellipse cx="60" cy="128" rx="28" ry="14" fill="${body}" stroke="${outline}" stroke-width="1.5"/>
+  <!-- GLUTE -->
+  <ellipse cx="48" cy="138" rx="18" ry="16" fill="${fc('glute')}" stroke="${fo('glute')}" stroke-width="1"/>
+  <ellipse cx="72" cy="138" rx="18" ry="16" fill="${fc('glute')}" stroke="${fo('glute')}" stroke-width="1"/>
+  <!-- GLUTE FRONT (front glute/TFL) -->
+  <ellipse cx="44" cy="130" rx="12" ry="10" fill="${fc('glute_front')}" stroke="${fo('glute_front')}" stroke-width="1"/>
+  <ellipse cx="76" cy="130" rx="12" ry="10" fill="${fc('glute_front')}" stroke="${fo('glute_front')}" stroke-width="1"/>
+  <!-- HIP ABDUCTOR (outer hip) -->
+  <ellipse cx="36" cy="138" rx="10" ry="14" fill="${fc('hip_abductor')}" stroke="${fo('hip_abductor')}" stroke-width="1"/>
+  <ellipse cx="84" cy="138" rx="10" ry="14" fill="${fc('hip_abductor')}" stroke="${fo('hip_abductor')}" stroke-width="1"/>
+  <!-- HAMSTRING left -->
+  <rect x="34" y="154" width="20" height="46" rx="8" fill="${fc('hamstring')}" stroke="${fo('hamstring')}" stroke-width="1"/>
+  <rect x="66" y="154" width="20" height="46" rx="8" fill="${fc('hamstring')}" stroke="${fo('hamstring')}" stroke-width="1"/>
+  <!-- knees back -->
+  <ellipse cx="44" cy="204" rx="10" ry="8" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <ellipse cx="76" cy="204" rx="10" ry="8" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- CALF (gastrocnemius) -->
+  <ellipse cx="44" cy="224" rx="10" ry="18" fill="${fc('calf')}" stroke="${fo('calf')}" stroke-width="1"/>
+  <ellipse cx="76" cy="224" rx="10" ry="18" fill="${fc('calf')}" stroke="${fo('calf')}" stroke-width="1"/>
+  <!-- lower shin -->
+  <rect x="36" y="240" width="16" height="10" rx="4" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <rect x="68" y="240" width="16" height="10" rx="4" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <!-- feet -->
+  <ellipse cx="44" cy="252" rx="12" ry="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <ellipse cx="76" cy="252" rx="12" ry="6" fill="${body}" stroke="${outline}" stroke-width="1"/>
+  <text x="60" y="262" text-anchor="middle" fill="${outline}" font-size="7" font-family="sans-serif">BACK</text>
+</svg>`;
+  }
+}
+
+// ═══ SETUP LOGIC ═══
+// ═══════════════════════════════════════
+// USER PROFILE
+// ═══════════════════════════════════════
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem(userKey('profile')) || 'null'); } catch(e) { return null; }
+}
+function saveProfile(p) { localStorage.setItem(userKey('profile'), JSON.stringify(p)); }
+
+function heightBand(cm) {
+  if (!cm) return 'M';
+  return cm <= 162 ? 'S' : cm >= 179 ? 'T' : 'M';
+}
+
+function bwStartWeight(exId, bw) {
+  // Returns suggested starting weight as % of bodyweight for key exercises
+  // Only shown as a hint, never overrides logged values
+  if (!bw) return null;
+  const pct = {
+    'd1_inc_bp': 0.4, 'd1_flat_bp': 0.5, 'd1_cgbp': 0.45,
+    'd2_pullups': null, // bodyweight
+    'd3_ohp': 0.28,
+    'd4_squat': 0.6, 'd4_rdl': 0.5,
+  };
+  const p = pct[exId];
+  if (!p) return null;
+  return Math.round(bw * p / 2.5) * 2.5; // round to nearest 2.5kg
+}
+
+// ═══════════════════════════════════════
+// SETUP TAB RENDERER
+// ═══════════════════════════════════════
+function renderSetupTab(exId) {
+  const data = SETUP_DATA[exId];
+  if (!data) return '<div style="color:var(--text3);font-size:12px;padding:8px">Setup info coming soon.</div>';
+  
+  const profile = getProfile();
+  const band = heightBand(profile?.height);
+  const bw = profile?.weight;
+  const machineText = data.machine ? (data.machine[band] || data.machine['M']) : null;
+  const regionId = BODY_REGION_MAP[data.feel] || data.feel;
+  const suggestedWeight = bwStartWeight(exId, bw);
+
+  return `
+<div style="display:flex;flex-direction:column;gap:10px">
+  ${machineText ? `
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:12px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue);margin-bottom:7px">⚙️ Machine &amp; Cable Setup</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.7">${machineText}</div>
+    ${profile?.height ? `<div style="margin-top:6px;font-size:10px;color:var(--text3)">Adjusted for your height: ${profile.height}cm</div>` : ''}
+  </div>` : ''}
+  
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:12px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--amber);margin-bottom:7px">📍 Body Position</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.7">${data.position}</div>
+  </div>
+
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:12px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:8px">🎯 Feel It Here</div>
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="flex-shrink:0">${getBodySVG(regionId)}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:6px;line-height:1.5">${data.feel_txt}</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6"><span style="color:var(--red)">✗ Not here:</span> ${data.not_here}</div>
+        ${suggestedWeight ? `<div style="margin-top:10px;padding:7px 10px;background:var(--bg4);border-radius:var(--rs);font-size:11px;color:var(--text3)">💡 Starting weight hint: ~${suggestedWeight}kg based on your bodyweight</div>` : ''}
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
+
+
+const user=getUser();
+if(user){
+  document.getElementById('onboard').style.display='none';
+  initApp();
+} else {
+  document.getElementById('onboard').style.display='flex';
+}
+
+</script>
+
+<script>
+// Unregister any existing service workers to clear old cache
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => { r.unregister(); console.log('SW unregistered'); });
+  });
+}
+</script>
+</body>
+</html>
