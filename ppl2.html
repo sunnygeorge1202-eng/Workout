@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Workout">
+<meta name="theme-color" content="#0d0d0d">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<link rel="manifest" href="/Workout/manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="/Workout/icon-180.png">
+<title>Workout</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0d0d0d;--bg2:#111;--bg3:#141414;--bg4:#1a1a1a;
+  --border:#1e1e1e;--border2:#222;
+  --text:#f0f0f0;--text2:#888;--text3:#444;
+  --green:#4ade80;--green-dim:#1a2e1a;--green-bg:#0d1a0d;
+  --orange:#f97316;--orange-dim:#2a1a0d;
+  --red:#f87171;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ONBOARDING */
+#onboard{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 24px;gap:20px}
+.ob-logo{font-size:56px;margin-bottom:8px}
+.ob-title{font-size:28px;font-weight:600;color:var(--text);text-align:center}
+.ob-sub{font-size:15px;color:var(--text2);text-align:center;line-height:1.5}
+.ob-input{width:100%;max-width:340px;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:14px 16px;font-size:16px;color:var(--text);outline:none}
+.ob-input:focus{border-color:var(--green)}
+.ob-btn{width:100%;max-width:340px;background:var(--green);color:#0a1a0a;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:600;cursor:pointer}
+
+/* MAIN APP */
+#app{display:none;flex-direction:column;min-height:100vh}
+
+/* HEADER */
+.hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.hdr-left{}
+.day-lbl{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase}
+.day-title{font-size:22px;font-weight:600;color:var(--text);line-height:1.2;margin-top:2px}
+.week-badge{font-size:11px;font-weight:600;background:var(--green-dim);color:var(--green);padding:5px 10px;border-radius:20px;letter-spacing:0.06em;margin-top:4px;white-space:nowrap}
+
+/* TIMER */
+.timer-bar{background:var(--bg2);padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.timer-num{font-size:34px;font-weight:600;color:var(--green);font-variant-numeric:tabular-nums;letter-spacing:-0.02em;min-width:72px}
+.timer-num.urgent{color:var(--red)}
+.t-presets{display:flex;gap:6px;flex:1;overflow-x:auto;scrollbar-width:none}
+.t-pre{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.t-pre.on{border-color:var(--green);color:var(--green)}
+.t-btns{display:flex;gap:8px;flex-shrink:0}
+.t-start{background:var(--green);color:#0a1a0a;border:none;border-radius:10px;padding:9px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.t-reset{background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:14px;cursor:pointer}
+
+/* DAY TABS */
+.day-tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);scrollbar-width:none;padding:0 12px;gap:2px}
+.day-tab{padding:10px 12px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;flex-shrink:0;text-align:center;line-height:1.3}
+.day-tab.on{color:var(--green);border-bottom:2px solid var(--green)}
+.day-tab .dt-sub{font-size:10px;opacity:0.7;display:block;margin-top:1px}
+
+/* CONTENT */
+.content{flex:1;padding:0 0 100px}
+
+/* SECTION LABEL */
+.sec-lbl{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:0.14em;text-transform:uppercase;padding:18px 20px 8px}
+
+/* GIANT BADGE */
+.giant-badge{margin:4px 16px 8px;display:flex;align-items:flex-start;gap:8px}
+.giant-dot{width:8px;height:8px;border-radius:2px;background:var(--orange);flex-shrink:0;margin-top:3px}
+.giant-lbl{font-size:10px;color:var(--orange);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4}
+
+/* ABS BADGE */
+.abs-badge{margin:4px 16px 8px;display:flex;align-items:flex-start;gap:8px}
+.abs-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:3px}
+.abs-lbl{font-size:10px;color:var(--green);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4}
+
+/* EXERCISE CARD */
+.ex-card{margin:0 16px 10px;background:var(--bg3);border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.ex-card.giant-card{background:#111a11;border-color:#1e2a1e}
+.ex-card.abs-card{background:var(--bg3);border-color:var(--border)}
+.ex-card.done-card{opacity:0.6}
+
+/* CARD HEADER */
+.ex-hdr{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ex-name{font-size:16px;font-weight:600;color:var(--text);line-height:1.3}
+.ex-focus{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.4}
+.ex-ring{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.ring-lbl{font-size:12px;color:var(--text3);font-variant-numeric:tabular-nums}
+
+/* SET ROWS */
+.warmup-row{display:grid;grid-template-columns:60px 1fr auto 40px;align-items:center;padding:8px 16px;border-top:1px solid var(--border);gap:8px;opacity:0.4}
+.set-row{display:grid;grid-template-columns:60px 1fr auto 40px;align-items:center;padding:10px 16px;border-top:1px solid var(--border);gap:8px;cursor:pointer;transition:background 0.15s}
+.set-row:active{background:var(--bg4)}
+.set-row.set-done{background:var(--green-bg)}
+.set-lbl{font-size:12px;font-weight:600;color:var(--text3);letter-spacing:0.04em}
+.set-kg{font-size:20px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;line-height:1}
+.set-kg-unit{font-size:12px;font-weight:400;color:var(--text2);margin-left:2px}
+.set-reps{font-size:14px;color:var(--text2);font-variant-numeric:tabular-nums;text-align:right}
+.set-tick{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.set-tick.ticked{background:var(--green);border-color:var(--green)}
+.set-tick.ticked::after{content:'✓';font-size:14px;color:#0a1a0a;font-weight:700}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:12px 20px 28px;display:flex;gap:12px}
+.finish-btn{flex:1;background:var(--green);color:#0a1a0a;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer}
+.sync-btn{background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;font-size:14px;cursor:pointer;white-space:nowrap}
+
+/* REST DAY */
+#rest{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:40px 24px;text-align:center;gap:16px}
+.rest-icon{font-size:64px}
+.rest-title{font-size:28px;font-weight:600;color:var(--text)}
+.rest-msg{font-size:15px;color:var(--text2);line-height:1.6;max-width:320px}
+
+/* SETTINGS */
+.settings-btn{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div id="onboard">
+  <div class="ob-logo">💪</div>
+  <div class="ob-title">Welcome</div>
+  <div class="ob-sub">Your personal workout tracker</div>
+  <input class="ob-input" id="ob-name" type="text" placeholder="Your name" maxlength="30">
+  <button class="ob-btn" onclick="completeOnboard()">Let's go</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="day-lbl" id="hdr-date">Monday</div>
+      <div class="day-title" id="hdr-title">Push 1 — Heavy</div>
+      <div class="week-badge" id="week-badge">Week A</div>
+    </div>
+    <button class="settings-btn" onclick="showSettings()">⚙</button>
+  </div>
+
+  <div class="timer-bar">
+    <div class="timer-num" id="t-dig">2:30</div>
+    <div class="t-presets">
+      <div class="t-pre" onclick="setTimer(150)">2:30</div>
+      <div class="t-pre" onclick="setTimer(120)">2:00</div>
+      <div class="t-pre" onclick="setTimer(90)">1:30</div>
+      <div class="t-pre" onclick="setTimer(60)">1:00</div>
+      <div class="t-pre" onclick="setTimer(45)">0:45</div>
+    </div>
+    <div class="t-btns">
+      <button class="t-reset" onclick="resetTimer()">Reset</button>
+      <button class="t-start" id="t-start" onclick="toggleTimer()">▶ Start</button>
+    </div>
+  </div>
+
+  <div class="day-tabs" id="day-tabs"></div>
+
+  <div class="content" id="content">
+    <div id="rest" style="display:none">
+      <div class="rest-icon">🛌</div>
+      <div class="rest-title">Rest Day</div>
+      <div class="rest-msg" id="rest-msg">Muscles grow when you recover.</div>
+    </div>
+    <div id="exwrap"></div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="finish-btn" onclick="finishDay()">✓ Finish Workout</button>
+    <button class="sync-btn" onclick="syncSheets()">☁ Sync</button>
+  </div>
+</div>
+
+<script>
+const P=[{"id":"d1","label":"Day 1","title":"Push 1 \u2014 Heavy","muscle":"Chest, Shoulders, Triceps","note":"Heavy compounds first \u2014 full rest. Giant set is continuous no rest between exercises.","a":{"label":"Week A","exercises":[{"id":"d1a_inc_bp","giant":false,"giantLabel":"","name":"Incline Barbell Press","focus":"Upper chest \u2014 primary heavy compound","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":7},{"t":"Set 2","kg":70,"r":7},{"t":"Set 3","kg":67.5,"r":7},{"t":"Set 4","kg":65,"r":8}],"form":"Bench at 30\u00b0. Retract scapula. Bar to upper chest. Elbows 45\u00b0. Drive up and slightly back.","pre":"Squeeze shoulder blades, push chest up, big breath and brace.","during":"Upper chest stretch at bottom. Contraction at top \u2014 not front delt.","check":"Correct: upper chest stretch. Wrong: front delt \u2014 lower the bench angle."},{"id":"d1a_ohp","giant":false,"giantLabel":"","name":"Overhead Barbell Press","focus":"All 3 delt heads \u2014 heavy compound","rest":180,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":50,"r":7},{"t":"Set 2","kg":50,"r":7},{"t":"Set 3","kg":47.5,"r":7},{"t":"Set 4","kg":47.5,"r":8}],"form":"Bar at collarbone. Press up and slightly back. Full lockout with slight shrug. Brace core.","pre":"Touch all three parts of your shoulder \u2014 all three fire here.","during":"Press the ceiling away. Full shoulder cap contracted at lockout.","check":"Correct: whole shoulder cap burning. Wrong: only front delt \u2014 elbows too far forward."},{"id":"d1a_cable_lth","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Cable Cross \u2192 Lateral Raise \u2192 Overhead Cable Ext \u2192 Rope Pushdown \u2192 Rear Delt Fly \u2014 rest 90 sec after all 5","name":"Cable Crossover (Low-to-High)","focus":"Upper chest \u2014 cable stretch","rest":0,"sets":[{"t":"Round 1","kg":10,"r":12},{"t":"Round 2","kg":10,"r":12}],"form":"Cables at lowest. Stand centre, slight forward lean. Hands from hip level UP to chest height. Squeeze hard at top.","pre":"Cable at bottom creates upward pull targeting upper pec fibres specifically.","during":"Feel upward arc in upper chest. Squeeze hard at the top for 1 sec.","check":"Correct: burning near collarbone at squeeze. Wrong: shoulders firing \u2014 hands going too high."},{"id":"d1a_lat_raise","giant":true,"giantLabel":"","name":"Lateral Raise","focus":"Side delt \u2014 isolation","rest":0,"sets":[{"t":"Round 1","kg":10,"r":15},{"t":"Round 2","kg":8,"r":20}],"form":"Slight forward lean. Elbow leads. Raise to shoulder height. 3 sec lowering.","pre":"3-second lowering is where side delt works hardest.","during":"Feel outer shoulder burning on the way DOWN especially.","check":"Correct: outer shoulder burning. Wrong: traps shrugging \u2014 reduce weight."},{"id":"d1a_overhead_ext","giant":true,"giantLabel":"","name":"Overhead Cable Extension","focus":"Tricep long head \u2014 only stretches overhead","rest":0,"sets":[{"t":"Round 1","kg":35,"r":12},{"t":"Round 2","kg":32.5,"r":12}],"form":"Face away from cable. Rope overhead. Hands drop as far back as possible. Elbows forward and fixed. Press to extension.","pre":"Long head only fully stretches in this overhead position.","during":"Hold the stretch 1 sec before pressing. That stretch is the stimulus.","check":"Correct: deep stretch in back of upper arm. Wrong: elbows flaring \u2014 must stay forward."},{"id":"d1a_rope_push","giant":true,"giantLabel":"","name":"Rope Pushdown","focus":"Tricep lateral head \u2014 outer visible head","rest":0,"sets":[{"t":"Round 1","kg":52.5,"r":12},{"t":"Round 2","kg":47.5,"r":15}],"form":"Cable at top. Elbows pinned. Push down and FLARE rope outward at bottom. Full extension. 1 sec hold.","pre":"Flare at the bottom targets the lateral head specifically.","during":"At bottom spread rope as wide as possible.","check":"Correct: outer side of back of arm burning. Wrong: not feeling outer arm \u2014 flare harder."},{"id":"d1a_rear_delt","giant":true,"giantLabel":"","name":"Rear Delt Fly","focus":"Rear delt \u2014 5th exercise in giant set","rest":90,"sets":[{"t":"Round 1","kg":8,"r":15},{"t":"Round 2","kg":6,"r":20}],"form":"Hinge 45\u00b0. Raise in wide arc to shoulder height. Thumbs DOWN. Elbows lead back and up. Squeeze at peak 2 sec.","pre":"Thumbs down reduces trap involvement. Feel contraction at BACK of shoulder cap.","during":"Lead with elbows going back. Feel contraction at back of shoulder cap.","check":"Correct: burning at back of shoulder cap. Wrong: mid traps \u2014 arms going too high."},{"id":"d1a_cable_crunch","giant":false,"giantLabel":"Abs \u2014 Superset: Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable, rope at neck. Crunch through elbows. Hips fixed. Full spine flexion.","pre":"Hips stay completely still \u2014 only spine moves.","during":"Elbows to knees. Feel burn in centre of stomach.","check":"Correct: abs burning. Wrong: hip flexors \u2014 hips are moving."},{"id":"d1a_leg_raise","giant":false,"giantLabel":"","name":"Hanging Leg Raise","focus":"Lower abs \u2014 pelvic tilt is the key","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top. Slow lowering.","pre":"Pelvic tilt at top makes this lower abs not hip flexors.","during":"Pelvic tilt every rep. Feel below the belly button.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add the pelvic tilt."}]},"b":{"label":"Week B","exercises":[{"id":"d1b_inc_db","giant":false,"giantLabel":"","name":"Incline Dumbbell Press","focus":"Upper chest \u2014 greater stretch than barbell","rest":180,"sets":[{"t":"Warm-up","kg":15,"r":15},{"t":"Set 1","kg":22,"r":7},{"t":"Set 2","kg":22,"r":7},{"t":"Set 3","kg":20,"r":8},{"t":"Set 4","kg":20,"r":8}],"form":"45\u00b0 bench. Natural arc. Greater stretch at bottom than barbell. Control the lowering.","pre":"Dumbbells allow more natural arc and greater ROM.","during":"Upper chest stretch at the bottom. Chase contraction at the top.","check":"Correct: upper chest stretch at bottom. Wrong: shoulder pain \u2014 check wrist angle."},{"id":"d1b_db_press","giant":false,"giantLabel":"","name":"Dumbbell Shoulder Press","focus":"All 3 delt heads \u2014 natural arc vs barbell","rest":180,"sets":[{"t":"Warm-up","kg":10,"r":15},{"t":"Set 1","kg":20,"r":7},{"t":"Set 2","kg":20,"r":7},{"t":"Set 3","kg":18,"r":8},{"t":"Set 4","kg":18,"r":8}],"form":"Dumbbells at shoulder height. Press up in natural arc. Full lockout. Control lowering.","pre":"Each arm works independently \u2014 find left-right imbalances.","during":"Natural arc upward. Full shoulder cap contracted at lockout.","check":"Correct: whole shoulder cap burning. Wrong: front delt only \u2014 start position too far forward."},{"id":"d1b_inc_fly","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Incline Cable Fly \u2192 Cable Lateral Raise \u2192 Overhead DB Ext \u2192 Bar Pushdown \u2192 Rear Delt Cable Pull \u2014 rest 90 sec after all 5","name":"Incline Cable Fly (Low-to-High)","focus":"Upper chest \u2014 lying cable stretch","rest":0,"sets":[{"t":"Round 1","kg":8,"r":12},{"t":"Round 2","kg":8,"r":12}],"form":"Bench at 30\u201345\u00b0 between cable columns. Cables at lowest. Arms out to sides. Bring hands together in arc above upper chest.","pre":"Lying position gives a different stretch to standing cable crossover.","during":"Feel upper chest stretch as arms open wide. Squeeze at top.","check":"Correct: upper chest stretch at bottom. Wrong: elbows bending too much \u2014 keep fixed slight bend."},{"id":"d1b_cable_lat","giant":true,"giantLabel":"","name":"Cable Lateral Raise","focus":"Side delt \u2014 constant cable tension","rest":0,"sets":[{"t":"Round 1","kg":10,"r":15},{"t":"Round 2","kg":8,"r":20}],"form":"Single cable low pulley, side on. Raise to shoulder height. Elbow leads. 3 sec lowering.","pre":"Cable keeps tension at bottom unlike dumbbell.","during":"3-second lowering is where side delt works hardest.","check":"Correct: outer shoulder burning throughout. Wrong: trap shrugging \u2014 reduce weight."},{"id":"d1b_overhead_db","giant":true,"giantLabel":"","name":"Overhead DB Extension","focus":"Tricep long head \u2014 stretch mediated","rest":0,"sets":[{"t":"Round 1","kg":20,"r":12},{"t":"Round 2","kg":18,"r":12}],"form":"Elbows point forward \u2014 fixed. Hands drop behind head for full stretch. Press to extension.","pre":"Long head only fully stretches in this overhead position.","during":"Hold the stretch before every press.","check":"Correct: stretch in back of upper arm at bottom. Wrong: elbows flaring \u2014 stay forward."},{"id":"d1b_bar_push","giant":true,"giantLabel":"","name":"Straight Bar Pushdown","focus":"Tricep medial head \u2014 different to rope","rest":0,"sets":[{"t":"Round 1","kg":47.5,"r":12},{"t":"Round 2","kg":42.5,"r":15}],"form":"Straight bar at top. Elbows pinned. Push straight down. Wrist neutral. Full extension.","pre":"Straight bar targets medial head differently to rope flare.","during":"Wrist neutral throughout.","check":"Correct: back of arm burning. Wrong: wrist pain \u2014 ensure neutral wrist."},{"id":"d1b_rear_cable","giant":true,"giantLabel":"","name":"Rear Delt Cable Pull","focus":"Rear delt \u2014 cable constant tension version","rest":90,"sets":[{"t":"Round 1","kg":10,"r":15},{"t":"Round 2","kg":8,"r":20}],"form":"Cable at face height, single handle. Pull elbow back and out past your ear. Keep elbow high.","pre":"Cable version of rear delt fly. Constant tension differs from dumbbell.","during":"Elbow goes back and OUT. Feel contraction at back of shoulder cap.","check":"Correct: rear delt burning. Wrong: trap engaging \u2014 elbow stays high."},{"id":"d1b_decline_crunch","giant":false,"giantLabel":"Abs \u2014 Superset: Decline Crunch then immediately Ab Wheel, rest 60 sec","name":"Weighted Decline Crunch","focus":"Upper rectus \u2014 full spinal flexion","rest":0,"sets":[{"t":"Set 1","kg":10,"r":15},{"t":"Set 2","kg":10,"r":15},{"t":"Set 3","kg":10,"r":20}],"form":"Hold plate at chest. Crunch UP \u2014 round spine fully so lower back lifts off bench. Pause 1 sec.","pre":"Full spinal flexion \u2014 lower back lifts off bench at top.","during":"Feel full spinal flexion. Pause at top.","check":"Correct: burn in centre, full spinal flexion. Wrong: just lifting head \u2014 crunch the spine."},{"id":"d1b_ab_wheel","giant":false,"giantLabel":"","name":"Ab Wheel Rollout","focus":"Full core \u2014 highest ab activation","rest":60,"sets":[{"t":"Set 1","kg":0,"r":10},{"t":"Set 2","kg":0,"r":10},{"t":"Set 3","kg":0,"r":12}],"form":"Knees on floor. Roll out keeping lower back flat. Roll back using abs.","pre":"Big breath and brace before every rep.","during":"Feel abs under tension through the full stretch.","check":"Correct: abs burning from stretch to contraction. Wrong: lower back arching \u2014 reduce range."}]}},{"id":"d2","label":"Day 2","title":"Pull 1 \u2014 Heavy","muscle":"Back, Biceps","note":"Heavy pull day. Full stretch on every rep. 3 min rest after compounds.","a":{"label":"Week A","exercises":[{"id":"d2a_bb_row","giant":false,"giantLabel":"","name":"Barbell Row","focus":"Mid back + lats \u2014 heavy compound pull","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":7},{"t":"Set 2","kg":70,"r":7},{"t":"Set 3","kg":67.5,"r":7},{"t":"Set 4","kg":65,"r":8}],"form":"Hinge 45\u00b0. Overhand grip outside shoulder width. Pull bar to lower sternum. Elbows back and up.","pre":"Hip hinge first \u2014 feel the back loading. Bar stays close to body.","during":"Pull to lower sternum. Elbows go back and up past the torso.","check":"Correct: mid back and lats burning. Wrong: lower back strain \u2014 hinge more."},{"id":"d2a_wide_pull","giant":false,"giantLabel":"","name":"Wide Grip Lat Pulldown","focus":"Lat width \u2014 outer lat emphasis","rest":90,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":70,"r":8},{"t":"Set 2","kg":70,"r":8},{"t":"Set 3","kg":65,"r":8},{"t":"Set 4","kg":65,"r":8}],"form":"Wide overhand grip. 15\u00b0 lean back. Bar to upper chest. Lead with elbows. Full lat stretch at top.","pre":"Think elbows to pockets not hands pulling.","during":"Full stretch at top. Lats contracted against sides at bottom.","check":"Correct: lat burning from armpit down. Wrong: biceps dominating \u2014 pull with elbows."},{"id":"d2a_cable_row","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Cable Row \u2192 Incline DB Curl \u2192 Hammer Curl \u2192 Dead Bug \u2192 Pallof Press \u2014 rest 90 sec after all 5","name":"Seated Cable Row","focus":"Lower lats + mid back \u2014 pump volume","rest":0,"sets":[{"t":"Round 1","kg":55,"r":12},{"t":"Round 2","kg":55,"r":12}],"form":"V-bar. Reach forward fully every rep. Pull to lower sternum. No torso rocking. Hold 1 sec.","pre":"Full reach forward \u2014 lat stretch. Full row back \u2014 lat contracted.","during":"Two deliberate positions every rep. Hold at the back.","check":"Correct: feeling stretch and squeeze. Wrong: rocking torso \u2014 reduce weight."},{"id":"d2a_inc_curl","giant":true,"giantLabel":"","name":"Incline Dumbbell Curl","focus":"Bicep long head \u2014 best stretch position","rest":0,"sets":[{"t":"Round 1","kg":12,"r":10},{"t":"Round 2","kg":10,"r":12}],"form":"45\u00b0 incline. Arms hanging behind torso. Curl without elbows moving forward. Hold stretch 1 sec.","pre":"Long head only fully stretches with arm behind torso.","during":"Hold stretch 1 sec before every curl. Upper arm stays back.","check":"Correct: deep stretch in lower bicep at bottom. Wrong: elbows swinging forward."},{"id":"d2a_hammer","giant":true,"giantLabel":"","name":"Hammer Curl","focus":"Brachialis \u2014 pushes bicep up from underneath","rest":0,"sets":[{"t":"Round 1","kg":16,"r":12},{"t":"Round 2","kg":14,"r":15}],"form":"Neutral grip throughout. Elbows pinned. Full extension at bottom.","pre":"Neutral grip targets brachialis differently to regular curl.","during":"Feel it in outer bicep and lower arm \u2014 that is the brachialis.","check":"Correct: outer bicep and lower arm burning. Wrong: rotating wrist \u2014 keep neutral."},{"id":"d2a_dead_bug","giant":true,"giantLabel":"","name":"Dead Bug","focus":"TVA \u2014 deep core stability","rest":0,"sets":[{"t":"Round 1","kg":0,"r":10},{"t":"Round 2","kg":0,"r":12}],"form":"Lie on back. Arms up, knees 90\u00b0. Lower opposite arm and leg. Lower back FLAT throughout.","pre":"Press lower back into floor as hard as possible before starting.","during":"Lower back flat on floor is the entire exercise.","check":"Correct: lower back stays flat. Wrong: back arching \u2014 reduce range."},{"id":"d2a_pallof","giant":true,"giantLabel":"","name":"Pallof Press","focus":"Anti-rotation \u2014 obliques and deep core","rest":90,"sets":[{"t":"Round 1","kg":15,"r":12},{"t":"Round 2","kg":15,"r":12}],"form":"Cable at chest height, side on. Press out from chest. Hold 2 sec. Resist rotation.","pre":"The effort is resisting the cable pulling you sideways.","during":"Feel obliques on the far side working to keep you square.","check":"Correct: obliques burning on far side. Wrong: rotating \u2014 reduce weight."}]},"b":{"label":"Week B","exercises":[{"id":"d2b_chest_row","giant":false,"giantLabel":"","name":"Chest Supported Row","focus":"Mid back \u2014 no lower back fatigue","rest":180,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":55,"r":7},{"t":"Set 2","kg":55,"r":7},{"t":"Set 3","kg":52.5,"r":7},{"t":"Set 4","kg":50,"r":8}],"form":"Chest fully on pad. Full stretch forward. Pull elbows back and up past torso. Squeeze blades, hold 1 sec.","pre":"Chest on pad eliminates lower back entirely. Pure mid back stimulus.","during":"Full stretch forward, full contraction back. Hold 1 sec at top.","check":"Correct: mid back burning, no lower back. Wrong: upper traps \u2014 drive elbows back not up."},{"id":"d2b_neutral_pull","giant":false,"giantLabel":"","name":"Neutral Grip Pulldown","focus":"Lats \u2014 lower lat emphasis vs wide grip","rest":90,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":65,"r":8},{"t":"Set 2","kg":65,"r":8},{"t":"Set 3","kg":60,"r":8},{"t":"Set 4","kg":60,"r":8}],"form":"V-bar or parallel handles. Pull to upper chest. Elbows drive down and back. Full lat stretch at top.","pre":"Neutral grip hits lower lats differently to wide grip.","during":"Full stretch at top. Lats contracted at bottom.","check":"Correct: lats burning, full stretch at top. Wrong: biceps first \u2014 pull with elbows."},{"id":"d2b_single_row","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Single Arm Row \u2192 Cable Curl \u2192 Concentration Curl \u2192 Dead Bug \u2192 Pallof Press \u2014 rest 90 sec after all 5","name":"Single Arm Dumbbell Row","focus":"Lat \u2014 unilateral max load","rest":0,"sets":[{"t":"Round 1","kg":30,"r":12},{"t":"Round 2","kg":28,"r":12}],"form":"Knee and hand on bench. Row elbow straight back past hip. Full reach forward every rep.","pre":"Unilateral \u2014 heavier effective load per lat. Compare left vs right.","during":"Full reach forward \u2014 lat stretch. Full row back \u2014 lat contracted.","check":"Correct: lat burning on working side. Wrong: torso rotating \u2014 elbow drives back."},{"id":"d2b_cable_curl","giant":true,"giantLabel":"","name":"Cable Curl","focus":"Bicep \u2014 constant tension from cable","rest":0,"sets":[{"t":"Round 1","kg":15,"r":12},{"t":"Round 2","kg":12.5,"r":15}],"form":"Cable at low pulley. Curl with elbows pinned. Cable maintains tension at bottom.","pre":"Cable gives constant tension at bottom \u2014 the bottom position is now loaded.","during":"Feel tension even at full extension. Curl to peak and squeeze.","check":"Correct: bicep burning throughout full range. Wrong: elbows swinging \u2014 pin them."},{"id":"d2b_conc_curl","giant":true,"giantLabel":"","name":"Concentration Curl","focus":"Bicep peak \u2014 maximum isolation","rest":0,"sets":[{"t":"Round 1","kg":10,"r":12},{"t":"Round 2","kg":8,"r":15}],"form":"Sit on bench. Elbow planted on inner thigh. Curl and fully supinate at top. Squeeze hard.","pre":"Elbow planted eliminates all cheating. Maximum peak contraction.","during":"Full supination at top \u2014 pinky turns outward.","check":"Correct: intense burn at peak contraction. Wrong: elbow leaving thigh \u2014 plant it harder."},{"id":"d2b_dead_bug","giant":true,"giantLabel":"","name":"Dead Bug","focus":"TVA \u2014 deep core stability","rest":0,"sets":[{"t":"Round 1","kg":0,"r":10},{"t":"Round 2","kg":0,"r":12}],"form":"Lie on back. Arms up, knees 90\u00b0. Lower opposite arm and leg. Lower back FLAT throughout.","pre":"Press lower back into floor. Feel deep core engage.","during":"Lower back flat on floor is the entire exercise.","check":"Correct: lower back stays flat. Wrong: back arching \u2014 reduce range."},{"id":"d2b_pallof","giant":true,"giantLabel":"","name":"Pallof Press","focus":"Anti-rotation \u2014 obliques and deep core","rest":90,"sets":[{"t":"Round 1","kg":15,"r":12},{"t":"Round 2","kg":15,"r":12}],"form":"Cable at chest height, side on. Press out. Hold 2 sec. Resist rotation.","pre":"Resist the cable pulling you sideways.","during":"Feel obliques on far side keeping you square.","check":"Correct: obliques burning on far side. Wrong: rotating \u2014 reduce weight."}]}},{"id":"d3","label":"Day 3","title":"Legs 1 \u2014 Heavy","muscle":"Quads, Hamstrings, Glutes, Calves","note":"Squat and RDL are the session. Everything else supports them.","a":{"label":"Week A","exercises":[{"id":"d3a_squat","giant":false,"giantLabel":"","name":"Barbell Back Squat","focus":"Quads + glutes \u2014 king of leg exercises","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":82.5,"r":6},{"t":"Set 2","kg":82.5,"r":6},{"t":"Set 3","kg":80,"r":7},{"t":"Set 4","kg":77.5,"r":7}],"form":"Bar on upper traps. Feet shoulder width, toes 25\u201330\u00b0 out. At or below parallel. Knees track over toes.","pre":"Bodyweight squat first. Spread the floor with feet at bottom \u2014 feel glutes activate.","during":"Quads loading on descent. Glutes squeeze hard coming up and at the top.","check":"Correct: quads on descent, glutes on ascent. Wrong: lower back taking load \u2014 reduce weight."},{"id":"d3a_rdl","giant":false,"giantLabel":"","name":"Romanian Deadlift","focus":"Hamstrings + glutes \u2014 heavy stretch","rest":150,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":75,"r":7},{"t":"Set 2","kg":75,"r":7},{"t":"Set 3","kg":72.5,"r":7},{"t":"Set 4","kg":70,"r":8}],"form":"Push hips BACK \u2014 not down. Slight fixed knee bend. Bar drags down legs. Neutral spine always.","pre":"Hip hinge against a wall \u2014 feel hamstrings loading.","during":"Push the wall behind you with your hips every rep.","check":"Correct: strong hamstring pull from mid-thigh down. Wrong: lower back pain \u2014 reduce weight."},{"id":"d3a_leg_curl","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Lying Leg Curl \u2192 Standing Calf Raise \u2192 Hollow Body Hold \u2192 Ab Wheel \u2014 rest 90 sec after all 4","name":"Lying Leg Curl","focus":"Hamstrings \u2014 isolated after RDL","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":12}],"form":"Hips flat on bench. FLEX feet \u2014 toes toward shins. Curl to full contraction. 3 sec lowering.","pre":"Hamstrings primed from RDL. Leg curl isolates them through the curl range.","during":"Toes toward shins the whole set. Feel pull in back of thigh.","check":"Correct: hamstring burning from knee to glute. Wrong: calf cramping \u2014 flex feet harder."},{"id":"d3a_calf_stand","giant":true,"giantLabel":"","name":"Standing Calf Raise","focus":"Gastrocnemius \u2014 full range essential","rest":0,"sets":[{"t":"Round 1","kg":60,"r":15},{"t":"Round 2","kg":60,"r":15}],"form":"Ball of foot on step edge. Full heel drop. Rise ALL the way up on big toe. Hold 1 sec.","pre":"Full stretch at bottom, full contraction at top. Half reps build nothing.","during":"Full stretch, full rise, 1 sec hold every rep.","check":"Correct: burn from stretch to peak contraction. Wrong: partial reps."},{"id":"d3a_hollow","giant":true,"giantLabel":"","name":"Hollow Body Hold","focus":"Full core \u2014 static tension","rest":0,"sets":[{"t":"Round 1","kg":0,"r":35},{"t":"Round 2","kg":0,"r":40}],"form":"Lie on back. Arms overhead, legs straight and low. Tuck ribs toward hips. Lower back flat. Hold.","pre":"Rib tuck not a crunch. Feel the entire core engage from ribs to pelvis.","during":"Maintain rib tuck. Lower back flat. Hold under fatigue.","check":"Correct: full core working, lower back flat. Wrong: back arching \u2014 raise legs higher."},{"id":"d3a_ab_wheel","giant":true,"giantLabel":"","name":"Ab Wheel Rollout","focus":"Full core \u2014 highest ab activation","rest":90,"sets":[{"t":"Round 1","kg":0,"r":10},{"t":"Round 2","kg":0,"r":12}],"form":"Knees on floor. Roll out keeping lower back flat. Roll back using abs.","pre":"Big breath and brace before every rep.","during":"Feel abs under tension through the full stretch.","check":"Correct: abs burning from stretch to contraction. Wrong: lower back arching \u2014 reduce range."}]},"b":{"label":"Week B","exercises":[{"id":"d3b_squat","giant":false,"giantLabel":"","name":"Barbell Back Squat","focus":"Quads + glutes \u2014 progressive overload","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":82.5,"r":6},{"t":"Set 2","kg":82.5,"r":6},{"t":"Set 3","kg":80,"r":7},{"t":"Set 4","kg":77.5,"r":7}],"form":"Bar on upper traps. Feet shoulder width, toes 25\u201330\u00b0 out. At or below parallel.","pre":"Aim to beat last week by 1 rep or 2.5kg.","during":"Quads loading on descent. Glutes squeeze hard at the top.","check":"Correct: quads on descent, glutes on ascent. Wrong: lower back \u2014 reduce weight."},{"id":"d3b_rdl","giant":false,"giantLabel":"","name":"Romanian Deadlift","focus":"Hamstrings + glutes \u2014 heavy stretch","rest":150,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":75,"r":7},{"t":"Set 2","kg":75,"r":7},{"t":"Set 3","kg":72.5,"r":7},{"t":"Set 4","kg":70,"r":8}],"form":"Push hips BACK. Slight fixed knee bend. Bar drags down legs. Neutral spine.","pre":"Progressive overload \u2014 aim to beat last week.","during":"Push hips back every rep. Feel hamstring stretch from sitting bone down.","check":"Correct: hamstring pull from mid-thigh down. Wrong: lower back pain \u2014 reduce weight."},{"id":"d3b_leg_press","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Leg Press \u2192 Seated Leg Curl \u2192 Seated Calf Raise \u2192 Hollow Body Hold \u2192 Side Plank \u2014 rest 90 sec after all 5","name":"Leg Press","focus":"Quads \u2014 mid position for quad emphasis","rest":0,"sets":[{"t":"Round 1","kg":120,"r":10},{"t":"Round 2","kg":110,"r":12}],"form":"Feet mid-plate, hip width. Lower until knees at 90\u00b0. Press through full foot. No full lockout.","pre":"Week B adds leg press as quad volume after squats.","during":"Quads loading through full range. Constant tension.","check":"Correct: quads burning. Wrong: knees caving \u2014 push them outward."},{"id":"d3b_seated_curl","giant":true,"giantLabel":"","name":"Seated Leg Curl","focus":"Hamstrings \u2014 different angle to lying curl","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":12}],"form":"Seated changes hip angle shifting emphasis. Flex feet. Full range. 3 sec negative.","pre":"Different to lying curl \u2014 seated hip angle shifts which part of hamstring is loaded.","during":"Toes toward shins. Full extension at top. 3-second lowering.","check":"Correct: hamstring burning throughout. Wrong: back lifting off seat \u2014 reduce weight."},{"id":"d3b_calf_seated","giant":true,"giantLabel":"","name":"Seated Calf Raise","focus":"Soleus \u2014 different muscle to standing calf raise","rest":0,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":37.5,"r":18}],"form":"Seated targets the SOLEUS. Full drop, full rise, 1 sec hold at top.","pre":"Seated bends the knee taking the gastrocnemius out. Different burn location.","during":"Full heel drop, full rise on big toe, 1 sec hold.","check":"Correct: burning deep in calf differently to standing. Wrong: half reps."},{"id":"d3b_hollow","giant":true,"giantLabel":"","name":"Hollow Body Hold","focus":"Full core \u2014 static tension","rest":0,"sets":[{"t":"Round 1","kg":0,"r":35},{"t":"Round 2","kg":0,"r":40}],"form":"Lie on back. Arms overhead, legs low. Rib tuck. Lower back flat. Hold.","pre":"Rib tuck \u2014 feel entire core engage.","during":"Maintain rib tuck. Lower back flat.","check":"Correct: full core working. Wrong: back arching \u2014 raise legs higher."},{"id":"d3b_side_plank","giant":true,"giantLabel":"","name":"Side Plank","focus":"Lateral core + obliques","rest":90,"sets":[{"t":"Round 1","kg":0,"r":35},{"t":"Round 2","kg":0,"r":40}],"form":"Forearm on floor, body in straight line. Hips elevated. Hold. Both sides.","pre":"Reps are seconds. Feel lateral core from hip to armpit.","during":"Hips up throughout.","check":"Correct: lateral core burning. Wrong: hips sagging \u2014 raise them."}]}},{"id":"d4","label":"Day 4","title":"Push 2 \u2014 Volume","muscle":"Triceps, Chest, Shoulders","note":"Triceps get the compound today \u2014 CGBP. Chest as secondary. Giant set for pump.","a":{"label":"Week A","exercises":[{"id":"d4a_cgbp","giant":false,"giantLabel":"","name":"Close Grip Bench Press","focus":"Triceps + inner chest \u2014 tricep compound","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":65,"r":7},{"t":"Set 2","kg":65,"r":7},{"t":"Set 3","kg":62.5,"r":7},{"t":"Set 4","kg":60,"r":8}],"form":"Grip shoulder width or slightly inside. Elbows tuck at 45\u00b0. Lower to sternum. Full lockout.","pre":"Narrower grip shifts emphasis to triceps. Feel the tricep driving the press.","during":"Elbows tuck in \u2014 not flared. Feel the tricep extend at the top.","check":"Correct: tricep burning at lockout. Wrong: wrist pain \u2014 grip slightly wider."},{"id":"d4a_pec_deck","giant":false,"giantLabel":"","name":"Pec Deck","focus":"Inner chest \u2014 peak contraction and stretch","rest":90,"sets":[{"t":"Set 1","kg":50,"r":12},{"t":"Set 2","kg":50,"r":12},{"t":"Set 3","kg":47.5,"r":15},{"t":"Set 4","kg":47.5,"r":15}],"form":"Forearms flat against pads. Bring together slowly. Squeeze HARD at peak for 2 sec. Control return.","pre":"Touch your sternum \u2014 inner chest fibres run from there outward.","during":"At peak squeeze as hard as possible for 2 full seconds.","check":"Correct: burning in inner chest at peak squeeze. Wrong: feeling in arms \u2014 elbows lead not hands."},{"id":"d4a_cable_htl","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Cable Fly High-to-Low \u2192 Arnold Press \u2192 Rear Delt Fly \u2192 Skull Crusher \u2014 rest 90 sec after all 4","name":"Cable Fly (High-to-Low)","focus":"Lower chest \u2014 downward arc targets lower pec","rest":0,"sets":[{"t":"Round 1","kg":10,"r":12},{"t":"Round 2","kg":8,"r":15}],"form":"Cables at HIGHEST position. Stand centre. Hands at shoulder height, bring DOWN and together to hip level.","pre":"Lower pec fibres run at a downward angle \u2014 this is the only exercise that directly targets them.","during":"Feel the downward arc pulling at the lower chest. Squeeze where hands meet at hip level.","check":"Correct: burning at bottom of chest near ribcage. Wrong: mid chest only \u2014 hands further down."},{"id":"d4a_arnold","giant":true,"giantLabel":"","name":"Arnold Press","focus":"All 3 delt heads \u2014 rotation hits all of them","rest":0,"sets":[{"t":"Round 1","kg":14,"r":12},{"t":"Round 2","kg":12,"r":15}],"form":"Start palms facing you at chin. Press up while rotating palms forward. Full lockout at top.","pre":"Rotation progressively loads front then side delt through the movement.","during":"Feel front delt at start of rotation, side delt at top. Slow deliberate rotation.","check":"Correct: feeling different delt heads through rotation. Wrong: rushing \u2014 slow down."},{"id":"d4a_rear_delt_fly","giant":true,"giantLabel":"","name":"Rear Delt Fly","focus":"Rear delt \u2014 dedicated isolation hit","rest":0,"sets":[{"t":"Round 1","kg":8,"r":15},{"t":"Round 2","kg":6,"r":20}],"form":"Hinge 45\u00b0. Raise in wide arc to shoulder height. Thumbs DOWN. Elbows lead back. Squeeze 2 sec.","pre":"Thumbs down reduces trap involvement. Feel contraction at BACK of shoulder cap.","during":"Lead with elbows going back. Feel contraction at back of shoulder cap.","check":"Correct: burning at back of shoulder cap. Wrong: mid traps \u2014 arms going too high."},{"id":"d4a_skull_crusher","giant":true,"giantLabel":"","name":"Skull Crusher","focus":"Tricep long + medial head \u2014 full ROM","rest":90,"sets":[{"t":"Round 1","kg":30,"r":12},{"t":"Round 2","kg":27.5,"r":12}],"form":"EZ bar. Lie flat. Lower bar to forehead \u2014 elbows stay pointing up. Press to full extension.","pre":"Elbows point toward ceiling throughout. Lower to forehead not behind head.","during":"Feel stretch at bottom, full contraction at lockout.","check":"Correct: tricep stretching at bottom, contracting at top. Wrong: elbows flaring \u2014 point them up."},{"id":"d4a_bicycle","giant":false,"giantLabel":"Abs \u2014 Superset: Bicycle Crunch then immediately Russian Twist, rest 60 sec","name":"Bicycle Crunch","focus":"Obliques + rectus \u2014 rotational","rest":0,"sets":[{"t":"Set 1","kg":0,"r":20},{"t":"Set 2","kg":0,"r":20},{"t":"Set 3","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel the oblique pulling you into each rotation. Slow reps worth 10x fast ones.","during":"Full rotation each side. Feel oblique contracting at each peak.","check":"Correct: obliques burning, slow controlled rotation. Wrong: neck pulling \u2014 hands just rest."},{"id":"d4a_russian_twist","giant":false,"giantLabel":"","name":"Russian Twist","focus":"Obliques \u2014 rotational strength","rest":60,"sets":[{"t":"Set 1","kg":10,"r":20},{"t":"Set 2","kg":10,"r":20},{"t":"Set 3","kg":8,"r":25}],"form":"Sit at 45\u00b0. Feet off floor. Rotate side to side \u2014 touch weight to floor each side. Pause 1 sec.","pre":"Feel the obliques pulling you through the rotation.","during":"Oblique PULLS you through the rotation. Pause 1 sec each side.","check":"Correct: burning on sides of stomach. Wrong: just swinging arms \u2014 slow down."}]},"b":{"label":"Week B","exercises":[{"id":"d4b_cgbp","giant":false,"giantLabel":"","name":"Close Grip Bench Press","focus":"Triceps + inner chest \u2014 tricep compound","rest":180,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":65,"r":7},{"t":"Set 2","kg":65,"r":7},{"t":"Set 3","kg":62.5,"r":7},{"t":"Set 4","kg":60,"r":8}],"form":"Grip shoulder width or slightly inside. Elbows tuck at 45\u00b0. Lower to sternum. Full lockout.","pre":"Beat last week \u2014 add 1 rep or 2.5kg.","during":"Elbows tuck in \u2014 not flared. Feel the tricep extend at the top.","check":"Correct: tricep burning at lockout. Wrong: wrist pain \u2014 grip slightly wider."},{"id":"d4b_machine_press","giant":false,"giantLabel":"","name":"Machine Chest Press","focus":"Overall chest \u2014 constant tension","rest":90,"sets":[{"t":"Set 1","kg":60,"r":12},{"t":"Set 2","kg":60,"r":12},{"t":"Set 3","kg":55,"r":12},{"t":"Set 4","kg":55,"r":12}],"form":"Seat so handles at mid-chest. Full extension at lockout \u2014 squeeze chest. Control return.","pre":"Machine removes stability demand \u2014 focus purely on feeling the chest work.","during":"Smooth controlled reps. Feel the chest contracting on every press.","check":"Correct: chest burning throughout. Wrong: shoulder pain \u2014 adjust seat height."},{"id":"d4b_cable_mid","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Cable Crossover Mid \u2192 DB Lateral Raise \u2192 Rear Delt Cable Pull \u2192 Overhead DB Extension \u2014 rest 90 sec after all 4","name":"Cable Crossover (Mid/Horizontal)","focus":"Mid chest \u2014 horizontal fibres","rest":0,"sets":[{"t":"Round 1","kg":10,"r":12},{"t":"Round 2","kg":8,"r":15}],"form":"Cables at chest height. Stand centre. Hands together horizontally at chest height. Elbows slightly bent.","pre":"Cables at chest height hit mid fibres \u2014 different to low-to-high or high-to-low.","during":"At peak feel the mid-chest squeeze. Hands at chest height \u2014 not above, not below.","check":"Correct: mid-chest burning. Wrong: shoulders dominating \u2014 chest up, lead with elbows."},{"id":"d4b_db_lat","giant":true,"giantLabel":"","name":"DB Lateral Raise","focus":"Side delt \u2014 pump focus","rest":0,"sets":[{"t":"Round 1","kg":10,"r":15},{"t":"Round 2","kg":8,"r":20}],"form":"Slight forward lean. Elbow leads. Raise to shoulder height. 3 sec lowering.","pre":"Volume hit for side delt \u2014 lighter and more reps.","during":"3-second LOWERING is the working portion.","check":"Correct: outer shoulder burning on lowering. Wrong: traps \u2014 reduce weight."},{"id":"d4b_rear_cable","giant":true,"giantLabel":"","name":"Rear Delt Cable Pull","focus":"Rear delt \u2014 cable constant tension","rest":0,"sets":[{"t":"Round 1","kg":10,"r":15},{"t":"Round 2","kg":8,"r":20}],"form":"Cable at face height, single handle. Pull elbow back and out past your ear. Keep elbow high.","pre":"Cable version \u2014 constant tension differs from dumbbell rear delt fly.","during":"Elbow goes back and OUT. Feel contraction at back of shoulder cap.","check":"Correct: rear delt burning. Wrong: trap engaging \u2014 elbow stays high."},{"id":"d4b_overhead_db_b","giant":true,"giantLabel":"","name":"Overhead DB Extension","focus":"Tricep long head \u2014 stretch mediated","rest":90,"sets":[{"t":"Round 1","kg":20,"r":12},{"t":"Round 2","kg":18,"r":15}],"form":"Elbows point forward \u2014 fixed. Hands drop behind head for full stretch. Press to extension.","pre":"Long head only fully stretches in this overhead position.","during":"Hold the stretch before every press.","check":"Correct: stretch in back of upper arm at bottom. Wrong: elbows flaring."},{"id":"d4b_bicycle","giant":false,"giantLabel":"Abs \u2014 Superset: Bicycle Crunch then immediately Russian Twist, rest 60 sec","name":"Bicycle Crunch","focus":"Obliques + rectus \u2014 rotational","rest":0,"sets":[{"t":"Set 1","kg":0,"r":20},{"t":"Set 2","kg":0,"r":20},{"t":"Set 3","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel the oblique pulling you into each rotation.","during":"Full rotation each side.","check":"Correct: obliques burning. Wrong: neck pulling \u2014 hands just rest."},{"id":"d4b_russian_twist","giant":false,"giantLabel":"","name":"Russian Twist","focus":"Obliques \u2014 rotational strength","rest":60,"sets":[{"t":"Set 1","kg":10,"r":20},{"t":"Set 2","kg":10,"r":20},{"t":"Set 3","kg":8,"r":25}],"form":"Sit at 45\u00b0. Feet off floor. Rotate side to side. Pause 1 sec each side.","pre":"Feel obliques pulling through the rotation.","during":"Pause 1 sec each side.","check":"Correct: sides burning. Wrong: just swinging arms."}]}},{"id":"d5","label":"Day 5","title":"Pull 2 \u2014 Volume","muscle":"Biceps, Back","note":"Biceps get the compound today \u2014 fresh. Back as secondary. Giant set for pump.","a":{"label":"Week A","exercises":[{"id":"d5a_bb_curl","giant":false,"giantLabel":"","name":"Barbell Curl","focus":"Biceps overall \u2014 heavy compound curl","rest":120,"sets":[{"t":"Warm-up","kg":20,"r":15},{"t":"Set 1","kg":37.5,"r":8},{"t":"Set 2","kg":37.5,"r":8},{"t":"Set 3","kg":35,"r":8},{"t":"Set 4","kg":35,"r":8}],"form":"Elbows pinned at sides. Full extension at bottom. Supinate at top. No swinging.","pre":"Biceps fresh today \u2014 go heavier than on pull day.","during":"Full extension at the bottom every rep. Supination and squeeze at top.","check":"Correct: bicep burning from stretch to peak. Wrong: swinging \u2014 reduce weight."},{"id":"d5a_chest_row","giant":false,"giantLabel":"","name":"Chest Supported Row","focus":"Mid back \u2014 heavy volume pull","rest":120,"sets":[{"t":"Warm-up","kg":30,"r":15},{"t":"Set 1","kg":55,"r":8},{"t":"Set 2","kg":55,"r":8},{"t":"Set 3","kg":52.5,"r":8},{"t":"Set 4","kg":50,"r":8}],"form":"Chest fully on pad. Full stretch forward. Pull elbows back and up. Squeeze blades, hold 1 sec.","pre":"Back compound today \u2014 chest supported so no lower back fatigue.","during":"Full stretch forward, full contraction back. Hold 1 sec.","check":"Correct: mid back burning. Wrong: upper traps \u2014 drive elbows back not up."},{"id":"d5a_cable_row","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Cable Row \u2192 Single Arm Pulldown \u2192 Preacher Curl \u2192 Shrugs \u2192 Side Plank \u2014 rest 90 sec after all 5","name":"Seated Cable Row","focus":"Lower lats + mid back \u2014 pump volume","rest":0,"sets":[{"t":"Round 1","kg":55,"r":12},{"t":"Round 2","kg":55,"r":12}],"form":"V-bar. Reach forward fully. Pull to lower sternum. No torso rocking. Hold 1 sec.","pre":"Third back exercise \u2014 pump volume. Feel the stretch and squeeze.","during":"Two deliberate positions. Hold at the back.","check":"Correct: stretch and squeeze. Wrong: rocking torso \u2014 reduce weight."},{"id":"d5a_single_pull","giant":true,"giantLabel":"","name":"Single Arm Lat Pulldown","focus":"Lat \u2014 unilateral fixes imbalances","rest":0,"sets":[{"t":"Round 1","kg":25,"r":12},{"t":"Round 2","kg":22.5,"r":12}],"form":"Single handle. Pull elbow straight down to hip. Full stretch at top. Feel one lat at a time.","pre":"Feel each side individually. Compare left vs right.","during":"One lat fully stretching at top, fully contracting at bottom.","check":"Correct: one lat burning fully. Wrong: leaning too far \u2014 keep torso upright."},{"id":"d5a_preacher","giant":true,"giantLabel":"","name":"Preacher Curl","focus":"Bicep short head \u2014 lower bicep thickness","rest":0,"sets":[{"t":"Round 1","kg":22,"r":12},{"t":"Round 2","kg":20,"r":15}],"form":"Upper arm flat on pad. Full extension at bottom. Curl to 90\u00b0. Squeeze HARD. Slow lowering.","pre":"Pad eliminates all cheating. Short head emphasis \u2014 different to barbell curl.","during":"Curl to 90\u00b0 and squeeze hard. Hold 1 sec.","check":"Correct: burn in lower inner belly of bicep. Wrong: elbow joint pain \u2014 reduce weight."},{"id":"d5a_shrugs","giant":true,"giantLabel":"","name":"Barbell Shrug","focus":"Upper traps \u2014 completely missed by all other exercises","rest":0,"sets":[{"t":"Round 1","kg":80,"r":12},{"t":"Round 2","kg":80,"r":12}],"form":"Barbell at hips. Shrug STRAIGHT UP. Hold 2 sec at the top. Full lowering. Do not roll.","pre":"Purely vertical movement. Feel upper trap from neck to outer shoulder.","during":"Straight up, 2 sec hold, full drop every rep.","check":"Correct: burning from neck to outer shoulder at top. Wrong: rolling \u2014 straight up only."},{"id":"d5a_side_plank","giant":true,"giantLabel":"","name":"Side Plank","focus":"Lateral core + obliques","rest":90,"sets":[{"t":"Round 1","kg":0,"r":35},{"t":"Round 2","kg":0,"r":40}],"form":"Forearm on floor, body in straight line. Hips elevated. Hold. Both sides.","pre":"Reps are seconds. Feel lateral core from hip to armpit.","during":"Hips up throughout.","check":"Correct: lateral core burning. Wrong: hips sagging \u2014 raise them."}]},"b":{"label":"Week B","exercises":[{"id":"d5b_ez_curl","giant":false,"giantLabel":"","name":"EZ Bar Curl","focus":"Biceps \u2014 wrist-friendly heavy curl","rest":120,"sets":[{"t":"Warm-up","kg":20,"r":15},{"t":"Set 1","kg":35,"r":8},{"t":"Set 2","kg":35,"r":8},{"t":"Set 3","kg":32.5,"r":8},{"t":"Set 4","kg":32.5,"r":8}],"form":"EZ bar natural wrist angle. Elbows pinned. Full extension at bottom. Pinkies up at top.","pre":"Wrist-friendly. Different feel to straight barbell curl.","during":"Full extension at bottom. Pinkies up at top for peak supination.","check":"Correct: bicep burning, no wrist discomfort. Wrong: wrist pain \u2014 check grip width."},{"id":"d5b_single_row","giant":false,"giantLabel":"","name":"Single Arm Dumbbell Row","focus":"Lat \u2014 unilateral max load","rest":120,"sets":[{"t":"Warm-up","kg":20,"r":15},{"t":"Set 1","kg":30,"r":8},{"t":"Set 2","kg":30,"r":8},{"t":"Set 3","kg":28,"r":8},{"t":"Set 4","kg":28,"r":8}],"form":"Knee and hand on bench. Row elbow straight back past hip. Full reach forward every rep.","pre":"Unilateral \u2014 heavier effective load per lat. Compare left vs right.","during":"Full reach forward \u2014 lat stretch. Full row back \u2014 lat contracted.","check":"Correct: lat burning on working side. Wrong: torso rotating \u2014 elbow drives back."},{"id":"d5b_lat_prayer","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Straight Arm Pulldown \u2192 Neutral Pulldown \u2192 Incline DB Curl \u2192 Shrugs \u2192 Bicycle Crunch \u2014 rest 90 sec after all 5","name":"Straight Arm Lat Pulldown","focus":"Lat isolation \u2014 zero bicep involvement","rest":0,"sets":[{"t":"Round 1","kg":30,"r":12},{"t":"Round 2","kg":27.5,"r":12}],"form":"Stand facing high cable. Arms straight \u2014 do NOT bend elbows. Pull bar down in arc to hips.","pre":"Arms stay straight the entire set. Zero bicep involvement. Pure lat.","during":"Feel the lat pulling your upper arm down. Very intense contraction at bottom.","check":"Correct: burning deep in lat from armpit down. Wrong: elbows bending \u2014 reduce weight."},{"id":"d5b_neutral_pull","giant":true,"giantLabel":"","name":"Neutral Grip Pulldown","focus":"Lats \u2014 pump volume","rest":0,"sets":[{"t":"Round 1","kg":60,"r":12},{"t":"Round 2","kg":55,"r":12}],"form":"V-bar. Pull to upper chest. Elbows drive down and back. Full lat stretch at top.","pre":"Second lat pulldown today \u2014 feel the pump building.","during":"Full stretch at top. Lats contracted at bottom.","check":"Correct: lats burning, full stretch at top. Wrong: biceps first \u2014 pull with elbows."},{"id":"d5b_inc_db_curl","giant":true,"giantLabel":"","name":"Incline Dumbbell Curl","focus":"Bicep long head \u2014 best stretch position","rest":0,"sets":[{"t":"Round 1","kg":12,"r":12},{"t":"Round 2","kg":10,"r":15}],"form":"45\u00b0 incline. Arms hanging behind torso. Curl without elbows moving forward.","pre":"Long head only fully stretches with arm behind torso.","during":"Hold stretch 1 sec before every curl. Upper arm stays back.","check":"Correct: deep stretch in lower bicep. Wrong: elbows swinging forward."},{"id":"d5b_shrugs","giant":true,"giantLabel":"","name":"Barbell Shrug","focus":"Upper traps \u2014 direct stimulus","rest":0,"sets":[{"t":"Round 1","kg":80,"r":12},{"t":"Round 2","kg":80,"r":12}],"form":"Barbell at hips. Shrug STRAIGHT UP. Hold 2 sec at top. Full lowering.","pre":"Straight up only. Feel upper trap contracting hard at the top.","during":"Straight up, 2 sec hold, full drop.","check":"Correct: neck to outer shoulder burning. Wrong: rolling \u2014 straight up only."},{"id":"d5b_bicycle","giant":true,"giantLabel":"","name":"Bicycle Crunch","focus":"Obliques + rectus \u2014 rotational","rest":90,"sets":[{"t":"Round 1","kg":0,"r":20},{"t":"Round 2","kg":0,"r":25}],"form":"Hands behind head lightly. Opposite elbow to knee. Slow and deliberate.","pre":"Feel the oblique pulling you into each rotation.","during":"Full rotation each side. Feel oblique contracting at peak.","check":"Correct: obliques burning. Wrong: neck pulling \u2014 hands just rest."}]}},{"id":"d6","label":"Day 6","title":"Legs 2 \u2014 Volume","muscle":"Glutes, Quads, Hamstrings, Calves","note":"Hip thrust leads \u2014 glutes get the compound today. All accessories in one giant set.","a":{"label":"Week A","exercises":[{"id":"d6a_hip_thrust","giant":false,"giantLabel":"","name":"Barbell Hip Thrust","focus":"Glutes \u2014 the single best glute exercise","rest":120,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":10},{"t":"Set 4","kg":75,"r":10}],"form":"Upper back against bench at shoulder blade level. Bar across hip crease \u2014 use pad. Drive hips up. SQUEEZE glutes for 2 sec at top.","pre":"Bar in the hip crease not the lower abdomen. Bar pad is not optional.","during":"At top: body straight from knees to shoulders. Squeeze glutes as hard as possible for 2 full seconds.","check":"Correct: glutes on fire, 2-sec squeeze. Wrong: lower back arching \u2014 squeeze glutes more."},{"id":"d6a_leg_press","giant":false,"giantLabel":"","name":"Leg Press","focus":"Quads \u2014 mid position for quad emphasis","rest":90,"sets":[{"t":"Set 1","kg":120,"r":10},{"t":"Set 2","kg":120,"r":10},{"t":"Set 3","kg":110,"r":12},{"t":"Set 4","kg":110,"r":12}],"form":"Feet mid-plate, hip width. Lower until knees at 90\u00b0. Press through full foot. No full lockout.","pre":"Mid plate for quad emphasis \u2014 different to high/wide position.","during":"Quads loading through full range. Constant tension.","check":"Correct: quads burning. Wrong: knees caving \u2014 push them outward."},{"id":"d6a_leg_ext","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Leg Extension \u2192 Lying Leg Curl \u2192 Seated Calf Raise \u2192 Abductor \u2192 Adductor \u2014 rest 90 sec after all 5","name":"Leg Extension","focus":"VMO + quad isolation \u2014 end range contraction","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":15}],"form":"Sit fully back. Pad just above ankle. Extend to FULL lockout. Hold 1 sec. 3 sec lowering.","pre":"After leg press \u2014 mechanical drop set. Hits VMO at end-range that compounds miss.","during":"Full lockout and 1 sec hold every rep. Feel teardrop muscle above the knee.","check":"Correct: quads burning especially above knee. Wrong: lifting off seat \u2014 reduce weight."},{"id":"d6a_leg_curl_ss","giant":true,"giantLabel":"","name":"Lying Leg Curl","focus":"Hamstrings \u2014 volume hit after hip thrust","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":12}],"form":"Hips flat on bench. FLEX feet. Curl to full contraction. Full extension. 3 sec lowering.","pre":"Hamstrings already primed from hip thrust. Isolation finisher.","during":"Toes toward shins. Feel pull in back of thigh.","check":"Correct: hamstring burning. Wrong: calf cramping \u2014 flex feet harder."},{"id":"d6a_calf_seated","giant":true,"giantLabel":"","name":"Seated Calf Raise","focus":"Soleus \u2014 different muscle to standing calf raise","rest":0,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":37.5,"r":18}],"form":"Seated targets the SOLEUS. Full drop, full rise, 1 sec hold at top.","pre":"Seated bends the knee taking gastrocnemius out. Different burn location.","during":"Full heel drop, full rise on big toe, 1 sec hold.","check":"Correct: burning deep in calf \u2014 different to standing raises. Wrong: half reps."},{"id":"d6a_abductor","giant":true,"giantLabel":"","name":"Abductor Machine","focus":"Outer hip \u2014 missed by all compounds","rest":0,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":40,"r":15}],"form":"Sit fully back. Pads on outer thighs above knee. Open to maximum range. Squeeze outer hips at widest point.","pre":"Outer hip gets no stimulus from any compound movement.","during":"At widest point feel the squeeze on outer hip and side of glute.","check":"Correct: outer hip and glute burning. Wrong: feeling in quad \u2014 focus on hip opening."},{"id":"d6a_adductor","giant":true,"giantLabel":"","name":"Adductor Machine","focus":"Inner thigh \u2014 completely missed by all compounds","rest":90,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":40,"r":15}],"form":"Sit fully back. Pads on inner thighs. Squeeze legs together. Pause 1 sec at full closure.","pre":"Inner thigh gets zero stimulus from any other exercise.","during":"Pause 1 sec at full closure \u2014 feel the inner thigh contracting.","check":"Correct: inner thigh burning. Wrong: feeling outer hip \u2014 squeeze inward not push."},{"id":"d6a_cable_crunch","giant":false,"giantLabel":"Abs \u2014 Superset: Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable. Crunch through elbows. Hips fixed. Full spine flexion.","pre":"Hips stay completely still.","during":"Elbows to knees. Feel burn in centre of stomach.","check":"Correct: abs burning. Wrong: hip flexors \u2014 hips are moving."},{"id":"d6a_leg_raise","giant":false,"giantLabel":"","name":"Hanging Leg Raise","focus":"Lower abs \u2014 pelvic tilt is the key","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top.","pre":"Pelvic tilt at top makes this lower abs not hip flexors.","during":"Pelvic tilt every rep.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add the pelvic tilt."}]},"b":{"label":"Week B","exercises":[{"id":"d6b_hip_thrust","giant":false,"giantLabel":"","name":"Barbell Hip Thrust","focus":"Glutes \u2014 progressive overload session","rest":120,"sets":[{"t":"Warm-up","kg":40,"r":15},{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":10},{"t":"Set 4","kg":75,"r":10}],"form":"Upper back against bench. Bar across hip crease \u2014 use pad. Drive hips up. SQUEEZE glutes 2 sec.","pre":"Aim to beat last week \u2014 add 2.5kg or 1 rep.","during":"2-sec squeeze at the top every single rep.","check":"Correct: glutes on fire at top. Wrong: lower back arching \u2014 squeeze glutes more."},{"id":"d6b_hack_sq","giant":false,"giantLabel":"","name":"Hack Squat","focus":"Quads \u2014 deep range quad isolation","rest":90,"sets":[{"t":"Set 1","kg":80,"r":10},{"t":"Set 2","kg":80,"r":10},{"t":"Set 3","kg":75,"r":12},{"t":"Set 4","kg":75,"r":12}],"form":"Feet mid-plate, hip width. Descend until thighs below parallel. Press through full foot. No full lockout.","pre":"Week B uses hack squat \u2014 different quad stimulus to leg press.","during":"Feel quads burning through full range. Slow controlled descent.","check":"Correct: quads burning through full range. Wrong: back lifting off pad \u2014 reduce depth."},{"id":"d6b_leg_ext","giant":true,"giantLabel":"Giant Set \u2014 no rest between: Leg Extension \u2192 Seated Leg Curl \u2192 Standing Calf Raise \u2192 Abductor \u2192 Adductor \u2014 rest 90 sec after all 5","name":"Leg Extension","focus":"VMO \u2014 end range contraction after hack squat","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":15}],"form":"Sit fully back. Extend to full lockout. Hold 1 sec. 3 sec lowering.","pre":"After hack squat \u2014 mechanical drop set finishing the quads.","during":"Full lockout and 1 sec hold every rep.","check":"Correct: quads burning above knee. Wrong: lifting off seat \u2014 reduce weight."},{"id":"d6b_seated_curl","giant":true,"giantLabel":"","name":"Seated Leg Curl","focus":"Hamstrings \u2014 different angle to lying curl","rest":0,"sets":[{"t":"Round 1","kg":40,"r":12},{"t":"Round 2","kg":37.5,"r":12}],"form":"Seated position shifts hamstring emphasis. Flex feet. Full range. 3 sec negative.","pre":"Different to lying curl \u2014 seated hip angle shifts which part is loaded.","during":"Toes toward shins. Full extension at top. 3-second lowering.","check":"Correct: hamstring burning throughout. Wrong: back lifting off seat \u2014 reduce weight."},{"id":"d6b_calf_stand","giant":true,"giantLabel":"","name":"Standing Calf Raise","focus":"Gastrocnemius \u2014 full range","rest":0,"sets":[{"t":"Round 1","kg":60,"r":15},{"t":"Round 2","kg":60,"r":15}],"form":"Ball of foot on step. Full heel drop. Rise ALL the way up on big toe. Hold 1 sec.","pre":"Full range only. Half reps build nothing.","during":"Full stretch, full rise, 1 sec hold every rep.","check":"Correct: burn from stretch to peak. Wrong: partial reps."},{"id":"d6b_abductor","giant":true,"giantLabel":"","name":"Abductor Machine","focus":"Outer hip \u2014 second weekly hit","rest":0,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":40,"r":15}],"form":"Sit fully back. Open to maximum range. Squeeze outer hips at widest point.","pre":"Outer hip gets no stimulus from any compound.","during":"Squeeze at widest point. Control the return.","check":"Correct: outer hip and glute burning. Wrong: feeling in quad \u2014 focus on hip opening."},{"id":"d6b_adductor","giant":true,"giantLabel":"","name":"Adductor Machine","focus":"Inner thigh \u2014 only direct stimulus","rest":90,"sets":[{"t":"Round 1","kg":40,"r":15},{"t":"Round 2","kg":40,"r":15}],"form":"Sit fully back. Squeeze legs together. Pause 1 sec at full closure. Control return.","pre":"Inner thigh gets zero stimulus from any compound.","during":"Pause 1 sec at full closure.","check":"Correct: inner thigh burning. Wrong: feeling outer hip \u2014 squeeze inward."},{"id":"d6b_cable_crunch","giant":false,"giantLabel":"Abs \u2014 Superset: Cable Crunch then immediately Hanging Leg Raise, rest 60 sec","name":"Cable Crunch","focus":"Rectus abdominis \u2014 weighted","rest":0,"sets":[{"t":"Set 1","kg":27.5,"r":15},{"t":"Set 2","kg":27.5,"r":15},{"t":"Set 3","kg":25,"r":20}],"form":"Kneel facing cable. Crunch through elbows. Hips fixed.","pre":"Hips stay completely still.","during":"Elbows to knees.","check":"Correct: abs burning. Wrong: hip flexors."},{"id":"d6b_leg_raise","giant":false,"giantLabel":"","name":"Hanging Leg Raise","focus":"Lower abs","rest":60,"sets":[{"t":"Set 1","kg":0,"r":12},{"t":"Set 2","kg":0,"r":12},{"t":"Set 3","kg":0,"r":15}],"form":"Dead hang. Raise to 90\u00b0. Pelvic tilt BACK at top.","pre":"Pelvic tilt at top.","during":"Pelvic tilt every rep.","check":"Correct: lower abs burning. Wrong: hip flexors \u2014 add pelvic tilt."}]}}];
+
+// ── State ──
+let dayIdx=0, tSec=150, tPre=150, tRun=false, tInt=null;
+const APPS_URL='https://script.google.com/macros/s/AKfycbwaMRVr3gqoD8Kopf8Ask0WnNY9F3pRvOsUtoGjwiLDoMXD56FJJxBbjMpvhWmsO4XlAg/exec';
+
+// ── User ──
+function getUser(){return localStorage.getItem('wt_user')||'';}
+function setUser(n){localStorage.setItem('wt_user',n.trim());}
+function uk(k){return getUser()+'__'+k;}
+function completeOnboard(){
+  const n=document.getElementById('ob-name').value.trim();
+  if(!n){document.getElementById('ob-name').style.borderColor='var(--red)';return;}
+  setUser(n);
+  document.getElementById('onboard').style.display='none';
+  document.getElementById('app').style.display='flex';
+  initApp();
+}
+
+// ── Week A/B ──
+function getWeek(){
+  const now=new Date(),jan1=new Date(now.getFullYear(),0,1);
+  const wn=Math.ceil(((now-jan1)/86400000+jan1.getDay()+1)/7);
+  return wn%2===1?'a':'b';
+}
+function getCurrentDay(){
+  const v=getWeek(), d=P[dayIdx];
+  return {id:d.id,label:d.label,title:d.title,muscle:d.muscle,note:d.note,weekLabel:d[v].label,exercises:d[v].exercises};
+}
+
+// ── Session ──
+function sk(dayId){return uk('sess_'+dayId);}
+function loadSess(dayId){try{return JSON.parse(localStorage.getItem(sk(dayId)))||{};}catch{return {};}}
+function saveSess(dayId,s){localStorage.setItem(sk(dayId),JSON.stringify(s));}
+
+// ── Day detection ──
+function getDayForToday(){
+  const m={1:0,2:1,3:2,4:3,5:4,6:5,0:undefined};
+  return m[new Date().getDay()];
+}
+
+// ── Timer ──
+function pad(n){return String(n).padStart(2,'0');}
+function updateDig(){
+  const el=document.getElementById('t-dig');
+  el.textContent=Math.floor(tSec/60)+':'+pad(tSec%60);
+  el.className='timer-num'+(tSec<=10&&tSec>0?' urgent':'');
+}
+function setTimer(s){
+  clearInterval(tInt);tRun=false;tSec=s;tPre=s;updateDig();
+  document.getElementById('t-start').textContent='▶ Start';
+  document.querySelectorAll('.t-pre').forEach(b=>{
+    const v=parseInt(b.textContent.split(':')[0])*60+parseInt(b.textContent.split(':')[1]);
+    b.className='t-pre'+(v===s?' on':'');
+  });
+}
+function toggleTimer(){
+  const btn=document.getElementById('t-start');
+  if(tRun){clearInterval(tInt);tRun=false;btn.textContent='▶ Resume';}
+  else{
+    tRun=true;btn.textContent='⏸ Pause';
+    tInt=setInterval(()=>{
+      tSec--;updateDig();
+      if(tSec<=0){
+        clearInterval(tInt);tRun=false;btn.textContent='▶ Start';
+        if(navigator.vibrate)navigator.vibrate([200,100,200]);
+      }
+    },1000);
+  }
+}
+function resetTimer(){clearInterval(tInt);tRun=false;tSec=tPre;updateDig();document.getElementById('t-start').textContent='▶ Start';}
+function kickTimer(s){clearInterval(tInt);tRun=false;tSec=s;tPre=s;updateDig();document.getElementById('t-start').textContent='▶ Start';toggleTimer();}
+
+// ── Render ──
+function initApp(){
+  const user=getUser();
+  const now=new Date();
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('hdr-date').textContent=days[now.getDay()]+', '+now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  const todayIdx=getDayForToday();
+  if(todayIdx!==undefined)dayIdx=todayIdx;
+  buildTabs();
+  renderDay();
+}
+
+function buildTabs(){
+  const c=document.getElementById('day-tabs');c.innerHTML='';
+  const shorts=['Push 1','Pull 1','Legs 1','Push 2','Pull 2','Legs 2'];
+  P.forEach((d,i)=>{
+    const tb=document.createElement('div');
+    tb.className='day-tab'+(i===dayIdx?' on':'');
+    tb.innerHTML=`<span>${d.label}</span><span class="dt-sub">${shorts[i]||''}</span>`;
+    tb.onclick=()=>{dayIdx=i;renderDay();document.querySelectorAll('.day-tab').forEach((t,j)=>t.className='day-tab'+(j===i?' on':''));};
+    c.appendChild(tb);
+  });
+}
+
+function renderDay(){
+  const dayData=getCurrentDay();
+  const v=getWeek();
+  document.getElementById('hdr-title').textContent=dayData.title;
+  document.getElementById('week-badge').textContent=dayData.weekLabel;
+  const wrap=document.getElementById('exwrap');wrap.innerHTML='';
+  const sess=loadSess(dayData.id);
+  const exs=dayData.exercises;
+  if(!exs||exs.length===0)return;
+
+  // Group by section
+  let inGiant=false, giantLabel='', inAbs=false;
+  let giantBadgeAdded=false, absBadgeAdded=false;
+
+  // Section labels
+  const compoundLbl=document.createElement('div');compoundLbl.className='sec-lbl';compoundLbl.textContent='Compounds';wrap.appendChild(compoundLbl);
+
+  exs.forEach((ex,exIdx)=>{
+    // Detect section transitions
+    if(ex.giant&&!inGiant){
+      inGiant=true;
+      const gl=document.createElement('div');gl.className='sec-lbl';gl.textContent='Giant Set';wrap.appendChild(gl);
+      if(ex.giantLabel){
+        const gb=document.createElement('div');gb.className='giant-badge';
+        gb.innerHTML=`<div class="giant-dot"></div><div class="giant-lbl">${ex.giantLabel}</div>`;
+        wrap.appendChild(gb);
+      }
+    }
+    if(!ex.giant&&inGiant&&ex.giantLabel){
+      // abs section
+      inGiant=false;
+      const al=document.createElement('div');al.className='sec-lbl';al.textContent='Abs';wrap.appendChild(al);
+      const ab=document.createElement('div');ab.className='abs-badge';
+      ab.innerHTML=`<div class="abs-dot"></div><div class="abs-lbl">${ex.giantLabel}</div>`;
+      wrap.appendChild(ab);
+    }
+
+    // Build card
+    const workSets=ex.sets.filter(s=>s.t!=='Warm-up');
+    const warmSets=ex.sets.filter(s=>s.t==='Warm-up');
+    const doneCnt=workSets.filter((_,i)=>sess[ex.id+'_done_'+(warmSets.length+i)]).length;
+    const total=workSets.length;
+    const allDone=doneCnt===total&&total>0;
+    const pct=total?doneCnt/total:0;
+    const circ=2*Math.PI*14;
+    const off=circ*(1-pct);
+
+    const card=document.createElement('div');
+    card.className='ex-card'+(ex.giant?' giant-card':'')+(allDone?' done-card':'');
+
+    let rowsHTML='';
+    ex.sets.forEach((s,si)=>{
+      const isWarm=s.t==='Warm-up';
+      if(isWarm){
+        rowsHTML+=`<div class="warmup-row">
+          <span class="set-lbl">Warm-up</span>
+          <span class="set-kg">${s.kg}<span class="set-kg-unit">kg</span></span>
+          <span class="set-reps">× ${s.r}</span>
+          <div></div>
+        </div>`;
+      } else {
+        const done=sess[ex.id+'_done_'+si]?true:false;
+        rowsHTML+=`<div class="set-row${done?' set-done':''}" onclick="tickSet('${dayData.id}','${ex.id}',${si},${ex.rest||60})">
+          <span class="set-lbl">${s.t}</span>
+          <span class="set-kg">${s.kg>0?s.kg+'<span class=set-kg-unit>kg</span>':'—'}</span>
+          <span class="set-reps">× ${s.r}</span>
+          <div class="set-tick${done?' ticked':''}"></div>
+        </div>`;
+      }
+    });
+
+    card.innerHTML=`
+      <div class="ex-hdr">
+        <div>
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-focus">${ex.focus}</div>
+        </div>
+        <div class="ex-ring">
+          <span class="ring-lbl">${doneCnt}/${total}</span>
+          <svg width="32" height="32" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="14" fill="none" stroke="${ex.giant?'#1e2a1e':'#1e1e1e'}" stroke-width="3"/>
+            ${pct>0?`<circle cx="18" cy="18" r="14" fill="none" stroke="#4ade80" stroke-width="3" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 18 18)"/>`:''}
+          </svg>
+        </div>
+      </div>
+      ${rowsHTML}
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function tickSet(dayId,exId,si,rest){
+  const s=loadSess(dayId);
+  s[exId+'_done_'+si]=!s[exId+'_done_'+si];
+  saveSess(dayId,s);
+  // Update just this row and ring without full re-render
+  const row=document.querySelector(`.set-row[onclick*="'${exId}',${si},"]`);
+  if(row){
+    const done=s[exId+'_done_'+si];
+    row.className='set-row'+(done?' set-done':'');
+    const tick=row.querySelector('.set-tick');
+    if(tick)tick.className='set-tick'+(done?' ticked':'');
+    if(done)kickTimer(rest||60);
+  }
+  // Update ring
+  refreshRing(dayId,exId);
+}
+
+function refreshRing(dayId,exId){
+  const dayData=getCurrentDay();
+  const ex=dayData.exercises.find(e=>e.id===exId);
+  if(!ex)return;
+  const s=loadSess(dayId);
+  const workSets=ex.sets.filter(st=>st.t!=='Warm-up');
+  const warmSets=ex.sets.filter(st=>st.t==='Warm-up');
+  const done=workSets.filter((_,i)=>s[ex.id+'_done_'+(warmSets.length+i)]).length;
+  const total=workSets.length;
+  const pct=total?done/total:0;
+  const circ=2*Math.PI*14;
+  const off=circ*(1-pct);
+  // Find the card containing this exercise
+  const rows=document.querySelectorAll(`.set-row[onclick*="'${exId}',"]`);
+  if(!rows.length)return;
+  const card=rows[0].closest('.ex-card');
+  if(!card)return;
+  const ring=card.querySelector('.ex-ring');
+  if(!ring)return;
+  ring.innerHTML=`<span class="ring-lbl">${done}/${total}</span>
+    <svg width="32" height="32" viewBox="0 0 36 36">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="${ex.giant?'#1e2a1e':'#1e1e1e'}" stroke-width="3"/>
+      ${pct>0?`<circle cx="18" cy="18" r="14" fill="none" stroke="#4ade80" stroke-width="3" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 18 18)"/>`:''}
+    </svg>`;
+  if(done===total&&total>0)card.classList.add('done-card');
+  else card.classList.remove('done-card');
+}
+
+function finishDay(){
+  const d=getCurrentDay();
+  const s=loadSess(d.id);
+  const exs=d.exercises;
+  const total=exs.reduce((a,e)=>a+e.sets.filter(st=>st.t!=='Warm-up').length,0);
+  const done=exs.reduce((a,e)=>a+e.sets.filter((_,i)=>s[e.id+'_done_'+i]).length,0);
+  if(done<total&&!confirm(`Only ${done}/${total} sets done. Finish anyway?`))return;
+  localStorage.removeItem(sk(d.id));
+  renderDay();
+  alert('Great work! Session complete.');
+}
+
+function syncSheets(){
+  const d=getCurrentDay();
+  const s=loadSess(d.id);
+  const user=getUser();
+  const rows=[];
+  const date=new Date().toISOString().split('T')[0];
+  d.exercises.forEach(ex=>{
+    ex.sets.forEach((st,si)=>{
+      if(s[ex.id+'_done_'+si]){
+        rows.push({user,date,day:d.id,exercise:ex.name,set:st.t,kg:st.kg,reps:st.r});
+      }
+    });
+  });
+  if(!rows.length){alert('No completed sets to sync.');return;}
+  fetch(APPS_URL,{method:'POST',body:JSON.stringify(rows)})
+    .then(r=>r.json()).then(()=>alert('Synced!'))
+    .catch(()=>alert('Sync failed — check connection.'));
+}
+
+function showSettings(){
+  const name=getUser();
+  const newName=prompt('Your name:',name);
+  if(newName&&newName.trim()){setUser(newName.trim());alert('Name updated!');}
+}
+
+// ── Boot ──
+const user=getUser();
+if(user){
+  document.getElementById('app').style.display='flex';
+  initApp();
+} else {
+  document.getElementById('onboard').style.display='flex';
+}
+document.getElementById('ob-name').addEventListener('keydown',e=>{if(e.key==='Enter')completeOnboard();});
+</script>
+</body>
+</html>
